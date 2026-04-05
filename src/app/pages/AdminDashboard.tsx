@@ -5,8 +5,8 @@ import {
   MessageCircle, PlayCircle, Filter, Download, Search, 
   Settings, Calendar, Edit3, LayoutDashboard, Building2 
 } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
