@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Download } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { Button } from '../components/ui/button';
+import { Button } from '../components/ui/Button';
 
 export default function ParentalConsent() {
   return (
