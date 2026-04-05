@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Printer, ArrowLeft, Download } from 'lucide-react';
 import { Navbar } from '../components/layout/Navbar';
-import { Button } from '../components/ui/Button';
+import { Button } from '../components/ui/button';
 
 export default function ConsentFormDownload() {
   return (
