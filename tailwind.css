@@ -1,0 +1,17 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@import 'tw-animate-css';
+
+/* Decorative gradient backgrounds */
+.bg-gradient-rainbow {
+  background: linear-gradient(135deg, #fce7f3 0%, #e9d5ff 25%, #dbeafe 50%, #a5f3fc 75%, #fce7f3 100%);
+}
+
+.bg-gradient-pastel {
+  background: linear-gradient(135deg, #fae8ff 0%, #e0e7ff 50%, #fce7f3 100%);
+}
+
+.bg-gradient-sunset {
+  background: linear-gradient(135deg, #fef3c7 0%, #fecaca 50%, #fce7f3 100%);
+}
