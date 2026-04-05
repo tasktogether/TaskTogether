@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Building2, MapPin, Mail, User, MessageSquare, Check, Loader2 } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
+import { Button } from '../components/ui/button';
+import { Card } from '../components/ui/card';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import { toast } from 'sonner';
