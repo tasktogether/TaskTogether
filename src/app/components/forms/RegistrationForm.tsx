@@ -60,9 +60,10 @@ const handleVideoUpload = async (event: any) => {
     .upload(`videos/${file.name}`, file);
 
   if (error) {
-    toast.error('Upload failed');
-    return;
-  }
+  console.error(error);
+  toast.error(error.message);
+  return;
+}
 
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
