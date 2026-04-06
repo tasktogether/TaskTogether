@@ -72,13 +72,6 @@ const handleVideoUpload = async (event: any) => {
 
   const filePath = file.name;
 
-const handleVideoUpload = async (event: any) => {
-  const file = event.target.files[0];
-
-  if (!file) return;
-
-  const filePath = `${Date.now()}-${file.name}`;
-
   const { error } = await supabase.storage
     .from('videos')
     .upload(filePath, file);
