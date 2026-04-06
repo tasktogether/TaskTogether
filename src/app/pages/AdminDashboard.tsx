@@ -155,7 +155,7 @@ export default function AdminDashboard() {
                         <div className="bg-slate-50 p-4 rounded-xl mt-4 border border-slate-100">
                           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Required Documents</p>
                           <div className="flex flex-wrap gap-3">
-                            {app.video_url ? (
+                            {app.videoUrl ? (
   <a
     href={app.video_url}
     target="_blank"
