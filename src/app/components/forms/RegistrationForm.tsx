@@ -28,6 +28,7 @@ export const RegistrationForm = () => {
 
 const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(true);
+  console.log('Submitting with videoUrl:', videoUrl);
 
   if (!videoUrl) {
   toast.error('Please upload a video before submitting.');
