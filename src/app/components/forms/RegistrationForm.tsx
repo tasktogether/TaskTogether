@@ -5,6 +5,7 @@ import { Video, Upload, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../../lib/supabase';
 
 interface RegistrationData {
   fullName: string;
@@ -24,14 +25,30 @@ export const RegistrationForm = () => {
   const age = watch('age');
   const isMinor = age && age < 18;
 
-  const onSubmit = async (data: RegistrationData) => {
-    setIsSubmitting(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    registerUser(data.fullName, data.email);
+const onSubmit = async (data: RegistrationData) => {
+  setIsSubmitting(true);
+
+  const { error } = await supabase.from('volunteer_applications').insert([
+    {
+      full_name: data.fullName,
+      email: data.email,
+      age: String(data.age),
+      availability: '',
+      why_volunteer: '',
+      status: 'pending',
+    },
+  ]);
+
+  if (error) {
+    toast.error('Something went wrong. Please try again.');
     setIsSubmitting(false);
-  };
+    return;
+  }
+
+  toast.success('Application submitted successfully!');
+  registerUser(data.fullName, data.email);
+  setIsSubmitting(false);
+};
 
   const handleVideoUpload = () => {
     // Simulate video upload
