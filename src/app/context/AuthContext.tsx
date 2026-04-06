@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { supabase } from '../../lib/supabase';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { toast } from 'sonner';
 
 // Types
@@ -144,7 +145,34 @@ const MOCK_APPLICATIONS: Application[] = [
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [applications, setApplications] = useState<Application[]>(MOCK_APPLICATIONS);
+  const [applications, setApplications] = useState<Application[]>([]);
+  useEffect(() => {
+  const fetchApplications = async () => {
+    const { data, error } = await supabase
+      .from('volunteer_applications')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error loading applications:', error);
+      return;
+    }
+
+    const mappedApplications: Application[] = (data || []).map((app: any) => ({
+      id: String(app.id),
+      userId: String(app.id),
+      userName: app.full_name,
+      userEmail: app.email,
+      videoUrl: app.video_url,
+      status: app.status,
+      submittedAt: new Date(app.created_at),
+    }));
+
+    setApplications(mappedApplications);
+  };
+
+  fetchApplications();
+}, []);
   
   const login = (email: string, role: UserRole) => {
     // Simulated login logic
