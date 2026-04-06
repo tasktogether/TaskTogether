@@ -71,6 +71,13 @@ const handleVideoUpload = async (event: any) => {
 
   const filePath = file.name;
 
+const handleVideoUpload = async (event: any) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const filePath = `${Date.now()}-${file.name}`;
+
   const { error } = await supabase.storage
     .from('videos')
     .upload(filePath, file);
@@ -80,12 +87,15 @@ const handleVideoUpload = async (event: any) => {
     return;
   }
 
-  const { data } = supabase.storage
+  const publicUrlResult = supabase.storage
     .from('videos')
     .getPublicUrl(filePath);
 
-  console.log('VIDEO URL:', data.publicUrl);
-  setVideoUrl(data.publicUrl);
+  const publicUrl = publicUrlResult.data.publicUrl;
+
+  console.log('VIDEO URL:', publicUrl);
+
+  setVideoUrl(publicUrl);
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
 };
