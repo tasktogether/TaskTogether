@@ -21,6 +21,7 @@ export const RegistrationForm = () => {
   const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationData>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [videoUploaded, setVideoUploaded] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
 
   const age = watch('age');
   const isMinor = age && age < 18;
@@ -36,6 +37,7 @@ const onSubmit = async (data: RegistrationData) => {
       availability: '',
       why_volunteer: '',
       status: 'pending',
+      video_url: videoUrl,
     },
   ]);
 
@@ -55,16 +57,22 @@ const handleVideoUpload = async (event: any) => {
 
   if (!file) return;
 
-  const { data, error } = await supabase.storage
+  const filePath = file.name;
+
+  const { error } = await supabase.storage
     .from('videos')
-    .upload(`videos/${file.name}`, file);
+    .upload(filePath, file);
 
   if (error) {
-  console.error(error);
-  toast.error(error.message);
-  return;
-}
+    toast.error(error.message);
+    return;
+  }
 
+  const { data } = supabase.storage
+    .from('videos')
+    .getPublicUrl(filePath);
+
+  setVideoUrl(data.publicUrl);
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
 };
