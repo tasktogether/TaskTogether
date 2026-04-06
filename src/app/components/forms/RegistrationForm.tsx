@@ -161,8 +161,16 @@ const onSubmit = async (data: RegistrationData) => {
           <label className="text-lg font-semibold text-slate-800 flex items-center gap-2">
             Video Introduction
           </label>
-          <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 transition-colors cursor-pointer group relative overflow-hidden" onClick={handleVideoUpload}>
-            {videoUploaded ? (
+          <div
+  className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 transition-colors cursor-pointer group relative overflow-hidden"
+>
+
+  <input
+    type="file"
+    accept="video/*"
+    onChange={handleVideoUpload}
+  />
+  {videoUploaded ? (
               <div className="flex flex-col items-center gap-2 text-green-700 animate-in zoom-in duration-300">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-2">
                    <CheckCircle size={32} />
