@@ -41,11 +41,12 @@ const onSubmit = async (data: RegistrationData) => {
     },
   ]);
 
-  if (error) {
-    toast.error('Something went wrong. Please try again.');
-    setIsSubmitting(false);
-    return;
-  }
+if (error) {
+  console.error('SUBMIT ERROR:', error);
+  toast.error(error.message);
+  setIsSubmitting(false);
+  return;
+}
 
   toast.success('Application submitted successfully!');
   registerUser(data.fullName, data.email);
