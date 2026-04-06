@@ -124,25 +124,6 @@ const MOCK_OPPORTUNITIES: Opportunity[] = [
   },
 ];
 
-const MOCK_APPLICATIONS: Application[] = [
-  {
-    id: 'app-1',
-    userId: 'user-2',
-    userName: 'Sarah Jenkins',
-    userEmail: 'sarah@example.com',
-    status: 'pending',
-    submittedAt: new Date(),
-  },
-  {
-    id: 'app-2',
-    userId: 'user-3',
-    userName: 'Mike Ross',
-    userEmail: 'mike@example.com',
-    status: 'approved',
-    submittedAt: new Date(Date.now() - 86400000), // Yesterday
-  }
-];
-
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
