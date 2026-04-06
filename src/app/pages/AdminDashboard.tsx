@@ -155,16 +155,23 @@ export default function AdminDashboard() {
                         <div className="bg-slate-50 p-4 rounded-xl mt-4 border border-slate-100">
                           <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Required Documents</p>
                           <div className="flex flex-wrap gap-3">
-                            <button 
-                              onClick={() => alert("Playing Intro Video...")}
-                              className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-violet-300 hover:shadow-md transition-all"
-                            >
-                              <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center text-violet-600 group-hover:scale-110 transition-transform">
-                                <PlayCircle size={16} fill="currentColor" className="opacity-20" />
-                                <PlayCircle size={16} className="absolute" />
-                              </div>
-                              Intro Video
-                            </button>
+                            {app.video_url ? (
+  <a
+    href={app.video_url}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-violet-300 hover:shadow-md transition-all"
+  >
+    <div className="w-8 h-8 bg-violet-100 rounded-full flex items-center justify-center text-violet-600">
+      <PlayCircle size={16} />
+    </div>
+    Intro Video
+  </a>
+) : (
+  <span className="text-sm text-slate-400">
+    No video uploaded
+  </span>
+)}
                             <button 
                               onClick={() => alert("Opening Consent Form...")}
                               className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-pink-300 hover:shadow-md transition-all"
