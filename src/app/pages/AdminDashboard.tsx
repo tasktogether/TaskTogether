@@ -157,7 +157,7 @@ export default function AdminDashboard() {
                           <div className="flex flex-wrap gap-3">
                             {app.videoUrl ? (
   <a
-    href={app.video_url}
+    href={app.videoUrl}
     target="_blank"
     rel="noopener noreferrer"
     className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-violet-300 hover:shadow-md transition-all"
