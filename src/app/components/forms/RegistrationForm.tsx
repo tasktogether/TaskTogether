@@ -50,7 +50,23 @@ const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(false);
 };
 
-  const handleVideoUpload = () => {
+  const handleVideoUpload = async (event: any) => {
+  const file = event.target.files[0];
+
+  if (!file) return;
+
+  const { data, error } = await supabase.storage
+    .from('videos')
+    .upload(`videos/${file.name}`, file);
+
+  if (error) {
+    toast.error('Upload failed');
+    return;
+  }
+
+  setVideoUploaded(true);
+  toast.success('Video uploaded successfully!');
+};
     // Simulate video upload
     toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
       loading: 'Uploading your introduction...',
