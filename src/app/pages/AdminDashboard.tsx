@@ -172,15 +172,17 @@ export default function AdminDashboard() {
     No video uploaded
   </span>
 )}
-                            <button 
-                              onClick={() => alert("Opening Consent Form...")}
-                              className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-pink-300 hover:shadow-md transition-all"
-                            >
-                              <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600 group-hover:scale-110 transition-transform">
-                                <FileText size={16} />
-                              </div>
-                              Consent Form
-                            </button>
+{app.age && app.age < 18 && (
+  <button 
+    onClick={() => alert("Opening Consent Form...")}
+    className="group flex items-center gap-2 text-sm font-medium bg-white text-slate-700 pl-3 pr-4 py-2 rounded-lg border border-slate-200 hover:border-pink-300 hover:shadow-md transition-all"
+  >
+    <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center text-pink-600">
+      <FileText size={16} />
+    </div>
+    Consent Form
+  </button>
+)}
                           </div>
                         </div>
                       </div>
