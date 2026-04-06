@@ -47,7 +47,8 @@ export interface Application {
   userId: string;
   userName: string;
   userEmail: string;
-  videoUrl?: string; // Simulated
+  videoUrl?: string;
+  age?: number;   // ← ADD THIS LINE
   status: ApplicationStatus;
   submittedAt: Date;
 }
@@ -138,16 +139,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error loading applications:', error);
       return;
     }
-
-    const mappedApplications: Application[] = (data || []).map((app: any) => ({
-      id: String(app.id),
-      userId: String(app.id),
-      userName: app.full_name,
-      userEmail: app.email,
-      videoUrl: app.video_url,
-      status: app.status,
-      submittedAt: new Date(app.created_at),
-    }));
+const mappedApplications: Application[] = (data || []).map((app: any) => ({
+  id: String(app.id),
+  userId: String(app.id),
+  userName: app.full_name,
+  userEmail: app.email,
+  videoUrl: app.video_url,
+  age: app.age,   // ← ADD THIS LINE
+  status: app.status,
+  submittedAt: new Date(app.created_at),
+}));
 
     setApplications(mappedApplications);
   };
