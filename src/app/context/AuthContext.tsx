@@ -223,6 +223,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       role: 'volunteer',
       status: 'pending',
     });
+    fetchApplications();
     toast.success('Application submitted successfully!');
   };
 
