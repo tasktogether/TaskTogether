@@ -50,7 +50,7 @@ const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(false);
 };
 
-  const handleVideoUpload = async (event: any) => {
+const handleVideoUpload = async (event: any) => {
   const file = event.target.files[0];
 
   if (!file) return;
@@ -67,17 +67,6 @@ const onSubmit = async (data: RegistrationData) => {
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
 };
-    // Simulate video upload
-    toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
-      loading: 'Uploading your introduction...',
-      success: () => {
-        setVideoUploaded(true);
-        return 'Video uploaded successfully!';
-      },
-      error: 'Upload failed',
-    });
-  };
-
   return (
     <Card className="max-w-2xl mx-auto border border-slate-200 shadow-xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden">
       <div className="text-center mb-8 pt-8 px-6 bg-slate-50 border-b border-slate-100 pb-8">
