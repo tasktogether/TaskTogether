@@ -146,7 +146,7 @@ const MOCK_APPLICATIONS: Application[] = [
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
-  useEffect(() => {
+
   const fetchApplications = async () => {
     const { data, error } = await supabase
       .from('volunteer_applications')
@@ -171,8 +171,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setApplications(mappedApplications);
   };
 
-  fetchApplications();
-}, []);
+  useEffect(() => {
+    fetchApplications();
+
+    const interval = setInterval(() => {
+      fetchApplications();
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, []);
   
   const login = (email: string, role: UserRole) => {
     // Simulated login logic
