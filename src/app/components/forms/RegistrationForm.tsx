@@ -29,12 +29,6 @@ export const RegistrationForm = () => {
 const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(true);
   console.log('Submitting with videoUrl:', videoUrl);
-
-  if (!videoUrl) {
-  toast.error('Please upload a video before submitting.');
-  setIsSubmitting(false);
-  return;
-}
  
   if (!videoUrl) {
   toast.error('Please upload a video first.');
@@ -70,7 +64,7 @@ const handleVideoUpload = async (event: any) => {
 
   if (!file) return;
 
-  const filePath = file.name;
+  const filePath = `${Date.now()}-${file.name}`;
 
   const { error } = await supabase.storage
     .from('videos')
@@ -81,15 +75,13 @@ const handleVideoUpload = async (event: any) => {
     return;
   }
 
-  const publicUrlResult = supabase.storage
+  const { data } = supabase.storage
     .from('videos')
     .getPublicUrl(filePath);
 
-  const publicUrl = publicUrlResult.data.publicUrl;
+  console.log('VIDEO URL:', data.publicUrl);
 
-  console.log('VIDEO URL:', publicUrl);
-
-  setVideoUrl(publicUrl);
+  setVideoUrl(data.publicUrl);
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
 };
