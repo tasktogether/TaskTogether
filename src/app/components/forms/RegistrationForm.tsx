@@ -28,7 +28,12 @@ export const RegistrationForm = () => {
 
 const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(true);
-
+ 
+  if (!videoUrl) {
+  toast.error('Please upload a video first.');
+  setIsSubmitting(false);
+  return;
+}
   const { error } = await supabase.from('volunteer_applications').insert([
     {
       full_name: data.fullName,
@@ -73,6 +78,7 @@ const handleVideoUpload = async (event: any) => {
     .from('videos')
     .getPublicUrl(filePath);
 
+  console.log('VIDEO URL:', data.publicUrl);
   setVideoUrl(data.publicUrl);
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
