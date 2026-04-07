@@ -61,7 +61,7 @@ interface AuthContextType {
   updateUser: (updates: Partial<User>) => void;
   // Admin functions (simulated)
   applications: Application[];
-  updateApplicationStatus: (appId: string, status: ApplicationStatus) => void;
+  updateApplicationStatus: (appId: string, status: ApplicationStatus) => Promise<void>;
   opportunities: Opportunity[];
 }
 
@@ -223,7 +223,7 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
 
  const updateApplicationStatus = async (appId: string, status: ApplicationStatus) => {
   const { error } = await supabase
-    .from('applications')
+    .from('volunteer_applications')
     .update({ status })
     .eq('id', appId);
 
@@ -240,20 +240,19 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
   );
 
   toast.success(`Application ${status}`);
-};
-    
-    // Simulate Email Confirmation Flow
-    if (status === 'approved') {
-      const app = applications.find(a => a.id === appId);
-      if (app) {
-        setTimeout(() => {
-          toast.success(`📧 Automated email sent to ${app.userEmail}: "Welcome to TaskTogether! Your application is approved."`, {
-            duration: 6000,
-          });
-        }, 1000);
-      }
+
+  if (status === 'approved') {
+    const app = applications.find(a => a.id === appId);
+    if (app) {
+      setTimeout(() => {
+        toast.success(
+          `📧 Automated email sent to ${app.userEmail}: "Welcome to TaskTogether! Your application is approved."`,
+          { duration: 6000 }
+        );
+      }, 1000);
     }
-  };
+  }
+};
 
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => prev ? { ...prev, ...updates } : null);
