@@ -59,9 +59,12 @@ export default function AdminDashboard() {
 
   // Handle approve with email
   const handleApprove = async (app: any) => {
-    updateApplicationStatus(app.id, 'approved');
-    await sendApprovalEmail(app);
-  };
+  await updateApplicationStatus(app.id, 'approved');
+  await sendApprovalEmail(app);
+};  
+    const handleReject = async (app: any) => {
+  await updateApplicationStatus(app.id, 'rejected');
+};
 
   const renderContent = () => {
     switch (activeTab) {
@@ -143,7 +146,9 @@ export default function AdminDashboard() {
                       <div className="flex-1 space-y-3">
                         <div className="flex items-center gap-3">
                           <h3 className="text-xl font-bold text-slate-800">{app.userName}</h3>
-                          <span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full border border-slate-200">Age: 16</span>
+                          <span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full border border-slate-200"> 
+                            Age: {app.age ?? 'N/A'}
+                          </span>
                           <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-full border border-blue-100">Student</span>
                         </div>
                         <p className="text-slate-600 text-sm flex items-center gap-2">
@@ -199,7 +204,7 @@ export default function AdminDashboard() {
                           size="sm" 
                           variant="ghost" 
                           className="text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center"
-                          onClick={() => updateApplicationStatus(app.id, 'rejected')}
+                          onClick={() => handleReject(app)}
                         >
                           <X size={16} className="mr-2" /> Reject
                         </Button>
