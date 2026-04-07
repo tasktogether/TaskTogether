@@ -55,6 +55,14 @@ export default function AdminDashboard() {
     } finally {
       setIsSendingEmail(null);
     }
+  const sendRejectionEmail = async (app: any) => {
+  try {
+    await emailService.sendRejectionEmail(app.userEmail, app.userName);
+    toast.success(`📧 Rejection email sent to ${app.userName}`);
+  } catch (error) {
+    console.error('Rejection email failed:', error);
+  }
+};
   };
 
   // Handle approve with email
@@ -69,6 +77,7 @@ export default function AdminDashboard() {
 };
     const handleReject = async (app: any) => {
   await updateApplicationStatus(app.id, 'rejected');
+  await sendRejectionEmail(app);
 };
 
   const renderContent = () => {
