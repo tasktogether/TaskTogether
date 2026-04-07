@@ -14,12 +14,6 @@ import { emailService } from '../utils/emailService';
 import AdminSeniorHomesPage from './admin/AdminSeniorHomesPage';
 
 // Mock Data for other sections
-const MOCK_VOLUNTEERS = [
-  { id: 1, name: 'Alex Johnson', email: 'alex@example.com', joined: '2023-11-15', hours: 45, status: 'active', tasksCompleted: 12 },
-  { id: 2, name: 'Sam Smith', email: 'sam@example.com', joined: '2024-01-10', hours: 12, status: 'active', tasksCompleted: 3 },
-  { id: 3, name: 'Jamie Lee', email: 'jamie@example.com', joined: '2024-02-01', hours: 0, status: 'pending_training', tasksCompleted: 0 },
-];
-
 const MOCK_OPPORTUNITIES = [
   { id: 1, title: 'Grocery Run', requester: 'Mrs. Potts', date: 'Weekly', status: 'open', volunteersNeeded: 1 },
   { id: 2, title: 'Tech Help', requester: 'Senior Center', date: 'Feb 28, 10:00 AM', status: 'filled', volunteersNeeded: 0 },
@@ -86,7 +80,24 @@ const sendRejectionEmail = async (app: any) => {
   }
 };
 
+const handleApprove = async (app: any) => {
+  const confirmed = window.confirm(`Approve ${app.userName}?`);
+  if (!confirmed) return;
+
+  try {
+    await updateApplicationStatus(app.id, 'approved');
+    await sendApprovalEmail(app);
+    toast.success(`${app.userName} was approved.`);
+  } catch (error) {
+    console.error('Approve failed:', error);
+    toast.error('Failed to approve application.');
+  }
+};
+
 const handleReject = async (app: any) => {
+  const confirmed = window.confirm(`Reject ${app.userName}?`);
+  if (!confirmed) return;
+
   try {
     await updateApplicationStatus(app.id, 'rejected');
     await sendRejectionEmail(app);
@@ -329,7 +340,9 @@ const handleReject = async (app: any) => {
                 <div className="text-center">
                   <p className="text-slate-400 text-xs uppercase font-bold">Approved</p>
                   <p className="font-medium text-slate-700">
-                    {new Date(app.submittedAt).toLocaleDateString()}
+                    {app.processedAt
+  ? new Date(app.processedAt).toLocaleDateString()
+  : 'N/A'}
                   </p>
                 </div>
 
