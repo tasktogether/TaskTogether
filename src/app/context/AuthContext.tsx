@@ -239,29 +239,9 @@ const updateApplicationStatus = async (
       app.id === appId ? { ...app, status } : app
     )
   );
-};
-
-  setApplications(prev =>
-    prev.map(app =>
-      app.id === appId ? { ...app, status } : app
-    )
-  );
 
   toast.success(`Application ${status}`);
-
-  if (status === 'approved') {
-    const app = applications.find(a => a.id === appId);
-    if (app) {
-      setTimeout(() => {
-        toast.success(
-          `📧 Automated email sent to ${app.userEmail}: "Welcome to TaskTogether! Your application is approved."`,
-          { duration: 6000 }
-        );
-      }, 1000);
-    }
-  }
 };
-
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => prev ? { ...prev, ...updates } : null);
     toast.success('Profile updated successfully!');
