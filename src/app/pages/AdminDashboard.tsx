@@ -48,22 +48,33 @@ export default function AdminDashboard() {
     try {
       await emailService.sendApprovalEmail(app.userEmail, app.userName);
       toast.success(`📧 Approval email sent to ${app.userName}!`, { duration: 5000 });
-    } catch (error) {
-      console.error('Error sending approval email:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      toast.error(`Failed to send email: ${errorMessage}`, { duration: 7000 });
-    } finally {
-      setIsSendingEmail(null);
-    }
-  const sendRejectionEmail = async (app: any) => {
+    } const sendApprovalEmail = async (app: any) => {
+  setIsSendingEmail(app.id);
   try {
-    await emailService.sendRejectionEmail(app.userEmail, app.userName);
-    toast.success(`📧 Rejection email sent to ${app.userName}`);
+    await emailService.sendApprovalEmail(app.userEmail, app.userName);
+    toast.success(`📧 Approval email sent to ${app.userName}!`, { duration: 5000 });
   } catch (error) {
-    console.error('Rejection email failed:', error);
+    console.error('Error sending approval email:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    toast.error(`Failed to send email: ${errorMessage}`, { duration: 7000 });
+  } finally {
+    setIsSendingEmail(null);
   }
 };
-  };
+
+const sendRejectionEmail = async (app: any) => {
+  setIsSendingEmail(app.id);
+  try {
+    await emailService.sendRejectionEmail(app.userEmail, app.userName);
+    toast.success(`📧 Rejection email sent to ${app.userName}!`, { duration: 5000 });
+  } catch (error) {
+    console.error('Error sending rejection email:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    toast.error(`Failed to send email: ${errorMessage}`, { duration: 7000 });
+  } finally {
+    setIsSendingEmail(null);
+  }
+};
 
   // Handle approve with email
  const handleApprove = async (app: any) => {
