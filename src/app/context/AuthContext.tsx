@@ -224,28 +224,39 @@ const updateApplicationStatus = async (
   appId: string,
   status: 'pending' | 'approved' | 'rejected'
 ) => {
-  const { error } = await supabase
+  console.log('Updating application:', { appId, status, appIdType: typeof appId });
+
+  const { data, error } = await supabase
     .from('volunteer_applications')
     .update({ status })
-    .eq('id', appId);
+    .eq('id', Number(appId))
+    .select('id, status')
+    .maybeSingle();
+
+  console.log('Supabase update result:', { data, error });
 
   if (error) {
     console.error('Error updating application status:', error);
+    toast.error(`Supabase update failed: ${error.message}`);
     throw error;
+  }
+
+  if (!data) {
+    const message =
+      'No row was updated. This usually means RLS blocked the update or the id did not match.';
+    console.error(message, { appId, status });
+    toast.error(message);
+    throw new Error(message);
   }
 
   setApplications(prev =>
     prev.map(app =>
-      app.id === appId ? { ...app, status } : app
+      app.id === String(data.id) ? { ...app, status: data.status } : app
     )
   );
 
-  toast.success(`Application ${status}`);
+  toast.success(`Application ${data.status}`);
 };
-  const updateUser = (updates: Partial<User>) => {
-    setUser(prev => prev ? { ...prev, ...updates } : null);
-    toast.success('Profile updated successfully!');
-  };
 
   return (
     <AuthContext.Provider value={{ 
