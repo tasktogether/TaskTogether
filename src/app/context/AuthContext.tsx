@@ -229,7 +229,7 @@ const updateApplicationStatus = async (
   const { data, error } = await supabase
     .from('volunteer_applications')
     .update({ status })
-    .eq('id', Number(appId))
+    .eq('id', Number(appId));
     .select('id, status')
     .maybeSingle();
 
@@ -256,6 +256,10 @@ const updateApplicationStatus = async (
   );
 
   toast.success(`Application ${data.status}`);
+};
+  const updateUser = (updates: Partial<User>) => {
+  setUser(prev => (prev ? { ...prev, ...updates } : null));
+  toast.success('Profile updated successfully!');
 };
 
   return (
