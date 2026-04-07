@@ -242,7 +242,6 @@ const updateApplicationStatus = async (
   );
 
   toast.success(`Application ${status}`);
-};
 
   if (status === 'approved') {
     const app = applications.find(a => a.id === appId);
