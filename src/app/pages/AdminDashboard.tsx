@@ -42,8 +42,8 @@ export default function AdminDashboard() {
   const isPlatformAdmin = user.isPlatformAdmin === true;
 
   const pendingApps = applications.filter(app => app.status === 'pending');
-  const processedApps = applications.filter(app => app.status !== 'pending');
-  const approvedApps = applications.filter(app => app.status === 'approved');
+const approvedApps = applications.filter(app => app.status === 'approved');
+const rejectedApps = applications.filter(app => app.status === 'rejected');
 
 // Send approval email function
 const sendApprovalEmail = async (app: any) => {
