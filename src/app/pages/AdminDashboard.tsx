@@ -69,17 +69,6 @@ const sendRejectionEmail = async (app: any) => {
 };
 
   // Handle approve with email
- const handleApprove = async (app: any) => {
-  try {
-    await updateApplicationStatus(app.id, 'approved');
-    await sendApprovalEmail(app);
-    toast.success(`${app.userName} was approved.`);
-  } catch (error) {
-    console.error('Approve failed:', error);
-    toast.error('Failed to approve application.');
-  }
-};
-
 const handleApprove = async (app: any) => {
   const confirmed = window.confirm(`Approve ${app.userName}?`);
   if (!confirmed) return;
