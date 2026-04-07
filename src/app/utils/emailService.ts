@@ -23,6 +23,9 @@ export const emailService = {
       const error = await response.json();
       throw new Error(error.details || error.error || 'Failed to send approval email');
     }
+    return response.json();
+    },
+    
   async sendRejectionEmail(to: string, name: string): Promise<void> {
   const response = await fetch(`${API_BASE}/send-rejection-email`, {
     method: 'POST',
@@ -37,10 +40,7 @@ export const emailService = {
     const error = await response.json();
     throw new Error(error.details || error.error || 'Failed to send rejection email');
   }
-
-  return response.json();
-},
-
+    
     return response.json();
   },
 
