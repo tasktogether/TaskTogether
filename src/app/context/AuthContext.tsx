@@ -224,34 +224,36 @@ const updateApplicationStatus = async (
   appId: string,
   status: 'pending' | 'approved' | 'rejected'
 ) => {
-  console.log('Updating application:', { appId, status, appIdType: typeof appId });
+  const now = new Date().toISOString();
 
   const { data, error } = await supabase
-  .from('volunteer_applications')
-  .update({ status })
-  .eq('id', Number(appId))
-  .select('id, status')
-  .maybeSingle();
-
-  console.log('Supabase update result:', { data, error });
+    .from('volunteer_applications')
+    .update({
+      status,
+      processed_at: status === 'pending' ? null : now,
+    })
+    .eq('id', Number(appId))
+    .select('id, status, processed_at')
+    .maybeSingle();
 
   if (error) {
     console.error('Error updating application status:', error);
-    toast.error(`Supabase update failed: ${error.message}`);
     throw error;
   }
 
   if (!data) {
-    const message =
-      'No row was updated. This usually means RLS blocked the update or the id did not match.';
-    console.error(message, { appId, status });
-    toast.error(message);
-    throw new Error(message);
+    throw new Error('No application was updated.');
   }
 
   setApplications(prev =>
     prev.map(app =>
-      app.id === String(data.id) ? { ...app, status: data.status } : app
+      app.id === String(data.id)
+        ? {
+            ...app,
+            status: data.status,
+            processedAt: data.processed_at ? new Date(data.processed_at) : undefined,
+          }
+        : app
     )
   );
 
