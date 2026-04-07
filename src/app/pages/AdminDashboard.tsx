@@ -41,6 +41,7 @@ export default function AdminDashboard() {
 
   const pendingApps = applications.filter(app => app.status === 'pending');
   const processedApps = applications.filter(app => app.status !== 'pending');
+  const approvedApps = applications.filter(app => app.status === 'approved');
 
 // Send approval email function
 const sendApprovalEmail = async (app: any) => {
@@ -73,13 +74,25 @@ const sendRejectionEmail = async (app: any) => {
 
   // Handle approve with email
  const handleApprove = async (app: any) => {
-  await updateApplicationStatus(app.id, 'approved');
-  await sendApprovalEmail(app);
+  try {
+    await updateApplicationStatus(app.id, 'approved');
+    await sendApprovalEmail(app);
+    toast.success(`${app.userName} was approved.`);
+  } catch (error) {
+    console.error('Approve failed:', error);
+    toast.error('Failed to approve application.');
+  }
 };
 
 const handleReject = async (app: any) => {
-  await updateApplicationStatus(app.id, 'rejected');
-  await sendRejectionEmail(app);
+  try {
+    await updateApplicationStatus(app.id, 'rejected');
+    await sendRejectionEmail(app);
+    toast.success(`${app.userName} was rejected.`);
+  } catch (error) {
+    console.error('Reject failed:', error);
+    toast.error('Failed to reject application.');
+  }
 };
 
   const renderContent = () => {
@@ -99,7 +112,7 @@ const handleReject = async (app: any) => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-slate-500">Total Volunteers</p>
-                      <p className="text-2xl font-bold text-slate-800">{MOCK_VOLUNTEERS.length}</p>
+                      <p className="text-2xl font-bold text-slate-800">{approvedApps.length}</p>
                     </div>
                   </div>
                 </Card>
@@ -272,52 +285,67 @@ const handleReject = async (app: any) => {
           </div>
         );
 
-      case 'volunteers':
-        return (
-          <div className="space-y-6">
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="text-2xl font-bold font-poppins text-slate-800">Volunteers</h1>
-              <div className="flex gap-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
-                  <input type="text" placeholder="Search volunteers..." className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 w-64" />
-                </div>
-                <Button className="gap-2"><Users size={16}/> Add Volunteer</Button>
-              </div>
-            </div>
-
-            <div className="grid gap-4">
-              {MOCK_VOLUNTEERS.map(vol => (
-                <div key={vol.id} className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-gradient-to-br from-violet-400 to-fuchsia-400 rounded-full flex items-center justify-center text-white font-bold">
-                      {vol.name.charAt(0)}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-slate-800">{vol.name}</h3>
-                      <p className="text-sm text-slate-500">{vol.email}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-8 text-sm">
-                    <div className="text-center">
-                      <p className="text-slate-400 text-xs uppercase font-bold">Joined</p>
-                      <p className="font-medium text-slate-700">{vol.joined}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-slate-400 text-xs uppercase font-bold">Hours</p>
-                      <p className="font-medium text-slate-700">{vol.hours}</p>
-                    </div>
-                    <div className="text-center">
-                      <p className="text-slate-400 text-xs uppercase font-bold">Status</p>
-                      <span className={`inline-block w-2 h-2 rounded-full ${vol.status === 'active' ? 'bg-green-500' : 'bg-yellow-500'}`} />
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="icon"><Settings size={16} className="text-slate-400" /></Button>
-                </div>
-              ))}
-            </div>
+     case 'volunteers':
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold font-poppins text-slate-800">Volunteers</h1>
+        <div className="flex gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+            <input
+              type="text"
+              placeholder="Search volunteers..."
+              className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 w-64"
+            />
           </div>
-        );
+        </div>
+      </div>
+
+      {approvedApps.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
+          <p className="text-slate-500">No approved volunteers yet.</p>
+        </div>
+      ) : (
+        <div className="grid gap-4">
+          {approvedApps.map(app => (
+            <div
+              key={app.id}
+              className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-violet-400 to-fuchsia-400 rounded-full flex items-center justify-center text-white font-bold">
+                  {app.userName?.charAt(0) || 'V'}
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800">{app.userName}</h3>
+                  <p className="text-sm text-slate-500">{app.userEmail}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-8 text-sm">
+                <div className="text-center">
+                  <p className="text-slate-400 text-xs uppercase font-bold">Approved</p>
+                  <p className="font-medium text-slate-700">
+                    {new Date(app.submittedAt).toLocaleDateString()}
+                  </p>
+                </div>
+
+                <div className="text-center">
+                  <p className="text-slate-400 text-xs uppercase font-bold">Status</p>
+                  <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+                </div>
+              </div>
+
+              <Button variant="ghost" size="icon">
+                <Settings size={16} className="text-slate-400" />
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
       case 'opportunities':
         return (
