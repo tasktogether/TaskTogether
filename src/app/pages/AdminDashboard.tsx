@@ -28,7 +28,9 @@ const MOCK_OPPORTUNITIES = [
 
 export default function AdminDashboard() {
   const { user, applications, updateApplicationStatus, logout } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
+  const [activeTab, setActiveTab] = useState<
+  'overview' | 'applications' | 'volunteers' | 'opportunities' | 'senior_homes'
+>('applications');
   const [selectedApplication, setSelectedApplication] = useState<number | null>(null);
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
 
