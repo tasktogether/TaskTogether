@@ -221,11 +221,26 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
     toast.info('Logged out');
   };
 
-  const updateApplicationStatus = (appId: string, status: ApplicationStatus) => {
-    setApplications(prev => prev.map(app => 
+ const updateApplicationStatus = async (appId: string, status: ApplicationStatus) => {
+  const { error } = await supabase
+    .from('applications')
+    .update({ status })
+    .eq('id', appId);
+
+  if (error) {
+    console.error('Error updating application status:', error);
+    toast.error('Failed to update application status');
+    return;
+  }
+
+  setApplications(prev =>
+    prev.map(app =>
       app.id === appId ? { ...app, status } : app
-    ));
-    toast.success(`Application ${status}`);
+    )
+  );
+
+  toast.success(`Application ${status}`);
+};
     
     // Simulate Email Confirmation Flow
     if (status === 'approved') {
