@@ -250,7 +250,7 @@ const handleReject = async (app: any) => {
             </div>
 
             <div className="mt-12">
-              <h2 className="text-lg font-bold text-slate-700 mb-4">History</h2>
+              <h2 className="text-lg font-bold text-slate-700 mb-4">Rejected Applications</h2>
               <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
                 <table className="w-full text-sm text-left">
                   <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-medium">
@@ -262,7 +262,7 @@ const handleReject = async (app: any) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {processedApps.map(app => (
+                   {rejectedApps.map(app => (
                       <tr key={app.id} className="hover:bg-slate-50/50">
                         <td className="px-6 py-4 font-medium text-slate-800">{app.userName}</td>
                         <td className="px-6 py-4">
