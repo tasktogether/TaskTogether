@@ -42,13 +42,8 @@ export default function AdminDashboard() {
   const pendingApps = applications.filter(app => app.status === 'pending');
   const processedApps = applications.filter(app => app.status !== 'pending');
 
-  // Send approval email function
-  const sendApprovalEmail = async (app: any) => {
-    setIsSendingEmail(app.id);
-    try {
-      await emailService.sendApprovalEmail(app.userEmail, app.userName);
-      toast.success(`📧 Approval email sent to ${app.userName}!`, { duration: 5000 });
-    } const sendApprovalEmail = async (app: any) => {
+// Send approval email function
+const sendApprovalEmail = async (app: any) => {
   setIsSendingEmail(app.id);
   try {
     await emailService.sendApprovalEmail(app.userEmail, app.userName);
@@ -79,15 +74,10 @@ const sendRejectionEmail = async (app: any) => {
   // Handle approve with email
  const handleApprove = async (app: any) => {
   await updateApplicationStatus(app.id, 'approved');
-
-  try {
-    await sendApprovalEmail(app);
-  } catch (error) {
-    console.error('Approval email failed:', error);
-  }
+  await sendApprovalEmail(app);
 };
-   const handleReject = async (app: any) => {
-  console.log('Reject clicked for:', app.userEmail);
+
+const handleReject = async (app: any) => {
   await updateApplicationStatus(app.id, 'rejected');
   await sendRejectionEmail(app);
 };
