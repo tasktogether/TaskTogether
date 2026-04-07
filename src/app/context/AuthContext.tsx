@@ -222,8 +222,8 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
   };
 const updateApplicationStatus = async (
   appId: string,
-  status: ApplicationStatus
-): Promise<void> => {
+  status: 'pending' | 'approved' | 'rejected'
+) => {
   const { error } = await supabase
     .from('volunteer_applications')
     .update({ status })
@@ -231,9 +231,15 @@ const updateApplicationStatus = async (
 
   if (error) {
     console.error('Error updating application status:', error);
-    toast.error('Failed to update application status');
-    return;
+    throw error;
   }
+
+  setApplications(prev =>
+    prev.map(app =>
+      app.id === appId ? { ...app, status } : app
+    )
+  );
+};
 
   setApplications(prev =>
     prev.map(app =>
