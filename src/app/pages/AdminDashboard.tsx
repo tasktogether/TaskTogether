@@ -58,10 +58,15 @@ export default function AdminDashboard() {
   };
 
   // Handle approve with email
-  const handleApprove = async (app: any) => {
+ const handleApprove = async (app: any) => {
   await updateApplicationStatus(app.id, 'approved');
-  await sendApprovalEmail(app);
-};  
+
+  try {
+    await sendApprovalEmail(app);
+  } catch (error) {
+    console.error('Approval email failed:', error);
+  }
+};
     const handleReject = async (app: any) => {
   await updateApplicationStatus(app.id, 'rejected');
 };
