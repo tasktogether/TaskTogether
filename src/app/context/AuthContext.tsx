@@ -145,11 +145,11 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
   userName: app.full_name,
   userEmail: app.email,
   videoUrl: app.video_url,
-  age: app.age,   // ← ADD THIS LINE
+  age: app.age,
   status: app.status,
   submittedAt: new Date(app.created_at),
+  processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
 }));
-
     setApplications(mappedApplications);
   };
 
