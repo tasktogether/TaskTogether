@@ -158,7 +158,7 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
 
     const interval = setInterval(() => {
       fetchApplications();
-    }, 3000);
+    }, 10000);
 
     return () => clearInterval(interval);
   }, []);
