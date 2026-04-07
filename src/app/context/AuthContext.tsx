@@ -227,11 +227,11 @@ const updateApplicationStatus = async (
   console.log('Updating application:', { appId, status, appIdType: typeof appId });
 
   const { data, error } = await supabase
-    .from('volunteer_applications')
-    .update({ status })
-    .eq('id', Number(appId));
-    .select('id, status')
-    .maybeSingle();
+  .from('volunteer_applications')
+  .update({ status })
+  .eq('id', Number(appId))
+  .select('id, status')
+  .maybeSingle();
 
   console.log('Supabase update result:', { data, error });
 
