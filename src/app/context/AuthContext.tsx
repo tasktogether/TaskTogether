@@ -220,8 +220,10 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
     setUser(null);
     toast.info('Logged out');
   };
-
- const updateApplicationStatus = async (appId: string, status: ApplicationStatus) => {
+const updateApplicationStatus = async (
+  appId: string,
+  status: ApplicationStatus
+): Promise<void> => {
   const { error } = await supabase
     .from('volunteer_applications')
     .update({ status })
@@ -240,6 +242,7 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
   );
 
   toast.success(`Application ${status}`);
+};
 
   if (status === 'approved') {
     const app = applications.find(a => a.id === appId);
