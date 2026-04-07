@@ -48,11 +48,11 @@ export interface Application {
   userName: string;
   userEmail: string;
   videoUrl?: string;
-  age?: number;   // ← ADD THIS LINE
+  age?: number;
   status: ApplicationStatus;
   submittedAt: Date;
+  processedAt?: Date;
 }
-
 interface AuthContextType {
   user: User | null;
   login: (email: string, role: UserRole) => void;
