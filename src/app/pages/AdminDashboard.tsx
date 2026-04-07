@@ -75,7 +75,8 @@ export default function AdminDashboard() {
     console.error('Approval email failed:', error);
   }
 };
-    const handleReject = async (app: any) => {
+   const handleReject = async (app: any) => {
+  console.log('Reject clicked for:', app.userEmail);
   await updateApplicationStatus(app.id, 'rejected');
   await sendRejectionEmail(app);
 };
