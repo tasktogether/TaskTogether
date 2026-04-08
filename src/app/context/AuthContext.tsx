@@ -438,18 +438,18 @@ const updateApplicationStatus = async (
 
   return (
     <AuthContext.Provider value={{ 
-      user, 
-      login, 
-      logout, 
-      register, 
-      updateUser,
-      applications, 
-      updateApplicationStatus,
-      opportunities: MOCK_OPPORTUNITIES,
-      authLoading
-    }}>
-      {children}
-    </AuthContext.Provider>
+  user, 
+  login, 
+  logout, 
+  register, 
+  updateUser,
+  applications, 
+  updateApplicationStatus,
+  opportunities: MOCK_OPPORTUNITIES,
+  authLoading
+}}>
+  {children}
+</AuthContext.Provider>
   );
 };
 
