@@ -116,8 +116,20 @@ export default function VolunteerDashboard() {
   ]);
 
   if (!user || user.role !== 'volunteer') {
-    return <Navigate to="/login" replace />;
-  }
+  return <Navigate to="/login" replace />;
+}
+
+if (user.status === 'pending') {
+  ...
+}
+
+if (user.status === 'rejected') {
+  ...
+}
+
+if (user.status === 'not_found') {
+  ...
+}
 
   const handleAddNote = () => {
     if (!noteContent.trim()) return;
