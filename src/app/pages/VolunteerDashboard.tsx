@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { emailService } from '../utils/emailService';
 import { VolunteerSchedulingCalendar } from '../components/VolunteerSchedulingCalendar';
+import { useEffect, useState } from 'react';
+import { useNavigate, Navigate } from 'react-router';
 
 interface Task {
   id: number;
@@ -19,6 +21,11 @@ export default function VolunteerDashboard() {
   const { user, logout, updateUser } = useAuth();
   const { submitStory } = useStories();
   const navigate = useNavigate();
+  useEffect(() => {
+  if (user?.role === 'volunteer' && user.status === 'approved') {
+    navigate('/dashboard', { replace: true });
+  }
+}, [user?.status, user?.role, navigate]);
 
   // State for Modals
   const [isProfileOpen, setIsProfileOpen] = useState(false);
