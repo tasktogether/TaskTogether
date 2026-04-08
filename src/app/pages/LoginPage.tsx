@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError('');
 
@@ -31,11 +31,8 @@ export default function LoginPage() {
     return;
   }
 
-  if (result.status === 'approved') {
-    navigate('/dashboard');
-  } else {
-    navigate('/volunteer-status');
-  }
+  // Always go to dashboard
+  navigate('/dashboard');
 };
 
   return (
