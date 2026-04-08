@@ -370,11 +370,11 @@ setAuthLoading(false);
     fetchApplications();
     toast.success('Application submitted successfully!');
   };
-
-  const logout = () => {
-    setUser(null);
-    toast.info('Logged out');
-  };
+const logout = () => {
+  setUser(null);
+  toast.info('Logged out');
+  window.location.href = '/login';
+};
 
 const updateApplicationStatus = async (
   appId: string,
