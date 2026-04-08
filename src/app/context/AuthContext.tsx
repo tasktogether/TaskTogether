@@ -445,7 +445,7 @@ const updateApplicationStatus = async (
       updateUser,
       applications, 
       updateApplicationStatus,
-      opportunities: MOCK_OPPORTUNITIES
+      opportunities: MOCK_OPPORTUNITIES,
       authLoading
     }}>
       {children}
