@@ -296,19 +296,6 @@ const refreshVolunteerStatus = async (email: string) => {
   };
 };
       // Check if user exists in applications to determine status
-      const existingApp = applications.find(app => app.userEmail === email);
-      
-      setUser({
-        id: existingApp ? existingApp.userId : 'user-' + Date.now(),
-        name: existingApp ? existingApp.userName : 'New Volunteer',
-        email,
-        role: 'volunteer',
-        status: existingApp ? existingApp.status : 'pending',
-      });
-      toast.success(`Welcome back! Status: ${existingApp ? existingApp.status : 'Pending'}`);
-    }
-  };
-
   const register = (name: string, email: string) => {
     const newApp: Application = {
       id: `app-${Date.now()}`,
