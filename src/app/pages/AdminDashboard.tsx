@@ -69,19 +69,31 @@ const sendRejectionEmail = async (app: any) => {
 };
 
   // Handle approve with email
-const handleApprove = async (app: any) => {
-  const confirmed = window.confirm(`Approve ${app.userName}?`);
-  if (!confirmed) return;
-
+const handleApprove = async (application: any) => {
   try {
-    await updateApplicationStatus(app.id, 'approved');
-    await sendApprovalEmail(app);
-    toast.success(`${app.userName} was approved.`);
-  } catch (error) {
-    console.error('Approve failed:', error);
-    toast.error('Failed to approve application.');
+    const response = await fetch('/api/approveVolunteer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        applicationId: application.id,
+        email: application.userEmail,
+        fullName: application.userName
+      })
+    })
+
+    const result = await response.json()
+
+    if (!response.ok) {
+      throw new Error(result.error || 'Failed to approve volunteer')
+    }
+
+    // optional: refresh your list here
+    await fetchApplications()
+  } catch (error: any) {
+    console.error(error)
+    alert(error.message)
   }
-};
+}
 
 const handleReject = async (app: any) => {
   const confirmed = window.confirm(`Reject ${app.userName}?`);
