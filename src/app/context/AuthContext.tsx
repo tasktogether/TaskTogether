@@ -1,6 +1,7 @@
 import { supabase } from '../../lib/supabase';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 // Types
 export type UserRole = 'volunteer' | 'admin' | 'platform_admin' | null;
@@ -162,6 +163,61 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
 
   useEffect(() => {
   fetchApplications();
+  
+  useEffect(() => {
+  if (!user?.email || user.role !== 'volunteer') return;
+
+  const channel = supabase
+    .channel('volunteer-status-updates')
+    .on(
+      'postgres_changes',
+      {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'volunteer_applications',
+      },
+      (payload) => {
+        const updated = payload.new as {
+          id: number;
+          email: string;
+          status: ApplicationStatus;
+        };
+
+        if (updated.email !== user.email) return;
+
+        setUser(prev =>
+          prev
+            ? {
+                ...prev,
+                id: String(updated.id),
+                status: updated.status,
+              }
+            : prev
+        );
+
+        setApplications(prev =>
+          prev.map(app =>
+            app.id === String(updated.id)
+              ? { ...app, status: updated.status }
+              : app
+          )
+        );
+
+        if (updated.status === 'approved') {
+          toast.success('Your application has been approved!');
+        }
+
+        if (updated.status === 'rejected') {
+          toast.error('Your application was not approved at this time.');
+        }
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}, [user?.email, user?.role]);
 
   const interval = setInterval(() => {
     fetchApplications();
