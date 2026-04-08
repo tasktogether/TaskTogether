@@ -1,7 +1,6 @@
 import { supabase } from '../../lib/supabase';
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router';
 
 // Types
 export type UserRole = 'volunteer' | 'admin' | 'platform_admin' | null;
@@ -165,8 +164,15 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
 
   useEffect(() => {
   fetchApplications();
-  
-  useEffect(() => {
+
+  const interval = setInterval(() => {
+    fetchApplications();
+  }, 10000);
+
+  return () => clearInterval(interval);
+}, []);
+
+useEffect(() => {
   if (!user?.email || user.role !== 'volunteer') return;
 
   const channel = supabase
@@ -220,20 +226,6 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
     supabase.removeChannel(channel);
   };
 }, [user?.email, user?.role]);
-
-  const interval = setInterval(() => {
-    fetchApplications();
-
-    setUser(currentUser => {
-      if (currentUser?.role === 'volunteer' && currentUser.email) {
-        refreshVolunteerStatus(currentUser.email);
-      }
-      return currentUser;
-    });
-  }, 10000);
-
-  return () => clearInterval(interval);
-}, []);
 const refreshVolunteerStatus = async (email: string) => {
   const { data, error } = await supabase
     .from('volunteer_applications')
