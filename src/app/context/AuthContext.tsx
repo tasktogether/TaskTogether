@@ -71,6 +71,7 @@ interface AuthContextType {
   applications: Application[];
   updateApplicationStatus: (appId: string, status: ApplicationStatus) => Promise<void>;
   opportunities: Opportunity[];
+  authLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -136,6 +137,7 @@ const MOCK_OPPORTUNITIES: Opportunity[] = [
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
+  const [authLoading, setAuthLoading] = useState(false);
 
   const fetchApplications = async () => {
     const { data, error } = await supabase
@@ -441,7 +443,8 @@ const updateApplicationStatus = async (
       updateUser,
       applications, 
       updateApplicationStatus,
-      opportunities: MOCK_OPPORTUNITIES 
+      opportunities: MOCK_OPPORTUNITIES
+      authLoading
     }}>
       {children}
     </AuthContext.Provider>
