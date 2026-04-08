@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { emailService } from '../utils/emailService';
 import { VolunteerSchedulingCalendar } from '../components/VolunteerSchedulingCalendar';
 import { useEffect, useState } from 'react';
-import { useNavigate, Navigate } from 'react-router';
+import { Navigate } from 'react-router';
 
 interface Task {
   id: number;
@@ -20,12 +20,6 @@ interface Task {
 export default function VolunteerDashboard() {
   const { user, logout, updateUser, authLoading } = useAuth();
   const { submitStory } = useStories();
-  const navigate = useNavigate();
-  useEffect(() => {
-  if (user?.role === 'volunteer' && user.status === 'approved') {
-    navigate('/dashboard', { replace: true });
-  }
-}, [user?.status, user?.role, navigate]);
 
   // State for Modals
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -291,7 +285,7 @@ if (user.status === 'not_found') {
 
             <div className="flex gap-3 mt-6">
               <Button
-                onClick={() => navigate('/opportunities')}
+                onClick={() => window.location.href = '/opportunities'}
                 className="bg-white text-violet-600 hover:bg-violet-50 font-bold rounded-full px-6 shadow-md border-none"
               >
                 Find New Tasks 🔎
