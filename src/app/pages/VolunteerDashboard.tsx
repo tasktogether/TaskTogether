@@ -18,7 +18,7 @@ interface Task {
 }
 
 export default function VolunteerDashboard() {
-  const { user, logout, updateUser } = useAuth();
+  const { user, logout, updateUser, authLoading } = useAuth();
   const { submitStory } = useStories();
   const navigate = useNavigate();
   useEffect(() => {
