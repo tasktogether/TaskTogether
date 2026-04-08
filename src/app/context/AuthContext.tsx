@@ -273,6 +273,7 @@ const refreshVolunteerStatus = async (email: string) => {
   );
 };  
   const login = async (email: string, role: UserRole) => {
+  setAuthLoading(true);
   if (role === 'admin') {
     const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
 
@@ -285,7 +286,7 @@ const refreshVolunteerStatus = async (email: string) => {
     });
 
     toast.success(`Logged in as ${isPlatformAdmin ? 'Platform' : 'Senior Home'} Admin`);
-
+setAuthLoading(false);
     return {
       success: true,
     };
@@ -303,6 +304,7 @@ const refreshVolunteerStatus = async (email: string) => {
     if (error) {
       console.error('Error checking volunteer status:', error);
       toast.error('Could not check application status');
+      setAuthLoading(false);
       return {
         success: false,
         message: 'Could not check application status',
@@ -319,7 +321,7 @@ const refreshVolunteerStatus = async (email: string) => {
       });
 
       toast.error('No application found for that email');
-
+      setAuthLoading(false);
       return {
         success: true,
         status: 'not_found',
@@ -341,13 +343,13 @@ const refreshVolunteerStatus = async (email: string) => {
     } else {
       toast.success('Your application is under review.');
     }
-
+    setAuthLoading(false);
     return {
       success: true,
       status: data.status,
     };
   }
-
+  setAuthLoading(false);
   return {
     success: false,
     message: 'Invalid role selected',
