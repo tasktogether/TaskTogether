@@ -406,7 +406,7 @@ const updateApplicationStatus = async (
   }
 
   setApplications(prev =>
-    prev.map(app =>
+  prev.map(app =>
       app.id === String(data.id)
         ? {
             ...app,
