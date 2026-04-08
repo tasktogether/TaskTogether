@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 
 // Types
 export type UserRole = 'volunteer' | 'admin' | 'platform_admin' | null;
-export type ApplicationStatus = 'pending' | 'approved' | 'rejected';
+export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'not_found';
 
 export interface User {
   id: string;
@@ -55,7 +55,14 @@ export interface Application {
 }
 interface AuthContextType {
   user: User | null;
-  login: (email: string, role: UserRole) => void;
+  login: (
+  email: string,
+  role: UserRole
+) => Promise<{
+  success: boolean;
+  status?: ApplicationStatus;
+  message?: string;
+}>;
   logout: () => void;
   register: (name: string, email: string) => void;
   updateUser: (updates: Partial<User>) => void;
@@ -154,31 +161,140 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
   };
 
   useEffect(() => {
+  fetchApplications();
+
+  const interval = setInterval(() => {
     fetchApplications();
 
-    const interval = setInterval(() => {
-      fetchApplications();
-    }, 10000);
+    setUser(currentUser => {
+      if (currentUser?.role === 'volunteer' && currentUser.email) {
+        refreshVolunteerStatus(currentUser.email);
+      }
+      return currentUser;
+    });
+  }, 10000);
 
-    return () => clearInterval(interval);
-  }, []);
-  
-  const login = (email: string, role: UserRole) => {
-    // Simulated login logic
-    if (role === 'admin') {
-      // Check if this is the platform creator/admin (hardcoded for demo)
-      // In production, this would be checked against a database
-      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
-      
+  return () => clearInterval(interval);
+}, []);
+const refreshVolunteerStatus = async (email: string) => {
+  const { data, error } = await supabase
+    .from('volunteer_applications')
+    .select('id, full_name, email, status, created_at')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error refreshing volunteer status:', error);
+    return;
+  }
+
+  if (!data) {
+    setUser(prev =>
+      prev
+        ? {
+            ...prev,
+            status: 'not_found',
+          }
+        : null
+    );
+    return;
+  }
+
+  setUser(prev =>
+    prev
+      ? {
+          ...prev,
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          status: data.status,
+        }
+      : null
+  );
+};  
+  const login = async (email: string, role: UserRole) => {
+  if (role === 'admin') {
+    const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
+
+    setUser({
+      id: 'admin-1',
+      name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
+      email,
+      role: 'admin',
+      isPlatformAdmin,
+    });
+
+    toast.success(`Logged in as ${isPlatformAdmin ? 'Platform' : 'Senior Home'} Admin`);
+
+    return {
+      success: true,
+    };
+  }
+
+  if (role === 'volunteer') {
+    const { data, error } = await supabase
+      .from('volunteer_applications')
+      .select('id, full_name, email, status, created_at')
+      .eq('email', email)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Error checking volunteer status:', error);
+      toast.error('Could not check application status');
+      return {
+        success: false,
+        message: 'Could not check application status',
+      };
+    }
+
+    if (!data) {
       setUser({
-        id: 'admin-1',
-        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
+        id: 'not-found-' + Date.now(),
+        name: 'Volunteer',
         email,
-        role: 'admin',
-        isPlatformAdmin,
+        role: 'volunteer',
+        status: 'not_found',
       });
-      toast.success(`Logged in as ${isPlatformAdmin ? 'Platform' : 'Senior Home'} Admin`);
+
+      toast.error('No application found for that email');
+
+      return {
+        success: true,
+        status: 'not_found',
+      };
+    }
+
+    setUser({
+      id: String(data.id),
+      name: data.full_name,
+      email: data.email,
+      role: 'volunteer',
+      status: data.status,
+    });
+
+    if (data.status === 'approved') {
+      toast.success('Your application has been approved!');
+    } else if (data.status === 'rejected') {
+      toast.error('Your application was not approved at this time.');
     } else {
+      toast.success('Your application is under review.');
+    }
+
+    return {
+      success: true,
+      status: data.status,
+    };
+  }
+
+  return {
+    success: false,
+    message: 'Invalid role selected',
+  };
+};
       // Check if user exists in applications to determine status
       const existingApp = applications.find(app => app.userEmail === email);
       
@@ -220,6 +336,7 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
     setUser(null);
     toast.info('Logged out');
   };
+
 const updateApplicationStatus = async (
   appId: string,
   status: 'pending' | 'approved' | 'rejected'
@@ -256,6 +373,14 @@ const updateApplicationStatus = async (
         : app
     )
   );
+  setUser(prev =>
+  prev && prev.role === 'volunteer' && prev.id === String(data.id)
+    ? {
+        ...prev,
+        status: data.status,
+      }
+    : prev
+);
 
   toast.success(`Application ${data.status}`);
 };
