@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router';
 import { Heart, Eye, EyeOff, LogIn, AlertCircle } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
-  const { loginVolunteer } = useApp();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
@@ -12,23 +12,31 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    if (!form.email || !form.password) {
-      setError('Please fill in all fields.');
-      return;
-    }
-    setIsLoading(true);
-    // Simulate short delay
-    await new Promise(r => setTimeout(r, 600));
-    const result = loginVolunteer(form.email, form.password);
-    setIsLoading(false);
-    if (result.success) {
-      navigate('/dashboard');
-    } else {
-      setError(result.message);
-    }
-  };
+  e.preventDefault();
+  setError('');
+
+  if (!form.email || !form.password) {
+    setError('Please fill in all fields.');
+    return;
+  }
+
+  setIsLoading(true);
+
+  const result = await login(form.email, 'volunteer');
+
+  setIsLoading(false);
+
+  if (!result.success) {
+    setError(result.message || 'Login failed');
+    return;
+  }
+
+  if (result.status === 'approved') {
+    navigate('/dashboard');
+  } else {
+    navigate('/volunteer-status');
+  }
+};
 
   return (
     <div style={{
