@@ -136,7 +136,7 @@ const MOCK_OPPORTUNITIES: Opportunity[] = [
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
-  const [authLoading, setAuthLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
 
   const fetchApplications = async () => {
     const { data, error } = await supabase
@@ -370,7 +370,8 @@ setAuthLoading(false);
     fetchApplications();
     toast.success('Application submitted successfully!');
   };
-const logout = () => {
+const logout = async () => {
+  await supabase.auth.signOut();
   setUser(null);
   toast.info('Logged out');
   window.location.href = '/login';
