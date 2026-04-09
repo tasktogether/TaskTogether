@@ -20,6 +20,7 @@ import { AuthProvider } from './context/AuthContext';
 import { StoriesProvider } from './context/StoriesContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AppProvider } from './context/AppContext';
+import SetPassword from './pages/SetPassword';
 
 // Helper for scroll to top on route change
 function ScrollToTopHelper() {
@@ -54,6 +55,7 @@ export default function App() {
                 <Route path="/safety-guidelines" element={<SafetyGuidelines />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
+                <Route path="/set-password" element={<SetPassword />} />
               </Routes>
               <Toaster position="top-center" richColors />
             </StoriesProvider>
