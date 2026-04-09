@@ -260,6 +260,7 @@ useEffect(() => {
     subscription.unsubscribe();
   };
 }, []);
+useEffect(() => {
   fetchApplications();
 
   const interval = setInterval(() => {
