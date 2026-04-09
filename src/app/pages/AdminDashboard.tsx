@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
 import { 
   Users, FileText, Briefcase, Check, X, Eye, LogOut, 
   MessageCircle, PlayCircle, Filter, Download, Search, 
