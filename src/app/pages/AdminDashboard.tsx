@@ -77,20 +77,8 @@ const handleApprove = async (app: any) => {
 
   try {
     await updateApplicationStatus(app.id, 'approved');
-
-    const { error } = await supabase.auth.signInWithOtp({
-      email: app.userEmail,
-      options: {
-        shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/set-password`,
-      },
-    });
-
-    if (error) {
-      throw error;
-    }
-
-    toast.success(`${app.userName} was approved and sent a password setup email.`);
+    await sendApprovalEmail(app);
+    toast.success(`${app.userName} was approved.`);
   } catch (error: any) {
     console.error('Approve failed:', error);
     toast.error(error.message || 'Failed to approve application.');
