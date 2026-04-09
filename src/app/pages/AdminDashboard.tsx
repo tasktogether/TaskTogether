@@ -11,6 +11,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import AdminSeniorHomesPage from './admin/AdminSeniorHomesPage';
+import { supabase } from '../lib/supabase';
 
 // Mock Data for other sections
 const MOCK_OPPORTUNITIES = [
