@@ -12,6 +12,7 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import AdminSeniorHomesPage from './admin/AdminSeniorHomesPage';
+import { emailService } from '../utils/emailService';
 
 // Mock Data for other sections
 const MOCK_OPPORTUNITIES = [
@@ -77,7 +78,7 @@ const handleApprove = async (app: any) => {
 
   try {
     await updateApplicationStatus(app.id, 'approved');
-    await sendApprovalEmail(app);
+    await emailService.sendApprovalEmail(app.userEmail, app.userName);
     toast.success(`${app.userName} was approved.`);
   } catch (error: any) {
     console.error('Approve failed:', error);
