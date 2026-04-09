@@ -97,28 +97,7 @@ const handleApprove = async (app: any) => {
     setIsSendingEmail(null);
   }
 };
-    const response = await fetch('/api/approveVolunteer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        applicationId: application.id,
-        email: application.userEmail,
-        fullName: application.userName
-      })
-    })
 
-    const result = await response.json()
-
-    if (!response.ok) {
-      throw new Error(result.error || 'Failed to approve volunteer')
-    }
-
-    // optional: refresh your list here
-  } catch (error: any) {
-    console.error(error)
-    alert(error.message)
-  }
-}
 const handleReject = async (app: any) => {
   const confirmed = window.confirm(`Reject ${app.userName}?`);
   if (!confirmed) return;
