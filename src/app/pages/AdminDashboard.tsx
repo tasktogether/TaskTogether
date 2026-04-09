@@ -10,7 +10,6 @@ import { Card } from '../components/ui/Card';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
-import { emailService } from '../utils/emailService';
 import AdminSeniorHomesPage from './admin/AdminSeniorHomesPage';
 
 // Mock Data for other sections
@@ -69,8 +68,35 @@ const sendRejectionEmail = async (app: any) => {
 };
 
   // Handle approve with email
-const handleApprove = async (application: any) => {
+const handleApprove = async (app: any) => {
+  const confirmed = window.confirm(`Approve ${app.userName}?`);
+  if (!confirmed) return;
+
+  setIsSendingEmail(app.id);
+
   try {
+    await updateApplicationStatus(app.id, 'approved');
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: app.userEmail,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/set-password`,
+      },
+    });
+
+    if (error) {
+      throw error;
+    }
+
+    toast.success(`${app.userName} was approved and sent a password setup email.`);
+  } catch (error: any) {
+    console.error('Approve failed:', error);
+    toast.error(error.message || 'Failed to approve application.');
+  } finally {
+    setIsSendingEmail(null);
+  }
+};
     const response = await fetch('/api/approveVolunteer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -88,24 +114,25 @@ const handleApprove = async (application: any) => {
     }
 
     // optional: refresh your list here
-    await fetchApplications()
   } catch (error: any) {
     console.error(error)
     alert(error.message)
   }
 }
-
 const handleReject = async (app: any) => {
   const confirmed = window.confirm(`Reject ${app.userName}?`);
   if (!confirmed) return;
 
+  setIsSendingEmail(app.id);
+
   try {
     await updateApplicationStatus(app.id, 'rejected');
-    await sendRejectionEmail(app);
     toast.success(`${app.userName} was rejected.`);
   } catch (error) {
     console.error('Reject failed:', error);
     toast.error('Failed to reject application.');
+  } finally {
+    setIsSendingEmail(null);
   }
 };
 
