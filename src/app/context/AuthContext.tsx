@@ -161,8 +161,105 @@ const mappedApplications: Application[] = (data || []).map((app: any) => ({
 }));
     setApplications(mappedApplications);
   };
+useEffect(() => {
+  let mounted = true;
 
-  useEffect(() => {
+  const loadSession = async () => {
+    setAuthLoading(true);
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error('Error getting session:', error);
+    }
+
+    if (!mounted) return;
+
+    if (session?.user) {
+      const email = session.user.email || '';
+
+      const { data, error: appError } = await supabase
+        .from('volunteer_applications')
+        .select('id, full_name, email, status')
+        .eq('email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (appError) {
+        console.error('Error loading volunteer after refresh:', appError);
+      }
+
+      if (data) {
+        setUser({
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          role: 'volunteer',
+          status: data.status,
+        });
+      } else {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || 'Volunteer',
+          email,
+          role: 'volunteer',
+        });
+      }
+    } else {
+      setUser(null);
+    }
+
+    setAuthLoading(false);
+  };
+
+  loadSession();
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    if (session?.user) {
+      const email = session.user.email || '';
+
+      const { data } = await supabase
+        .from('volunteer_applications')
+        .select('id, full_name, email, status')
+        .eq('email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        setUser({
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          role: 'volunteer',
+          status: data.status,
+        });
+      } else {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || 'Volunteer',
+          email,
+          role: 'volunteer',
+        });
+      }
+    } else {
+      setUser(null);
+    }
+
+    setAuthLoading(false);
+  });
+
+  return () => {
+    mounted = false;
+    subscription.unsubscribe();
+  };
+}, []);
   fetchApplications();
 
   const interval = setInterval(() => {
@@ -264,8 +361,9 @@ const refreshVolunteerStatus = async (email: string) => {
       : null
   );
 };  
-  const login = async (email: string, role: UserRole) => {
+const login = async (email: string, role: UserRole) => {
   setAuthLoading(true);
+
   if (role === 'admin') {
     const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
 
@@ -278,13 +376,33 @@ const refreshVolunteerStatus = async (email: string) => {
     });
 
     toast.success(`Logged in as ${isPlatformAdmin ? 'Platform' : 'Senior Home'} Admin`);
-setAuthLoading(false);
+    setAuthLoading(false);
+
     return {
       success: true,
     };
   }
 
   if (role === 'volunteer') {
+    const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: `${window.location.origin}/set-password`,
+      },
+    });
+
+    if (authError) {
+      console.error('Volunteer login error:', authError);
+      toast.error(authError.message);
+      setAuthLoading(false);
+
+      return {
+        success: false,
+        message: authError.message,
+      };
+    }
+
     const { data, error } = await supabase
       .from('volunteer_applications')
       .select('id, full_name, email, status, created_at')
@@ -297,6 +415,7 @@ setAuthLoading(false);
       console.error('Error checking volunteer status:', error);
       toast.error('Could not check application status');
       setAuthLoading(false);
+
       return {
         success: false,
         message: 'Could not check application status',
@@ -314,6 +433,7 @@ setAuthLoading(false);
 
       toast.error('No application found for that email');
       setAuthLoading(false);
+
       return {
         success: true,
         status: 'not_found',
@@ -329,19 +449,23 @@ setAuthLoading(false);
     });
 
     if (data.status === 'approved') {
-      toast.success('Your application has been approved!');
+      toast.success('Check your email for your login link.');
     } else if (data.status === 'rejected') {
       toast.error('Your application was not approved at this time.');
     } else {
       toast.success('Your application is under review.');
     }
+
     setAuthLoading(false);
+
     return {
       success: true,
       status: data.status,
     };
   }
+
   setAuthLoading(false);
+
   return {
     success: false,
     message: 'Invalid role selected',
