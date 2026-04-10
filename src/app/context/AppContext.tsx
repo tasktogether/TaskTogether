@@ -272,7 +272,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const logoutVolunteer = () => setCurrentVolunteer(null);
 
   const loginAdmin = (email: string, password: string): boolean => {
-    if (email === ADMIN EMAIL && password === ADMIN PASSWORD) {
+    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
       setIsAdminLoggedIn(true);
       return true;
     }
