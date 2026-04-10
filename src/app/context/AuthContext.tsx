@@ -1,8 +1,7 @@
 import { supabase } from '../../lib/supabase';
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { toast } from 'sonner';
 
-// Types
 export type UserRole = 'volunteer' | 'admin' | 'platform_admin' | null;
 export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'not_found';
 
@@ -11,23 +10,12 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  status?: ApplicationStatus; // Only for volunteers
-  totalHours?: number; // Track volunteer hours
-  joinDate?: string; // When they joined
-  preferredSeniorHomeIds?: string[]; // Multiple preferred senior homes for volunteers
-  seniorHomeId?: string; // For senior home admins - which home they manage
-  isPlatformAdmin?: boolean; // True for main platform admins who can manage everything
-}
-
-export interface SeniorHome {
-  id: string;
-  name: string;
-  city: string;
-  state: string;
-  contactPerson: string;
-  email: string;
-  status: 'pending' | 'approved' | 'rejected';
-  registeredAt: string;
+  status?: ApplicationStatus;
+  totalHours?: number;
+  joinDate?: string;
+  preferredSeniorHomeIds?: string[];
+  seniorHomeId?: string;
+  isPlatformAdmin?: boolean;
 }
 
 export interface Opportunity {
@@ -38,8 +26,8 @@ export interface Opportunity {
   imageUrl: string;
   timeSlot: 'After School' | 'Weekends' | 'Summer' | 'Flexible';
   location: string;
-  seniorHomeId?: string; // Which senior home posted this opportunity
-  seniorHomeName?: string; // For display
+  seniorHomeId?: string;
+  seniorHomeName?: string;
 }
 
 export interface Application {
@@ -53,20 +41,21 @@ export interface Application {
   submittedAt: Date;
   processedAt?: Date;
 }
+
 interface AuthContextType {
   user: User | null;
   login: (
-  email: string,
-  role: UserRole
-) => Promise<{
-  success: boolean;
-  status?: ApplicationStatus;
-  message?: string;
-}>;
-  logout: () => void;
+    email: string,
+    password: string,
+    role: UserRole
+  ) => Promise<{
+    success: boolean;
+    status?: ApplicationStatus;
+    message?: string;
+  }>;
+  logout: () => Promise<void>;
   register: (name: string, email: string) => void;
   updateUser: (updates: Partial<User>) => void;
-  // Admin functions (simulated)
   applications: Application[];
   updateApplicationStatus: (appId: string, status: ApplicationStatus) => Promise<void>;
   opportunities: Opportunity[];
@@ -75,7 +64,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Mock Data
 const MOCK_OPPORTUNITIES: Opportunity[] = [
   {
     id: '1',
@@ -148,317 +136,198 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error('Error loading applications:', error);
       return;
     }
-const mappedApplications: Application[] = (data || []).map((app: any) => ({
-  id: String(app.id),
-  userId: String(app.id),
-  userName: app.full_name,
-  userEmail: app.email,
-  videoUrl: app.video_url,
-  age: app.age,
-  status: app.status,
-  submittedAt: new Date(app.created_at),
-  processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
-}));
+
+    const mappedApplications: Application[] = (data || []).map((app: any) => ({
+      id: String(app.id),
+      userId: String(app.id),
+      userName: app.full_name,
+      userEmail: app.email,
+      videoUrl: app.video_url,
+      age: app.age,
+      status: app.status,
+      submittedAt: new Date(app.created_at),
+      processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
+    }));
+
     setApplications(mappedApplications);
   };
-useEffect(() => {
-  let mounted = true;
 
-  const loadSession = async () => {
-    setAuthLoading(true);
+  useEffect(() => {
+    let mounted = true;
+
+    const loadSession = async () => {
+      setAuthLoading(true);
+
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error('Error getting session:', error);
+      }
+
+      if (!mounted) return;
+
+      if (session?.user?.email) {
+        const email = session.user.email;
+
+        const { data } = await supabase
+          .from('volunteer_applications')
+          .select('id, full_name, email, status')
+          .eq('email', email)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (data) {
+          setUser({
+            id: String(data.id),
+            name: data.full_name,
+            email: data.email,
+            role: 'volunteer',
+            status: data.status,
+          });
+        } else {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+
+      setAuthLoading(false);
+    };
+
+    loadSession();
 
     const {
-      data: { session },
-      error,
-    } = await supabase.auth.getSession();
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user?.email) {
+        const email = session.user.email;
 
-    if (error) {
-      console.error('Error getting session:', error);
-    }
+        const { data } = await supabase
+          .from('volunteer_applications')
+          .select('id, full_name, email, status')
+          .eq('email', email)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
 
-    if (!mounted) return;
-
-    if (session?.user) {
-      const email = session.user.email || '';
-
-      const { data, error: appError } = await supabase
-        .from('volunteer_applications')
-        .select('id, full_name, email, status')
-        .eq('email', email)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (appError) {
-        console.error('Error loading volunteer after refresh:', appError);
-      }
-
-      if (data) {
-        setUser({
-          id: String(data.id),
-          name: data.full_name,
-          email: data.email,
-          role: 'volunteer',
-          status: data.status,
-        });
+        if (data) {
+          setUser({
+            id: String(data.id),
+            name: data.full_name,
+            email: data.email,
+            role: 'volunteer',
+            status: data.status,
+          });
+        } else {
+          setUser(null);
+        }
       } else {
-        setUser({
-          id: session.user.id,
-          name: session.user.user_metadata?.name || 'Volunteer',
-          email,
-          role: 'volunteer',
-        });
+        setUser(null);
       }
-    } else {
-      setUser(null);
-    }
 
-    setAuthLoading(false);
-  };
+      setAuthLoading(false);
+    });
 
-  loadSession();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
-  const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (_event, session) => {
-    if (session?.user) {
-      const email = session.user.email || '';
-
-      const { data } = await supabase
-        .from('volunteer_applications')
-        .select('id, full_name, email, status')
-        .eq('email', email)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (data) {
-        setUser({
-          id: String(data.id),
-          name: data.full_name,
-          email: data.email,
-          role: 'volunteer',
-          status: data.status,
-        });
-      } else {
-        setUser({
-          id: session.user.id,
-          name: session.user.user_metadata?.name || 'Volunteer',
-          email,
-          role: 'volunteer',
-        });
-      }
-    } else {
-      setUser(null);
-    }
-
-    setAuthLoading(false);
-  });
-
-  return () => {
-    mounted = false;
-    subscription.unsubscribe();
-  };
-}, []);
-useEffect(() => {
-  fetchApplications();
-
-  const interval = setInterval(() => {
+  useEffect(() => {
     fetchApplications();
-  }, 10000);
+  }, []);
 
-  return () => clearInterval(interval);
-}, []);
+  const login = async (email: string, password: string, role: UserRole) => {
+    setAuthLoading(true);
 
-useEffect(() => {
-  if (!user?.email || user.role !== 'volunteer') return;
+    if (role === 'admin') {
+      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
 
-  const channel = supabase
-    .channel('volunteer-status-updates')
-    .on(
-      'postgres_changes',
-      {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'volunteer_applications',
-      },
-      (payload) => {
-        const updated = payload.new as {
-          id: number;
-          email: string;
-          status: ApplicationStatus;
+      setUser({
+        id: 'admin-1',
+        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
+        email,
+        role: 'admin',
+        isPlatformAdmin,
+      });
+
+      setAuthLoading(false);
+      return { success: true };
+    }
+
+    if (role === 'volunteer') {
+      const { error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) {
+        setAuthLoading(false);
+        return {
+          success: false,
+          message: authError.message,
         };
-
-        if (updated.email !== user.email) return;
-
-        setUser(prev =>
-          prev
-            ? {
-                ...prev,
-                id: String(updated.id),
-                status: updated.status,
-              }
-            : prev
-        );
-
-        setApplications(prev =>
-          prev.map(app =>
-            app.id === String(updated.id)
-              ? { ...app, status: updated.status }
-              : app
-          )
-        );
-
-        if (updated.status === 'approved') {
-          toast.success('Your application has been approved!');
-        }
-
-        if (updated.status === 'rejected') {
-          toast.error('Your application was not approved at this time.');
-        }
       }
-    )
-    .subscribe();
 
-  return () => {
-    supabase.removeChannel(channel);
+      const { data, error } = await supabase
+        .from('volunteer_applications')
+        .select('id, full_name, email, status')
+        .eq('email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (error) {
+        setAuthLoading(false);
+        return {
+          success: false,
+          message: 'Could not check application status',
+        };
+      }
+
+      if (!data) {
+        setAuthLoading(false);
+        return {
+          success: false,
+          message: 'No application found',
+        };
+      }
+
+      if (data.status !== 'approved') {
+        setAuthLoading(false);
+        return {
+          success: false,
+          message: 'Your application is not approved yet.',
+        };
+      }
+
+      setUser({
+        id: String(data.id),
+        name: data.full_name,
+        email: data.email,
+        role: 'volunteer',
+        status: data.status,
+      });
+
+      setAuthLoading(false);
+      return {
+        success: true,
+        status: data.status,
+      };
+    }
+
+    setAuthLoading(false);
+    return {
+      success: false,
+      message: 'Invalid role selected',
+    };
   };
-}, [user?.email, user?.role]);
-const refreshVolunteerStatus = async (email: string) => {
-  const { data, error } = await supabase
-    .from('volunteer_applications')
-    .select('id, full_name, email, status, created_at')
-    .eq('email', email)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
 
-  if (error) {
-    console.error('Error refreshing volunteer status:', error);
-    return;
-  }
-
-  if (!data) {
-    setUser(prev =>
-      prev
-        ? {
-            ...prev,
-            status: 'not_found',
-          }
-        : null
-    );
-    return;
-  }
-
-  setUser(prev =>
-    prev
-      ? {
-          ...prev,
-          id: String(data.id),
-          name: data.full_name,
-          email: data.email,
-          status: data.status,
-        }
-      : null
-  );
-};  
-const login = async (email: string, role: UserRole) => {
-  setAuthLoading(true);
-
-  if (role === 'admin') {
-    const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
-
-    setUser({
-      id: 'admin-1',
-      name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
-      email,
-      role: 'admin',
-      isPlatformAdmin,
-    });
-
-    toast.success(`Logged in as ${isPlatformAdmin ? 'Platform' : 'Senior Home'} Admin`);
-    setAuthLoading(false);
-
-    return {
-      success: true,
-    };
-  }
-
-if (role === 'volunteer') {
-  const { data: authData, error: authError } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password: (window as any).__LOGIN_PASSWORD__,
-    });
-
-  if (authError) {
-    console.error('Volunteer login error:', authError);
-    toast.error(authError.message);
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: authError.message,
-    };
-  }
-
-  // Check application status
-  const { data, error } = await supabase
-    .from('volunteer_applications')
-    .select('id, full_name, email, status')
-    .eq('email', email)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error) {
-    console.error('Error checking volunteer status:', error);
-    toast.error('Could not check application status');
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'Could not check application status',
-    };
-  }
-
-  if (!data) {
-    toast.error('No application found for that email');
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'No application found',
-    };
-  }
-
-  if (data.status !== 'approved') {
-    toast.error('Your application is not approved yet.');
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'Application not approved',
-    };
-  }
-
-  setUser({
-    id: String(data.id),
-    name: data.full_name,
-    email: data.email,
-    role: 'volunteer',
-    status: data.status,
-  });
-
-  toast.success('Logged in successfully');
-  setAuthLoading(false);
-
-  return {
-    success: true,
-    status: data.status,
-  };
-}
-      // Check if user exists in applications to determine status
   const register = (name: string, email: string) => {
     const newApp: Application = {
       id: `app-${Date.now()}`,
@@ -468,9 +337,9 @@ if (role === 'volunteer') {
       status: 'pending',
       submittedAt: new Date(),
     };
-    setApplications([...applications, newApp]);
-    
-    // Auto login
+
+    setApplications(prev => [...prev, newApp]);
+
     setUser({
       id: newApp.userId,
       name: newApp.userName,
@@ -478,93 +347,87 @@ if (role === 'volunteer') {
       role: 'volunteer',
       status: 'pending',
     });
-    fetchApplications();
+
     toast.success('Application submitted successfully!');
   };
-const logout = async () => {
-  await supabase.auth.signOut();
-  setUser(null);
-  toast.info('Logged out');
-  window.location.href = '/login';
-};
 
-const updateApplicationStatus = async (
-  appId: string,
-  status: 'pending' | 'approved' | 'rejected'
-) => {
-  const now = new Date().toISOString();
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    window.location.href = '/login';
+  };
 
-  const { data, error } = await supabase
-    .from('volunteer_applications')
-    .update({
-      status,
-      processed_at: status === 'pending' ? null : now,
-    })
-    .eq('id', Number(appId))
-    .select('id, status, processed_at')
-    .maybeSingle();
+  const updateApplicationStatus = async (
+    appId: string,
+    status: ApplicationStatus
+  ) => {
+    const now = new Date().toISOString();
 
-  if (error) {
-    console.error('Error updating application status:', error);
-    throw error;
-  }
+    const { data, error } = await supabase
+      .from('volunteer_applications')
+      .update({
+        status,
+        processed_at: status === 'pending' ? null : now,
+      })
+      .eq('id', Number(appId))
+      .select('id, status, processed_at')
+      .maybeSingle();
 
-  if (!data) {
-    throw new Error('No application was updated.');
-  }
+    if (error) {
+      console.error('Error updating application status:', error);
+      throw error;
+    }
 
-  setApplications(prev =>
-    prev.map(app =>
-      app.id === String(data.id)
-        ? {
-            ...app,
-            status: data.status,
-            processedAt: data.processed_at ? new Date(data.processed_at) : undefined,
-          }
-        : app
-    )
+    if (!data) {
+      throw new Error('No application was updated.');
+    }
+
+    setApplications(prev =>
+      prev.map(app =>
+        app.id === String(data.id)
+          ? {
+              ...app,
+              status: data.status,
+              processedAt: data.processed_at ? new Date(data.processed_at) : undefined,
+            }
+          : app
+      )
+    );
+
+    setUser(prev =>
+      prev && prev.role === 'volunteer' && prev.id === String(data.id)
+        ? { ...prev, status: data.status }
+        : prev
+    );
+  };
+
+  const updateUser = (updates: Partial<User>) => {
+    setUser(prev => (prev ? { ...prev, ...updates } : null));
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        register,
+        updateUser,
+        applications,
+        updateApplicationStatus,
+        opportunities: MOCK_OPPORTUNITIES,
+        authLoading,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
-
-  setUser(prev =>
-    prev && prev.role === 'volunteer' && prev.id === String(data.id)
-      ? {
-          ...prev,
-          status: data.status,
-        }
-      : prev
-  );
-
-  toast.success(`Application ${data.status}`);
-};
-
-const updateUser = (updates: Partial<User>) => {
-  setUser(prev => (prev ? { ...prev, ...updates } : null));
-  toast.success('Profile updated successfully!');
-};
-
-return (
-  <AuthContext.Provider
-    value={{
-      user,
-      login,
-      logout,
-      register,
-      updateUser,
-      applications,
-      updateApplicationStatus,
-      opportunities: MOCK_OPPORTUNITIES,
-      authLoading,
-    }}
-  >
-    {children}
-  </AuthContext.Provider>
-);
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
 
