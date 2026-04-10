@@ -43,7 +43,7 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/opportunities" element={<Opportunities />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/dashboard" element={<VolunteerDashboard />} />
+                <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
                 <Route path="/stories" element={<StoriesPage />} />
