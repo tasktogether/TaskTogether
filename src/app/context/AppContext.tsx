@@ -272,7 +272,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const logoutVolunteer = () => setCurrentVolunteer(null);
 
   const loginAdmin = (email: string, password: string): boolean => {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (email === tasktogethercontact@gmail.com && password === TaskTogether123$) {
       setIsAdminLoggedIn(true);
       return true;
     }
