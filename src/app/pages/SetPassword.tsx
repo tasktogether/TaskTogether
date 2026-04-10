@@ -59,7 +59,7 @@ export default function SetPassword() {
     }
 
     setLoading(true)
-    setMessage('Saved!')
+    setMessage('!')
 
     const { error } = await supabase.auth.updateUser({
       password,
