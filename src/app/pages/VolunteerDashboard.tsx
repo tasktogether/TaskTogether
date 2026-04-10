@@ -54,7 +54,7 @@ export default function VolunteerDashboard() {
   // Load email preferences when profile modal opens
   useEffect(() => {
     if (isProfileOpen && user?.id) {
-      emailService.getEmailPreferences(user.id)
+      emailService.getEmailPreferences(user?.id)
         .then(prefs => {
           setReceiveTaskEmails(prefs.receiveTaskEmails);
           setReceiveReminders(prefs.receiveReminders);
@@ -66,12 +66,12 @@ export default function VolunteerDashboard() {
   }, [isProfileOpen, user?.id]);
 
   const handleSaveProfile = async () => {
-    updateUser({ name: userName, email: userEmail });
+    updateUser({ name: user?.Name, email: user?.Email });
     
     // Save email preferences
     if (user?.id) {
       try {
-        await emailService.updateEmailPreferences(user.id, {
+        await emailService.updateEmailPreferences(user?.id, {
           receiveTaskEmails,
           receiveReminders,
         });
@@ -277,7 +277,7 @@ if (user?.status === 'not_found') {
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-2xl animate-pulse" />
           <div className="relative z-10">
             <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-wide">
-              Hi, {user.name}! 👋
+              Hi, {user?.name}! 👋
             </h1>
             <p className="text-violet-100 text-lg md:text-xl font-medium">Ready to make someone's day awesome?</p>
 
@@ -423,7 +423,7 @@ if (user?.status === 'not_found') {
       <AnimatePresence>
         {/* My Profile Modal */}
         {isProfileOpen && (
-          <Modal key="profile" onClose={() => setIsProfileOpen(false)} title={`Hi, ${user.name}! 👋`}>
+          <Modal key="profile" onClose={() => setIsProfileOpen(false)} title={`Hi, ${user?.name}! 👋`}>
             <div className="space-y-4">
               <div className="flex justify-center mb-6">
                 <div className="relative">
