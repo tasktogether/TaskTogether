@@ -45,39 +45,38 @@ export default function SetPassword() {
     handleAuthFromUrl()
   }, [])
 
-  const handleSetPassword = async (e: React.FormEvent) => {
-    e.preventDefault()
+ const handleSetPassword = async (e: React.FormEvent) => {
+  e.preventDefault()
 
-    if (password.length < 8) {
-      setMessage('Password must be at least 8 characters.')
-      return
-    }
+  if (password.length < 8) {
+    setMessage('Password must be at least 8 characters.')
+    return
+  }
 
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match.')
-      return
-    }
+  if (password !== confirmPassword) {
+    setMessage('Passwords do not match.')
+    return
+  }
 
-    setLoading(true)
-    setMessage('!')
+  setLoading(true)
+  setMessage('')
 
+  try {
     const { error } = await supabase.auth.updateUser({
       password,
     })
 
-if (error) {
-  setLoading(false)
-  setMessage(error.message)
-  return
-}
+    if (error) {
+      setMessage(error.message)
+      return
+    }
 
-setLoading(false)
-setMessage('Password saved! Redirecting...')
-
-setTimeout(() => {
-  window.location.href = '/volunteer-dashboard'
-}, 300)
+    setMessage('Password saved! Redirecting...')
+    window.location.href = '/volunteer-dashboard'
+  } finally {
+    setLoading(false)
   }
+}
 
   return (
     <div style={{ maxWidth: 420, margin: '80px auto' }}>
