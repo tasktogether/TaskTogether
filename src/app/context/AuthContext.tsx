@@ -262,17 +262,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (role === 'volunteer') {
       const { error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+  email,
+  password,
+});
 
-      if (authError) {
-        setAuthLoading(false);
-        return {
-          success: false,
-          message: authError.message,
-        };
-      }
+if (authError) {
+  setAuthLoading(false);
+  return {
+    success: false,
+    message: authError.message,
+  };
+}
 
       const { data, error } = await supabase
         .from('volunteer_applications')
