@@ -65,14 +65,14 @@ export default function SetPassword() {
       password,
     })
 
-    setLoading(false)
+  if (error) {
+  setLoading(false)
+  setMessage(error.message)
+  return
+}
 
-    if (error) {
-      setMessage(error.message)
-      return
-    }
-
-    setMessage('Password saved! Redirecting...')
+setLoading(false)
+setMessage('Password saved!')
 navigate('/volunteer-dashboard')
   }
 
