@@ -1,5 +1,4 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import Home from './pages/Home';
 import Opportunities from './pages/Opportunities';
@@ -21,6 +20,7 @@ import { StoriesProvider } from './context/StoriesContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { AppProvider } from './context/AppContext';
 import SetPassword from './pages/SetPassword';
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 
 // Helper for scroll to top on route change
 function ScrollToTopHelper() {
@@ -45,6 +45,7 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/dashboard" element={<Navigate to="/volunteer-dashboard" replace />} />
                 <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
                 <Route path="/stories" element={<StoriesPage />} />
                 <Route path="/learn-more" element={<LearnMorePage />} />
