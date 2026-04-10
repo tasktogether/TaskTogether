@@ -72,7 +72,8 @@ export default function SetPassword() {
       return
     }
 
-    navigate('/volunteer-dashboard')
+    setMessage('Password saved! Redirecting...')
+navigate('/volunteer-dashboard')
   }
 
   return (
