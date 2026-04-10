@@ -115,10 +115,7 @@ export default function VolunteerDashboard() {
     { id: 2, content: "Remember to bring the iPad charger for the tech session. 📱", color: 'bg-pink-100 -rotate-2' },
     { id: 3, content: "Had so much fun gardening today! Need to buy new gloves.", color: 'bg-blue-100 rotate-2' },
   ]);
-if (!user || user.role !== 'volunteer') {
-  return <Navigate to="/login" replace />;
-}
-  if (authLoading) {
+if (authLoading) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="bg-white rounded-3xl shadow-lg p-8 text-center">
@@ -129,6 +126,9 @@ if (!user || user.role !== 'volunteer') {
       </div>
     </div>
   );
+if (!user || user.role !== 'volunteer') {
+  return <Navigate to="/login" replace />;
+}
 }
  if (user.status === 'pending') {
   return (
