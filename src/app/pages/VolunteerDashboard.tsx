@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { emailService } from '../utils/emailService';
 import { VolunteerSchedulingCalendar } from '../components/VolunteerSchedulingCalendar';
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router';
+import { Navigate } from 'react-router-dom';
 
 interface Task {
   id: number;
