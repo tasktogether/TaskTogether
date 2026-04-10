@@ -7,7 +7,7 @@ import { VolunteerSchedulingCalendar } from '../components/VolunteerSchedulingCa
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { Clock } from 'lucide-react';
+import { Clock, Plus } from 'lucide-react';
 
 interface Task {
   id: number;
