@@ -97,8 +97,7 @@ const handleVideoUpload = async (event: any) => {
   }
 
   setVideoUrl(publicUrl);
-  setVideoUploaded(true);
-  toast.success('Video uploaded successfully!');
+toast.success('Video uploaded successfully!');
 };
   return (
     <Card className="max-w-2xl mx-auto border border-slate-200 shadow-xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden">
