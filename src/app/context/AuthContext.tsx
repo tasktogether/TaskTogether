@@ -384,94 +384,80 @@ const login = async (email: string, role: UserRole) => {
     };
   }
 
-  if (role === 'volunteer') {
-    const { data: authData, error: authError } = await supabase.auth.signInWithOtp({
+if (role === 'volunteer') {
+  const { data: authData, error: authError } =
+    await supabase.auth.signInWithPassword({
       email,
-      options: {
-        shouldCreateUser: false,
-        emailRedirectTo: `${window.location.origin}/set-password`,
-      },
+      password: (window as any).__LOGIN_PASSWORD__,
     });
 
-    if (authError) {
-      console.error('Volunteer login error:', authError);
-      toast.error(authError.message);
-      setAuthLoading(false);
-
-      return {
-        success: false,
-        message: authError.message,
-      };
-    }
-
-    const { data, error } = await supabase
-      .from('volunteer_applications')
-      .select('id, full_name, email, status, created_at')
-      .eq('email', email)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (error) {
-      console.error('Error checking volunteer status:', error);
-      toast.error('Could not check application status');
-      setAuthLoading(false);
-
-      return {
-        success: false,
-        message: 'Could not check application status',
-      };
-    }
-
-    if (!data) {
-      setUser({
-        id: 'not-found-' + Date.now(),
-        name: 'Volunteer',
-        email,
-        role: 'volunteer',
-        status: 'not_found',
-      });
-
-      toast.error('No application found for that email');
-      setAuthLoading(false);
-
-      return {
-        success: true,
-        status: 'not_found',
-      };
-    }
-
-    setUser({
-      id: String(data.id),
-      name: data.full_name,
-      email: data.email,
-      role: 'volunteer',
-      status: data.status,
-    });
-
-    if (data.status === 'approved') {
-      toast.success('Check your email for your login link.');
-    } else if (data.status === 'rejected') {
-      toast.error('Your application was not approved at this time.');
-    } else {
-      toast.success('Your application is under review.');
-    }
-
+  if (authError) {
+    console.error('Volunteer login error:', authError);
+    toast.error(authError.message);
     setAuthLoading(false);
 
     return {
-      success: true,
-      status: data.status,
+      success: false,
+      message: authError.message,
     };
   }
 
+  // Check application status
+  const { data, error } = await supabase
+    .from('volunteer_applications')
+    .select('id, full_name, email, status')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error checking volunteer status:', error);
+    toast.error('Could not check application status');
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Could not check application status',
+    };
+  }
+
+  if (!data) {
+    toast.error('No application found for that email');
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'No application found',
+    };
+  }
+
+  if (data.status !== 'approved') {
+    toast.error('Your application is not approved yet.');
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Application not approved',
+    };
+  }
+
+  setUser({
+    id: String(data.id),
+    name: data.full_name,
+    email: data.email,
+    role: 'volunteer',
+    status: data.status,
+  });
+
+  toast.success('Logged in successfully');
   setAuthLoading(false);
 
   return {
-    success: false,
-    message: 'Invalid role selected',
+    success: true,
+    status: data.status,
   };
-};
+}
       // Check if user exists in applications to determine status
   const register = (name: string, email: string) => {
     const newApp: Application = {
