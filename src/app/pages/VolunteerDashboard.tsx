@@ -130,7 +130,7 @@ if (!user || user.role !== 'volunteer') {
   return <Navigate to="/login" replace />;
 }
 }
- if (user.status === 'pending') {
+ if (user?.status === 'pending') {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
@@ -145,7 +145,7 @@ if (!user || user.role !== 'volunteer') {
   );
 }
 
-if (user.status === 'rejected') {
+if (user?.status === 'rejected') {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
@@ -160,7 +160,7 @@ if (user.status === 'rejected') {
   );
 }
 
-if (user.status === 'not_found') {
+if (user?.status === 'not_found') {
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
