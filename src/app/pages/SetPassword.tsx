@@ -65,15 +65,18 @@ export default function SetPassword() {
       password,
     })
 
-  if (error) {
+if (error) {
   setLoading(false)
   setMessage(error.message)
   return
 }
 
 setLoading(false)
-setMessage('Password saved!')
-navigate('/volunteer-dashboard')
+setMessage('Password saved! Redirecting...')
+
+setTimeout(() => {
+  window.location.href = '/volunteer-dashboard'
+}, 300)
   }
 
   return (
