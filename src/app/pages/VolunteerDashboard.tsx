@@ -271,8 +271,6 @@ if (user?.status === 'not_found') {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20 font-fredoka relative">
-      <Navbar />
-
       <main className="pt-28 px-4 md:px-8 max-w-7xl mx-auto space-y-8">
         {/* Welcome Header */}
         <div className="relative bg-gradient-to-r from-violet-400 to-fuchsia-400 rounded-3xl p-8 md:p-12 text-white overflow-hidden shadow-xl shadow-violet-200">
