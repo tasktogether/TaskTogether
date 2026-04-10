@@ -22,7 +22,9 @@ export default function LoginPage() {
 
   setIsLoading(true);
 
-  const result = await login(form.email, 'volunteer');
+  (window as any).__LOGIN_PASSWORD__ = form.password;
+
+const result = await login(form.email, 'volunteer');
 
   setIsLoading(false);
 
@@ -32,7 +34,7 @@ export default function LoginPage() {
   }
 
   // Always go to dashboard
-  navigate('/dashboard');
+  navigate('/volunteer-dashboard');
 };
 
   return (
