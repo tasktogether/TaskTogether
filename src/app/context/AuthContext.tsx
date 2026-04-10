@@ -514,7 +514,7 @@ const updateApplicationStatus = async (
   }
 
   setApplications(prev =>
-  prev.map(app =>
+    prev.map(app =>
       app.id === String(data.id)
         ? {
             ...app,
@@ -524,48 +524,49 @@ const updateApplicationStatus = async (
         : app
     )
   );
+
   setUser(prev =>
-  prev && prev.role === 'volunteer' && prev.id === String(data.id)
-    ? {
-        ...prev,
-        status: data.status,
-      }
-    : prev
-);
+    prev && prev.role === 'volunteer' && prev.id === String(data.id)
+      ? {
+          ...prev,
+          status: data.status,
+        }
+      : prev
+  );
 
   toast.success(`Application ${data.status}`);
 };
-  const updateUser = (updates: Partial<User>) => {
+
+const updateUser = (updates: Partial<User>) => {
   setUser(prev => (prev ? { ...prev, ...updates } : null));
   toast.success('Profile updated successfully!');
 };
 
-  return (
-    <AuthContext.Provider value={{ 
-  user, 
-  login, 
-  logout, 
-  register, 
-  updateUser,
-  applications, 
-  updateApplicationStatus,
-  opportunities: MOCK_OPPORTUNITIES,
-  authLoading
-}}>
-  {children}
-</AuthContext.Provider>
-  );
+return (
+  <AuthContext.Provider
+    value={{
+      user,
+      login,
+      logout,
+      register,
+      updateUser,
+      applications,
+      updateApplicationStatus,
+      opportunities: MOCK_OPPORTUNITIES,
+      authLoading,
+    }}
+  >
+    {children}
+  </AuthContext.Provider>
+);
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
 
   if (context === undefined) {
-    console.error("useAuth called outside AuthProvider");
     throw new Error('useAuth must be used within an AuthProvider');
   }
-
-  console.log("Auth context loaded:", context);
 
   return context;
 };
