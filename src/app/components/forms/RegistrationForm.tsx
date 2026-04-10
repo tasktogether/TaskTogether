@@ -20,7 +20,6 @@ export const RegistrationForm = () => {
   const { register: registerUser } = useAuth();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<RegistrationData>();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [videoUploaded, setVideoUploaded] = useState(false);
   const [videoUrl, setVideoUrl] = useState('');
 
   const age = watch('age');
@@ -190,7 +189,7 @@ const handleVideoUpload = async (event: any) => {
     accept="video/*"
     onChange={handleVideoUpload}
   />
-  {videoUploaded ? (
+  {videoUrl ? (
               <div className="flex flex-col items-center gap-2 text-green-700 animate-in zoom-in duration-300">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-2">
                    <CheckCircle size={32} />
