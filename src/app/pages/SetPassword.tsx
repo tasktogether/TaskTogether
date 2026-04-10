@@ -12,11 +12,33 @@ export default function SetPassword() {
 
   useEffect(() => {
     const handleAuthFromUrl = async () => {
-      // Needed for auth links that arrive with tokens/code in the URL
-      const { error } = await supabase.auth.getSession()
+      try {
+        const url = new URL(window.location.href)
+        const code = url.searchParams.get('code')
 
-      if (error) {
-        setMessage(error.message)
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code)
+          if (error) {
+            setMessage(error.message)
+            return
+          }
+        }
+
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession()
+
+        if (error) {
+          setMessage(error.message)
+          return
+        }
+
+        if (!session) {
+          setMessage('This password link is invalid or expired.')
+        }
+      } catch (err: any) {
+        setMessage(err.message || 'Could not verify password link.')
       }
     }
 
@@ -40,7 +62,7 @@ export default function SetPassword() {
     setMessage('')
 
     const { error } = await supabase.auth.updateUser({
-      password
+      password,
     })
 
     setLoading(false)
