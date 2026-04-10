@@ -24,7 +24,7 @@ export default function LoginPage() {
 
   (window as any).__LOGIN_PASSWORD__ = form.password;
 
-const result = await login(form.email, 'volunteer');
+const result = await login(form.email, form.password, 'volunteer');
 
   setIsLoading(false);
 
