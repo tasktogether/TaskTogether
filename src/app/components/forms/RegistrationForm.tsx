@@ -61,7 +61,6 @@ if (error) {
 
 const handleVideoUpload = async (event: any) => {
   const file = event.target.files?.[0];
-
   console.log('picked file:', file);
 
   if (!file) {
@@ -97,7 +96,7 @@ const handleVideoUpload = async (event: any) => {
   }
 
   setVideoUrl(publicUrl);
-toast.success('Video uploaded successfully!');
+  toast.success('Video uploaded successfully!');
 };
   return (
     <Card className="max-w-2xl mx-auto border border-slate-200 shadow-xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden">
