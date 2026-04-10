@@ -60,28 +60,43 @@ if (error) {
 };
 
 const handleVideoUpload = async (event: any) => {
-  const file = event.target.files[0];
+  const file = event.target.files?.[0];
 
-  if (!file) return;
+  console.log('picked file:', file);
 
-  const filePath = `${Date.now()}-${file.name}`;
-
-  const { error } = await supabase.storage
-    .from('videos')
-    .upload(filePath, file);
-
-  if (error) {
-    toast.error(error.message);
+  if (!file) {
+    toast.error('No file selected.');
     return;
   }
 
-  const { data } = supabase.storage
+  const filePath = `${Date.now()}-${file.name}`;
+
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from('videos')
+    .upload(filePath, file);
+
+  console.log('uploadData:', uploadData);
+  console.log('uploadError:', uploadError);
+
+  if (uploadError) {
+    toast.error(uploadError.message);
+    return;
+  }
+
+  const { data: publicUrlData } = supabase.storage
     .from('videos')
     .getPublicUrl(filePath);
 
-  console.log('VIDEO URL:', data.publicUrl);
+  console.log('publicUrlData:', publicUrlData);
 
-  setVideoUrl(data.publicUrl);
+  const publicUrl = publicUrlData?.publicUrl;
+
+  if (!publicUrl) {
+    toast.error('Video uploaded but URL was not created.');
+    return;
+  }
+
+  setVideoUrl(publicUrl);
   setVideoUploaded(true);
   toast.success('Video uploaded successfully!');
 };
