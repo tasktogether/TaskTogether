@@ -181,20 +181,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           .maybeSingle();
 
         if (data) {
-          setUser({
-            id: String(data.id),
-            name: data.full_name,
-            email: data.email,
-            role: 'volunteer',
-            status: data.status,
-          });
-        } else {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
+         setUser({
+  id: String(data.id),
+  name: data.full_name,
+  email: data.email,
+  role: 'volunteer',
+  status: data.status,
+});
 
+if (data.status === 'pending') {
+  toast('Your application is still under review.');
+}
+
+if (data.status === 'rejected') {
+  toast.error('Your application was not approved.');
+}
+
+if (data.status === 'approved') {
+  toast.success('Welcome! Your application has been approved.');
+}
       setAuthLoading(false);
     };
 
@@ -206,41 +211,201 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (session?.user?.email) {
         const email = session.user.email;
 
-        const { data } = await supabase
-          .from('volunteer_applications')
-          .select('id, full_name, email, status')
-          .eq('email', email)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
+useEffect(() => {
+  let mounted = true;
 
-        if (data) {
-          setUser({
-            id: String(data.id),
-            name: data.full_name,
-            email: data.email,
-            role: 'volunteer',
-            status: data.status,
-          });
-        } else {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
+  const loadSession = async () => {
+    setAuthLoading(true);
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.getSession();
+
+    if (error) {
+      console.error('Error getting session:', error);
+    }
+
+    if (!mounted) return;
+
+    if (session?.user) {
+      const email = session.user.email || '';
+
+      const { data, error: appError } = await supabase
+        .from('volunteer_applications')
+        .select('id, full_name, email, status')
+        .eq('email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (appError) {
+        console.error('Error loading volunteer after refresh:', appError);
       }
 
+      if (data) {
+        setUser({
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          role: 'volunteer',
+          status: data.status,
+        });
+      } else {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || 'Volunteer',
+          email,
+          role: 'volunteer',
+        });
+      }
+    } else {
+      setUser(null);
+    }
+
+    setAuthLoading(false);
+  };
+
+  loadSession();
+
+  const {
+    data: { subscription },
+  } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    if (session?.user) {
+      const email = session.user.email || '';
+
+      const { data } = await supabase
+        .from('volunteer_applications')
+        .select('id, full_name, email, status')
+        .eq('email', email)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (data) {
+        setUser({
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          role: 'volunteer',
+          status: data.status,
+        });
+      }
+    } else {
+      setUser(null);
+    }
+
+    setAuthLoading(false);
+  });
+
+  return () => {
+    mounted = false;
+    subscription.unsubscribe();
+  };
+}, []);
+
+const login = async (
+  email: string,
+  password: string,
+  role: UserRole
+) => {
+  setAuthLoading(true);
+
+  try {
+    // REAL authentication with Supabase
+    const { data: authData, error: authError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+    if (authError || !authData.user) {
       setAuthLoading(false);
+      return {
+        success: false,
+        message: 'Wrong email or password.',
+      };
+    }
+
+    // Admin login
+    if (role === 'admin') {
+      const isPlatformAdmin =
+        email === 'tasktogethercontact@gmail.com';
+
+      setUser({
+        id: authData.user.id,
+        name: isPlatformAdmin
+          ? 'Platform Admin'
+          : 'Senior Home Admin',
+        email,
+        role: 'admin',
+        isPlatformAdmin,
+      });
+
+      setAuthLoading(false);
+
+      return {
+        success: true,
+      };
+    }
+
+    // Volunteer login — check application
+    const { data, error } = await supabase
+      .from('volunteer_applications')
+      .select('id, full_name, email, status')
+      .eq('email', email)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (error || !data) {
+      await supabase.auth.signOut();
+
+      setAuthLoading(false);
+
+      return {
+        success: false,
+        message: 'No application found.',
+      };
+    }
+
+    if (data.status !== 'approved') {
+      await supabase.auth.signOut();
+
+      setAuthLoading(false);
+
+      return {
+        success: false,
+        message: 'Your application is not approved yet.',
+      };
+    }
+
+    setUser({
+      id: String(data.id),
+      name: data.full_name,
+      email: data.email,
+      role: 'volunteer',
+      status: data.status,
     });
 
-    return () => {
-      mounted = false;
-      subscription.unsubscribe();
-    };
-  }, []);
+    setAuthLoading(false);
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
+    return {
+      success: true,
+      status: data.status,
+    };
+
+  } catch (err) {
+    console.error('Login error:', err);
+
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Login failed.',
+    };
+  }
+};
 
   const login = async (email: string, password: string, role: UserRole) => {
     setAuthLoading(true);
