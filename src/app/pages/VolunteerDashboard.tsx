@@ -140,6 +140,7 @@ if (authLoading) {
   );
 if (!user || user.role !== 'volunteer') {
   return <Navigate to="/login" replace />;
+}
 };
 
   const handleAddNote = () => {
