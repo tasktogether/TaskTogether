@@ -152,65 +152,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setApplications(mappedApplications);
   };
 
-  useEffect(() => {
-    let mounted = true;
-
-    const loadSession = async () => {
-      setAuthLoading(true);
-
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error('Error getting session:', error);
-      }
-
-      if (!mounted) return;
-
-      if (session?.user?.email) {
-        const email = session.user.email;
-
-        const { data } = await supabase
-          .from('volunteer_applications')
-          .select('id, full_name, email, status')
-          .eq('email', email)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
-
-        if (data) {
-         setUser({
-  id: String(data.id),
-  name: data.full_name,
-  email: data.email,
-  role: 'volunteer',
-  status: data.status,
-});
-
-if (data.status === 'pending') {
-  toast('Your application is still under review.');
-}
-
-if (data.status === 'rejected') {
-  toast.error('Your application was not approved.');
-}
-
-if (data.status === 'approved') {
-  toast.success('Welcome! Your application has been approved.');
-}
-      setAuthLoading(false);
-    };
-
-    loadSession();
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      if (session?.user?.email) {
-        const email = session.user.email;
-
 useEffect(() => {
   let mounted = true;
 
