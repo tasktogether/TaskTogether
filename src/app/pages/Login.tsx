@@ -23,31 +23,37 @@ export default function Login() {
     }
   }, []);
 
-  const onSubmit = (data: any) => {
-    const role = isAdmin ? 'admin' : 'volunteer';
-    
-    // Check password for admin login
-    if (role === 'admin') {
-      const isPlatformAdmin = data.email === 'tasktogethercontact@gmail.com';
-      
-      // Validate password for platform admin
-      if (isPlatformAdmin && data.password !== 'TaskTogether123$') {
-        toast.error('Invalid password');
-        return;
-      }
-    }
-    
-    login(data.email, role);
-    
-    if (role === 'admin') {
-      // Check if platform admin and redirect accordingly
-      const isPlatformAdmin = data.email === 'tasktogethercontact@gmail.com';
-      navigate(isPlatformAdmin ? '/superadmin/dashboard' : '/admin/dashboard');
-    } else {
-      navigate('/dashboard');
-    }
-  };
+  const onSubmit = async (data: any) => {
+  const role = isAdmin ? 'admin' : 'volunteer';
 
+  if (role === 'admin') {
+    const isPlatformAdmin = data.email === 'tasktogethercontact@gmail.com';
+
+    if (isPlatformAdmin && data.password !== 'TaskTogether123$') {
+      toast.error('Invalid password');
+      return;
+    }
+
+    const result = await login(data.email, data.password, 'admin');
+
+    if (!result.success) {
+      toast.error(result.message || 'Login failed');
+      return;
+    }
+
+    navigate(isPlatformAdmin ? '/superadmin/dashboard' : '/admin/dashboard');
+    return;
+  }
+
+  const result = await login(data.email, data.password, 'volunteer');
+
+  if (!result.success || result.status !== 'approved') {
+    toast.error(result.message || 'Login failed');
+    return;
+  }
+
+  navigate('/volunteer-dashboard');
+};
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden flex flex-col">
       <Navbar />
