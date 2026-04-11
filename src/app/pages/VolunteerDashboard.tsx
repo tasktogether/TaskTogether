@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Clock, Plus } from 'lucide-react';
-import { Card } from '../components/ui/card';
+import { Card } from '../components/ui/Card';
 
 interface Task {
   id: number;
