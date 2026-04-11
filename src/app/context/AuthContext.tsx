@@ -260,66 +260,82 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return { success: true };
     }
 
-    if (role === 'volunteer') {
-      const { error: authError } = await supabase.auth.signInWithPassword({
-  email,
-  password,
-});
+if (role === 'volunteer') {
+  setUser(null);
 
-if (authError) {
+  const { data: signInData, error: authError } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+  if (authError || !signInData.user) {
+    await supabase.auth.signOut();
+    setUser(null);
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Wrong email or password.',
+    };
+  }
+
+  const { data, error } = await supabase
+    .from('volunteer_applications')
+    .select('id, full_name, email, status')
+    .eq('email', email)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    await supabase.auth.signOut();
+    setUser(null);
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Could not check application status',
+    };
+  }
+
+  if (!data) {
+    await supabase.auth.signOut();
+    setUser(null);
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'No application found',
+    };
+  }
+
+  if (data.status !== 'approved') {
+    await supabase.auth.signOut();
+    setUser(null);
+    setAuthLoading(false);
+
+    return {
+      success: false,
+      message: 'Your application is not approved yet.',
+    };
+  }
+
+  setUser({
+    id: String(data.id),
+    name: data.full_name,
+    email: data.email,
+    role: 'volunteer',
+    status: data.status,
+  });
+
   setAuthLoading(false);
+
   return {
-    success: false,
-    message: authError.message,
+    success: true,
+    status: data.status,
   };
 }
-
-      const { data, error } = await supabase
-        .from('volunteer_applications')
-        .select('id, full_name, email, status')
-        .eq('email', email)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (error) {
-        setAuthLoading(false);
-        return {
-          success: false,
-          message: 'Could not check application status',
-        };
-      }
-
-      if (!data) {
-        setAuthLoading(false);
-        return {
-          success: false,
-          message: 'No application found',
-        };
-      }
-
-      if (data.status !== 'approved') {
-        setAuthLoading(false);
-        return {
-          success: false,
-          message: 'Your application is not approved yet.',
-        };
-      }
-
-      setUser({
-        id: String(data.id),
-        name: data.full_name,
-        email: data.email,
-        role: 'volunteer',
-        status: data.status,
-      });
-
-      setAuthLoading(false);
-      return {
-        success: true,
-        status: data.status,
-      };
-    }
 
     setAuthLoading(false);
     return {
