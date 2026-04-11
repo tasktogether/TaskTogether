@@ -214,6 +214,7 @@ if (data) {
 }
 
 setAuthLoading(false);
+};
   loadSession();
 
   const {
