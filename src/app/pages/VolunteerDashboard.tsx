@@ -15,7 +15,12 @@ import {
   Users,
   Star,
   CheckCircle,
-  LogOut
+  LogOut,
+  X,
+  Building2,
+  Upload,
+  Edit3,
+  Save
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 
