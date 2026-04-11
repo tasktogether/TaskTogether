@@ -28,7 +28,7 @@ console.log('LOGIN RESULT:', result);
 
 setIsLoading(false);
 
-if (result.success !== true) {
+if (result.success !== true || result.status !== 'approved') {
   setError(result.message || 'Wrong email or password.');
   return;
 }
