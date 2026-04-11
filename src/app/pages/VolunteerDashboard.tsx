@@ -7,7 +7,15 @@ import { VolunteerSchedulingCalendar } from '../components/VolunteerSchedulingCa
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
-import { Clock, Plus } from 'lucide-react';
+import {
+  Clock,
+  Plus,
+  Camera,
+  Award,
+  Users,
+  Star,
+  CheckCircle
+} from 'lucide-react';
 import { Card } from '../components/ui/Card';
 
 interface Task {
