@@ -140,52 +140,8 @@ if (authLoading) {
   );
 if (!user || user.role !== 'volunteer') {
   return <Navigate to="/login" replace />;
-}
-}
- if (user?.status === 'pending') {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-slate-800 mb-3">
-          Application Received
-        </h1>
-        <p className="text-slate-600">
-          Your application is under review.
-        </p>
-      </div>
-    </div>
-  );
-}
+};
 
-if (user?.status === 'rejected') {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-slate-800 mb-3">
-          Application Update
-        </h1>
-        <p className="text-slate-600">
-          Your application was not approved at this time.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-if (user?.status === 'not_found') {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <div className="bg-white rounded-3xl shadow-lg p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-slate-800 mb-3">
-          No Application Found
-        </h1>
-        <p className="text-slate-600">
-          We could not find an application for this email address.
-        </p>
-      </div>
-    </div>
-  );
-}
   const handleAddNote = () => {
     if (!noteContent.trim()) return;
     const colors = ['bg-yellow-100', 'bg-pink-100', 'bg-blue-100', 'bg-green-100', 'bg-purple-100'];
