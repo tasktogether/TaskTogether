@@ -296,7 +296,7 @@ if (role === 'volunteer') {
 
     return {
       success: false,
-      message: 'No application found.',
+      message: 'We couldn’t find your application yet. If you recently applied, please wait for approval or contact support.',
     };
   }
 
