@@ -78,7 +78,7 @@ export default function VolunteerDashboard() {
   }, [isProfileOpen, user?.id]);
 
   const handleSaveProfile = async () => {
-    updateUser({ name: user?.Name, email: user?.Email });
+    updateUser({ name: userName, email: userEmail });
     
     // Save email preferences
     if (user?.id) {
@@ -138,10 +138,11 @@ if (authLoading) {
       </div>
     </div>
   );
-if (!user || user.role !== 'volunteer') {
+}
+
+if (!user || user.role !== 'volunteer' || user.status !== 'approved') {
   return <Navigate to="/login" replace />;
 }
-};
 
   const handleAddNote = () => {
     if (!noteContent.trim()) return;
