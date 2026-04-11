@@ -71,7 +71,7 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
   const filePath = `${Date.now()}-${cleanName}`;
 
   const { data: uploadData, error: uploadError } = await supabase.storage
-    .from('VIDEOS')
+    .from('videos')
     .upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
@@ -87,7 +87,7 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
   }
 
   const { data: publicUrlData } = supabase.storage
-    .from('VIDEOS')
+    .from('videos')
     .getPublicUrl(filePath);
 
   console.log('publicUrlData:', publicUrlData);
