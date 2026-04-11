@@ -28,7 +28,7 @@ export const RegistrationForm = () => {
 const onSubmit = async (data: RegistrationData) => {
   setIsSubmitting(true);
   console.log('Submitting with videoUrl:', videoUrl);
- 
+  if (isSubmitting) return;
   if (!videoUrl) {
   toast.error('Please upload a video first.');
   setIsSubmitting(false);
@@ -54,6 +54,7 @@ if (error) {
 }
 
   toast.success('Application submitted successfully!');
+  window.location.href = '/thank-you';
   registerUser(data.fullName, data.email);
   setIsSubmitting(false);
 };
