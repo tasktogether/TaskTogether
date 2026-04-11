@@ -192,17 +192,18 @@ useEffect(() => {
           role: 'volunteer',
           status: data.status,
         });
-      } else {
-        setUser({
-          id: session.user.id,
-          name: session.user.user_metadata?.name || 'Volunteer',
-          email,
-          role: 'volunteer',
-        });
-      }
-    } else {
-      setUser(null);
-    }
+
+        if (data.status === 'pending') {
+  toast('Your application is still under review.');
+}
+
+if (data.status === 'rejected') {
+  toast.error('Your application was not approved.');
+}
+
+if (data.status === 'approved') {
+  toast.success('Welcome! Your application has been approved.');
+}
 
     setAuthLoading(false);
   };
