@@ -70,8 +70,8 @@ const handleVideoUpload = async (event: any) => {
   const filePath = `${Date.now()}-${file.name}`;
 
   const { data: uploadData, error: uploadError } = await supabase.storage
-    .from('videos')
-    .upload(filePath, file);
+  .from('VIDEOS')
+  .upload(filePath, file);
 
   console.log('uploadData:', uploadData);
   console.log('uploadError:', uploadError);
@@ -82,8 +82,8 @@ const handleVideoUpload = async (event: any) => {
   }
 
   const { data: publicUrlData } = supabase.storage
-    .from('videos')
-    .getPublicUrl(filePath);
+  .from('VIDEOS')
+  .getPublicUrl(filePath);
 
   console.log('publicUrlData:', publicUrlData);
 
