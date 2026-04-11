@@ -23,23 +23,17 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   setIsLoading(true);
   await supabase.auth.signOut();
-  const result = await login(form.email, form.password, 'volunteer');
+const result = await login(form.email, form.password, 'volunteer');
+console.log('LOGIN RESULT:', result);
 
-  setIsLoading(false);
+setIsLoading(false);
 
-  if (!result.success) {
-    if (
-      result.message?.toLowerCase().includes('invalid login credentials') ||
-      result.message?.toLowerCase().includes('invalid')
-    ) {
-      setError('Wrong email or password.');
-    } else {
-      setError(result.message || 'Login failed.');
-    }
-    return;
-  }
+if (result.success !== true) {
+  setError(result.message || 'Wrong email or password.');
+  return;
+}
 
-  navigate('/volunteer-dashboard');
+navigate('/volunteer-dashboard');
 };
   return (
     <div style={{
