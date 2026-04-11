@@ -22,7 +22,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   setIsLoading(true);
-
+  await supabase.auth.signOut();
   const result = await login(form.email, form.password, 'volunteer');
 
   setIsLoading(false);
