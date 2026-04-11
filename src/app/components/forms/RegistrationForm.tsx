@@ -54,7 +54,7 @@ if (error) {
 }
 
   toast.success('Application submitted successfully!');
-  window.location.href = '/thank-you';
+  window.location.href = '/application-received';
   registerUser(data.fullName, data.email);
   setIsSubmitting(false);
 };
