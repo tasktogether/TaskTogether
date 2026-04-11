@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
- const handleSubmit = async (e: React.FormEvent) => {
+const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   setError('');
 
@@ -27,7 +27,14 @@ export default function LoginPage() {
   setIsLoading(false);
 
   if (!result.success) {
-    setError(result.message || 'Login failed');
+    if (
+      result.message?.toLowerCase().includes('invalid login credentials') ||
+      result.message?.toLowerCase().includes('invalid')
+    ) {
+      setError('Wrong email or password.');
+    } else {
+      setError(result.message || 'Login failed.');
+    }
     return;
   }
 
