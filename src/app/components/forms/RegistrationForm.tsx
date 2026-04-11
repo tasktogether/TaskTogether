@@ -58,7 +58,7 @@ if (error) {
   setIsSubmitting(false);
 };
 
-const handleVideoUpload = async (event: any) => {
+const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
   console.log('picked file:', file);
 
@@ -67,11 +67,16 @@ const handleVideoUpload = async (event: any) => {
     return;
   }
 
-  const filePath = `${Date.now()}-${file.name}`;
+  const cleanName = file.name.replace(/\s+/g, '-');
+  const filePath = `${Date.now()}-${cleanName}`;
 
   const { data: uploadData, error: uploadError } = await supabase.storage
-  .from('VIDEOS')
-  .upload(filePath, file);
+    .from('VIDEOS')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type,
+    });
 
   console.log('uploadData:', uploadData);
   console.log('uploadError:', uploadError);
@@ -82,12 +87,12 @@ const handleVideoUpload = async (event: any) => {
   }
 
   const { data: publicUrlData } = supabase.storage
-  .from('VIDEOS')
-  .getPublicUrl(filePath);
+    .from('VIDEOS')
+    .getPublicUrl(filePath);
 
   console.log('publicUrlData:', publicUrlData);
 
-  const publicUrl = publicUrlData?.publicUrl;
+  const publicUrl = publicUrlData?.publicUrl || '';
 
   if (!publicUrl) {
     toast.error('Video uploaded but URL was not created.');
