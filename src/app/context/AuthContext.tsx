@@ -312,7 +312,6 @@ const login = async (
   setAuthLoading(true);
 
   try {
-    // REAL authentication with Supabase
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -327,16 +326,12 @@ const login = async (
       };
     }
 
-    // Admin login
     if (role === 'admin') {
-      const isPlatformAdmin =
-        email === 'tasktogethercontact@gmail.com';
+      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
 
       setUser({
         id: authData.user.id,
-        name: isPlatformAdmin
-          ? 'Platform Admin'
-          : 'Senior Home Admin',
+        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
         email,
         role: 'admin',
         isPlatformAdmin,
@@ -349,7 +344,6 @@ const login = async (
       };
     }
 
-    // Volunteer login — check application
     const { data, error } = await supabase
       .from('volunteer_applications')
       .select('id, full_name, email, status')
@@ -360,7 +354,6 @@ const login = async (
 
     if (error || !data) {
       await supabase.auth.signOut();
-
       setAuthLoading(false);
 
       return {
@@ -371,7 +364,6 @@ const login = async (
 
     if (data.status !== 'approved') {
       await supabase.auth.signOut();
-
       setAuthLoading(false);
 
       return {
@@ -394,10 +386,8 @@ const login = async (
       success: true,
       status: data.status,
     };
-
   } catch (err) {
     console.error('Login error:', err);
-
     setAuthLoading(false);
 
     return {
@@ -406,99 +396,6 @@ const login = async (
     };
   }
 };
-
-  const login = async (email: string, password: string, role: UserRole) => {
-    setAuthLoading(true);
-
-    if (role === 'admin') {
-      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
-
-      setUser({
-        id: 'admin-1',
-        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
-        email,
-        role: 'admin',
-        isPlatformAdmin,
-      });
-
-      setAuthLoading(false);
-      return { success: true };
-    }
-if (role === 'volunteer') {
-  setUser(null);
-
-  const { data: signInData, error: authError } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-
-  console.log('SIGN IN DATA:', signInData);
-  console.log('AUTH ERROR:', authError);
-
-  if (authError || !signInData?.user) {
-    await supabase.auth.signOut();
-    setUser(null);
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'Wrong email or password.',
-    };
-  }
-
-  const { data, error } = await supabase
-    .from('volunteer_applications')
-    .select('id, full_name, email, status')
-    .eq('email', email)
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle();
-
-  if (error || !data) {
-    await supabase.auth.signOut();
-    setUser(null);
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'We couldn’t find your application yet. If you recently applied, please wait for approval or contact support.',
-    };
-  }
-
-  if (data.status !== 'approved') {
-    await supabase.auth.signOut();
-    setUser(null);
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'Your application is not approved yet.',
-    };
-  }
-
-  setUser({
-    id: String(data.id),
-    name: data.full_name,
-    email: data.email,
-    role: 'volunteer',
-    status: data.status,
-  });
-
-  setAuthLoading(false);
-
-  return {
-    success: true,
-    status: data.status,
-  };
-}
-
-    setAuthLoading(false);
-    return {
-      success: false,
-      message: 'Invalid role selected',
-    };
-  };
-
   const register = (name: string, email: string) => {
     const newApp: Application = {
       id: `app-${Date.now()}`,
