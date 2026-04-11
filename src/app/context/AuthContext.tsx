@@ -259,17 +259,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAuthLoading(false);
       return { success: true };
     }
-
 if (role === 'volunteer') {
   setUser(null);
 
-  const { data: signInData, error: authError } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+  const { data: signInData, error: authError } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
-  if (authError || !signInData.user) {
+  console.log('SIGN IN DATA:', signInData);
+  console.log('AUTH ERROR:', authError);
+
+  if (authError || !signInData?.user) {
     await supabase.auth.signOut();
     setUser(null);
     setAuthLoading(false);
@@ -288,25 +289,14 @@ if (role === 'volunteer') {
     .limit(1)
     .maybeSingle();
 
-  if (error) {
+  if (error || !data) {
     await supabase.auth.signOut();
     setUser(null);
     setAuthLoading(false);
 
     return {
       success: false,
-      message: 'Could not check application status',
-    };
-  }
-
-  if (!data) {
-    await supabase.auth.signOut();
-    setUser(null);
-    setAuthLoading(false);
-
-    return {
-      success: false,
-      message: 'No application found',
+      message: 'No application found.',
     };
   }
 
