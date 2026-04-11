@@ -14,7 +14,8 @@ import {
   Award,
   Users,
   Star,
-  CheckCircle
+  CheckCircle,
+  LogOut
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 
