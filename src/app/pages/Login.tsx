@@ -14,6 +14,7 @@ export default function Login() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // Check URL params for role=admin on mount (simulated)
   React.useEffect(() => {
@@ -24,6 +25,7 @@ export default function Login() {
   }, []);
 
   const onSubmit = async (data: any) => {
+  setLoading(true);
   const role = isAdmin ? 'admin' : 'volunteer';
 
   if (role === 'admin') {
@@ -38,7 +40,8 @@ export default function Login() {
 
     if (!result.success) {
       toast.error(result.message || 'Login failed');
-      return;
+setLoading(false);
+return;
     }
 
     navigate(isPlatformAdmin ? '/superadmin/dashboard' : '/admin/dashboard');
@@ -49,7 +52,8 @@ export default function Login() {
 
   if (!result.success || result.status !== 'approved') {
     toast.error(result.message || 'Login failed');
-    return;
+setLoading(false);
+return;
   }
 
   navigate('/volunteer-dashboard');
@@ -97,8 +101,9 @@ export default function Login() {
               </div>
             </div>
 
-            <Button fullWidth size="lg" className="group">
-              Sign In <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+            <<Button fullWidth size="lg" className="group" disabled={loading}>
+             {loading ? 'Signing in...' : 'Sign In'} 
+              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </Button>
           </form>
 
