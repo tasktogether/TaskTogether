@@ -378,12 +378,12 @@ const login = async (
 
     toast.success('Application submitted successfully!');
   };
-
-  const logout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    window.location.href = '/login';
-  };
+const logout = async () => {
+  await supabase.auth.signOut();
+  toast.success('You have been logged out.');
+  setUser(null);
+  window.location.href = '/login';
+};
 
   const updateApplicationStatus = async (
     appId: string,
