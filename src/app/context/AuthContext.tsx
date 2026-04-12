@@ -180,41 +180,45 @@ useEffect(() => {
         .limit(1)
         .maybeSingle();
 
-if (appError) {
-  console.error('Error loading volunteer after refresh:', appError);
-}
+      if (appError) {
+        console.error('Error loading volunteer after refresh:', appError);
+      }
 
-if (data) {
-  setUser({
-    id: String(data.id),
-    name: data.full_name,
-    email: data.email,
-    role: 'volunteer',
-    status: data.status,
-  });
+      if (data) {
+        setUser({
+          id: String(data.id),
+          name: data.full_name,
+          email: data.email,
+          role: 'volunteer',
+          status: data.status,
+        });
 
-  if (data.status === 'pending') {
-    toast('Your application is still under review.');
-  }
+        if (data.status === 'pending') {
+          toast('Your application is still under review.');
+        }
 
-  if (data.status === 'rejected') {
-    toast.error('Your application was not approved.');
-  }
+        if (data.status === 'rejected') {
+          toast.error('Your application was not approved.');
+        }
 
-  if (data.status === 'approved') {
-    toast.success('Welcome! Your application has been approved.');
-  }
-} else {
-  setUser({
-    id: session.user.id,
-    name: session.user.user_metadata?.name || 'Volunteer',
-    email,
-    role: 'volunteer',
-  });
-}
+        if (data.status === 'approved') {
+          toast.success('Welcome! Your application has been approved.');
+        }
+      } else {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || 'Volunteer',
+          email,
+          role: 'volunteer',
+        });
+      }
+    } else {
+      setUser(null);
+    }
 
-setAuthLoading(false);
-};
+    setAuthLoading(false);
+  };
+
   loadSession();
 
   const {
@@ -238,6 +242,13 @@ setAuthLoading(false);
           email: data.email,
           role: 'volunteer',
           status: data.status,
+        });
+      } else {
+        setUser({
+          id: session.user.id,
+          name: session.user.user_metadata?.name || 'Volunteer',
+          email,
+          role: 'volunteer',
         });
       }
     } else {
