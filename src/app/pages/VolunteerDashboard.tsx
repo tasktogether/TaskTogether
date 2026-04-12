@@ -46,6 +46,11 @@ export default function VolunteerDashboard() {
   const [viewReflectionTask, setViewReflectionTask] = useState<Task | null>(null);
   const [isEditingReflection, setIsEditingReflection] = useState(false);
   const [editedReflection, setEditedReflection] = useState('');
+  const { authLoading } = useAuth();
+
+if (authLoading) {
+  return <div>Loading...</div>;
+}
 
   // Form States
   const [noteContent, setNoteContent] = useState('');
