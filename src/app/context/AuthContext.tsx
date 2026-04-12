@@ -272,6 +272,24 @@ const login = async (
   setAuthLoading(true);
 
   try {
+    if (role === 'admin') {
+      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
+
+      setUser({
+        id: 'admin-1',
+        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
+        email,
+        role: 'admin',
+        isPlatformAdmin,
+      });
+
+      setAuthLoading(false);
+
+      return {
+        success: true,
+      };
+    }
+
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -283,24 +301,6 @@ const login = async (
       return {
         success: false,
         message: 'Wrong email or password.',
-      };
-    }
-
-    if (role === 'admin') {
-      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
-
-      setUser({
-        id: authData.user.id,
-        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
-        email,
-        role: 'admin',
-        isPlatformAdmin,
-      });
-
-      setAuthLoading(false);
-
-      return {
-        success: true,
       };
     }
 
@@ -339,6 +339,8 @@ const login = async (
       role: 'volunteer',
       status: data.status,
     });
+
+    toast.success('Welcome! Your application has been approved.');
 
     setAuthLoading(false);
 
