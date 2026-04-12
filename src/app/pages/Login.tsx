@@ -101,10 +101,10 @@ return;
               </div>
             </div>
 
-            <<Button fullWidth size="lg" className="group" disabled={loading}>
-             {loading ? 'Signing in...' : 'Sign In'} 
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-            </Button>
+            <Button fullWidth size="lg" className="group" disabled={loading}>
+  {loading ? 'Signing in...' : 'Sign In'}{' '}
+  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+</Button>
           </form>
 
           <div className="mt-6 text-center">
