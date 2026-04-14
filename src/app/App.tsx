@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Opportunities from './pages/Opportunities';
 import Login from './pages/Login';
 import VolunteerDashboard from './pages/VolunteerDashboard';
-import AdminDashboard from './pages/AdminDashboard';
+import DirectorDashboard from './pages/DirectorDashboard';
 import ParentalConsent from './pages/ParentalConsent';
 import SafetyGuidelines from './pages/SafetyGuidelines';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -45,7 +45,7 @@ export default function App() {
                 <Route path="/opportunities" element={<Opportunities />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/volunteer-dashboard" element={<VolunteerDashboard />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/director/dashboard" element={<DirectorDashboard />} />
                 <Route path="/dashboard" element={<Navigate to="/volunteer-dashboard" replace />} />
                 <Route path="/stories" element={<StoriesPage />} />
                 <Route path="/learn-more" element={<LearnMorePage />} />
