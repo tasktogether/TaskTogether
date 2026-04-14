@@ -13,21 +13,21 @@ export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isDirector, setIsDirector] = useState(false);
   const [loading, setLoading] = useState(false);
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    if (params.get('role') === 'admin') {
-      setIsAdmin(true);
+    if (params.get('role') === 'director') {
+      setIsDirector(true);
     }
   }, []);
 
   const onSubmit = async (data: any) => {
     setLoading(true);
 
-    if (isAdmin) {
-      const result = await login(data.email, data.password, 'admin');
+    if (isDirector) {
+      const result = await login(data.email, data.password, 'director');
 
       if (!result.success) {
         toast.error(result.message || 'Login failed');
@@ -35,7 +35,7 @@ export default function Login() {
         return;
       }
 
-      navigate('/admin/dashboard');
+      navigate('/director/dashboard');
       setLoading(false);
       return;
     }
@@ -61,10 +61,10 @@ export default function Login() {
         <Card className="w-full max-w-md bg-white/80 backdrop-blur-md shadow-2xl border-white/50">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-fredoka font-bold text-slate-800 mb-2">
-              {isAdmin ? 'Richmond Senior Center Admin Portal' : 'Welcome Back!'}
+              {isDirector ? 'Richmond Senior Center Director Portal' : 'Welcome Back!'}
             </h1>
             <p className="text-slate-500">
-              {isAdmin
+              {isDirector
                 ? 'Sign in to manage Richmond Senior Center volunteers.'
                 : 'Log in to view your volunteer dashboard.'}
             </p>
@@ -105,10 +105,10 @@ export default function Login() {
 
           <div className="mt-6 text-center">
             <button
-              onClick={() => setIsAdmin(!isAdmin)}
+              onClick={() => setIsDirector(!isDirector)}
               className="text-xs text-slate-400 hover:text-violet-600 underline decoration-dotted"
             >
-              Switch to {isAdmin ? 'Volunteer' : 'Admin'} Login
+              Switch to {isDirector ? 'Volunteer' : 'Director'} Login
             </button>
           </div>
         </Card>
