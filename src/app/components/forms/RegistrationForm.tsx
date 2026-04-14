@@ -107,13 +107,12 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
         upsert: false,
         contentType: file.type,
       });
-
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(
-        () => reject(new Error('Upload took too long. Please try again.')),
-        10000
-      )
-    );
+const timeoutPromise = new Promise((_, reject) =>
+  setTimeout(
+    () => reject(new Error('Upload took too long. Please try again or use an MP4 file.')),
+    30000
+  )
+);
 
     const result: any = await Promise.race([uploadPromise, timeoutPromise]);
 
@@ -254,9 +253,9 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
           </label>
 
           <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 transition-colors cursor-pointer group relative overflow-hidden">
-            <input
+           <input
   type="file"
-  accept="video/mp4,video/quicktime,video/webm"
+  accept="video/mp4,video/webm,video/quicktime"
   onChange={handleVideoUpload}
 />
 
