@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Star, Users, ChevronDown, Upload, FileText, CheckCircle, X, ArrowRight, Building2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
@@ -71,6 +71,7 @@ function SuccessPopup({ onClose }: { onClose: () => void }) {
 // ─── Registration Section ────────────────────────────────────────────────────
 function RegistrationSection() {
   const { addVolunteer } = useApp();
+  const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false);
   const [isMinor, setIsMinor] = useState(false);
   const [videoFileName, setVideoFileName] = useState<string | null>(null);
@@ -121,7 +122,9 @@ function RegistrationSection() {
       guardianEmail: isMinor ? form.guardianEmail.trim() : null,
       videoFileName: videoFileName,
     });
-    setShowSuccess(true);
+    
+    navigate('/application-received');
+    
     setForm({ name: '', email: '', password: '', age: '', guardianName: '', guardianEmail: '' });
     setVideoFileName(null);
     setIsMinor(false);
