@@ -232,7 +232,14 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
           <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 transition-colors cursor-pointer group relative overflow-hidden">
             <input type="file" accept="video/*" onChange={handleVideoUpload} />
 
-            {videoUrl ? (
+            {isUploadingVideo ? (
+  <div className="flex flex-col items-center gap-2 text-violet-700 animate-in zoom-in duration-300">
+    <div className="w-16 h-16 bg-violet-100 rounded-full flex items-center justify-center mb-2">
+      <Upload size={32} />
+    </div>
+    <span className="font-semibold text-lg">Uploading Video...</span>
+  </div>
+) : videoUrl ? (
               <div className="flex flex-col items-center gap-2 text-green-700 animate-in zoom-in duration-300">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-2">
                   <CheckCircle size={32} />
