@@ -379,7 +379,7 @@ function InfoCards() {
     {
       icon: Users,
       title: 'Get Involved',
-      description: 'Apply today, get approved, and start exploring opportunities near you. Every small act of service creates a big ripple of positive change.',
+      description: 'Apply today, get approved, and start volunteering at the Richmond Senior Center. Every small act of service creates a big ripple of positive change.',
       color: '#DBEAFE',
       accent: '#1D4ED8',
     },
@@ -430,11 +430,11 @@ function InfoCards() {
 // ─── Stats Banner ────────────────────────────────────────────────────────────
 function StatsBanner() {
   const stats = [
-    { value: '150+', label: 'Volunteers Registered' },
-    { value: '300+', label: 'Hours Served' },
-    { value: '80+', label: 'Seniors Helped' },
-    { value: '5', label: 'Partner Centers' },
-  ];
+  { value: '150+', label: 'Volunteers Registered' },
+  { value: '300+', label: 'Hours Served' },
+  { value: '80+', label: 'Seniors Supported' },
+  { value: '1', label: 'Senior Center Served' },
+];
 
   return (
     <section style={{ background: 'linear-gradient(135deg, #6D28D9, #4F46E5)', padding: '60px 24px' }}>
@@ -506,7 +506,7 @@ function HeroSection() {
               maxWidth: '600px',
               margin: '0 auto 36px'
             }}>
-              TaskTogether connects passionate teen volunteers with seniors who need a helping hand. Together, we build a stronger, warmer community — one task at a time.
+              TaskTogether connects passionate teen volunteers with seniors at the Richmond Senior Center. Together, we build a stronger, warmer community — one task at a time.
             </p>
 
             <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -608,87 +608,6 @@ function Testimonials() {
   );
 }
 
-// ─── Senior Home Application Section ─────────────────────────────────────────
-function SeniorHomeSection() {
-  const navigate = useNavigate();
-  
-  return (
-    <section style={{ background: '#F8FAFC', padding: '60px 24px', borderTop: '1px solid #E2E8F0' }}>
-      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-        <div className="tt-card" style={{ 
-          padding: '40px', 
-          background: 'linear-gradient(135deg, #FEFCE8 0%, #FEF3C7 100%)',
-          border: '2px solid #FDE68A'
-        }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', flexWrap: 'wrap' }}>
-            <div style={{
-              width: '56px', height: '56px', borderRadius: '16px',
-              background: 'linear-gradient(135deg, #F59E0B, #D97706)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              flexShrink: 0
-            }}>
-              <Building2 size={28} color="#fff" />
-            </div>
-            
-            <div style={{ flex: 1, minWidth: '280px' }}>
-              <h3 style={{ 
-                fontFamily: "'Fredoka', sans-serif", 
-                fontSize: '24px', 
-                fontWeight: 600, 
-                color: '#78350F',
-                marginBottom: '8px' 
-              }}>
-                Are you a Senior Home?
-              </h3>
-              <p style={{ 
-                fontFamily: "'Poppins', sans-serif", 
-                fontSize: '15px', 
-                color: '#92400E',
-                lineHeight: 1.7,
-                marginBottom: '20px'
-              }}>
-                Partner with TaskTogether to bring enthusiastic teen volunteers to your facility. Register your senior home to access our volunteer network and create meaningful connections for your residents.
-              </p>
-              
-              <button 
-                onClick={() => navigate('/register-senior-home')}
-                style={{
-                  background: '#F59E0B',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '12px',
-                  padding: '12px 24px',
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  boxShadow: '0 4px 12px rgba(245, 158, 11, 0.25)',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#D97706';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(245, 158, 11, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = '#F59E0B';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.25)';
-                }}
-              >
-                <Building2 size={18} />
-                Register Your Senior Home
-                <ArrowRight size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 // ─── Footer ──────────────────────────────────────────────────────────────────
 function Footer() {
   return (
@@ -723,7 +642,6 @@ export default function HomePage() {
       <StatsBanner />
       <Testimonials />
       <RegistrationSection />
-      <SeniorHomeSection />
       <Footer />
     </div>
   );
