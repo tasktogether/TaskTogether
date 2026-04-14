@@ -115,7 +115,7 @@ navigate('/volunteer-dashboard');
                 <button
                   type="button"
                   style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontFamily: "'Poppins', sans-serif", fontSize: '13px', color: '#6D28D9', fontWeight: 500 }}
-                  onClick={() => alert('💌 Please contact admin@tasktogether.org to reset your password.')}
+                  onClick={() => alert('💌 Please contact the director to reset your password.')}
                 >
                   Forgot password?
                 </button>
@@ -193,7 +193,7 @@ navigate('/volunteer-dashboard');
         {/* Admin link */}
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <Link to="/admin" style={{ fontFamily: "'Poppins', sans-serif", fontSize: '13px', color: '#94a3b8', textDecoration: 'none' }}>
-            Staff admin login →
+            Director login →
           </Link>
         </div>
       </div>
