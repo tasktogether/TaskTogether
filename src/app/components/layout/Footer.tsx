@@ -18,11 +18,11 @@ export const Footer = () => {
                 <Heart className="w-5 h-5 text-white fill-white" />
               </div>
               <span className="font-fredoka text-xl font-semibold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                TaskTogether
+                Richmond Senior Center Volunteers
               </span>
             </div>
             <p className="text-slate-600 text-sm leading-relaxed mb-4">
-              Connecting teen volunteers with seniors in a safe, organized, and welcoming way.
+              Supporting volunteers who serve seniors at the Richmond Senior Center in a safe and organized environment.
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export const Footer = () => {
 
         <div className="border-t border-violet-200 pt-8 text-center">
           <p className="text-slate-500 text-sm mb-2">
-            &copy; {new Date().getFullYear()} TaskTogether. Made with care by <span className="font-semibold text-violet-600">i2 scholar Kaitlyn Cleaveland</span>
+            &copy; {new Date().getFullYear()} Richmond Senior Center Volunteers. Made with care by <span className="font-semibold text-violet-600">i2 scholar Kaitlyn Cleaveland</span>
           </p>
           <p className="text-slate-400 text-xs">
             Building bridges between generations, one task at a time.
