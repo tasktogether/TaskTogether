@@ -1,77 +1,158 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle } from 'lucide-react';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
+import { CheckCircle, Heart } from 'lucide-react';
+
+function Footer() {
+  return (
+    <footer style={{ background: '#1e1b4b', padding: '48px 24px 32px' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', marginBottom: '16px' }}>
+          <Heart size={20} color="#E9D5FF" fill="#E9D5FF" />
+          <span style={{ fontFamily: "'Fredoka', sans-serif", fontSize: '24px', fontWeight: 600, color: '#E9D5FF' }}>
+            TaskTogether
+          </span>
+        </div>
+        <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '14px', color: '#94a3b8', marginBottom: '8px' }}>
+          "Serving Seniors. Together."
+        </p>
+        <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>
+          Contact: tasktogethercontact@gmail.com
+        </p>
+        <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '13px', color: '#475569' }}>
+          © 2026 TaskTogether. Created by i2 scholar Kaitlyn Cleaveland
+        </p>
+      </div>
+    </footer>
+  );
+}
 
 const ApplicationReceived: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <Navbar />
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #fff 0%, #F5F0FF 100%)', display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 20px' }}>
+        <div
+          className="tt-card"
+          style={{
+            width: '100%',
+            maxWidth: '720px',
+            padding: '48px 32px',
+            textAlign: 'center',
+          }}
+        >
+          <div
+            style={{
+              width: '88px',
+              height: '88px',
+              borderRadius: '9999px',
+              background: 'linear-gradient(135deg, #E9D5FF, #6D28D9)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 24px',
+            }}
+          >
+            <CheckCircle size={42} color="#fff" />
+          </div>
 
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-2xl">
-          <div className="bg-white rounded-3xl shadow-lg border border-gray-100 p-6 sm:p-10 text-center">
-            <div className="flex justify-center mb-6">
-              <div className="bg-green-100 p-4 rounded-full">
-                <CheckCircle className="h-14 w-14 text-green-600" />
+          <h1
+            style={{
+              fontFamily: "'Fredoka', sans-serif",
+              fontSize: 'clamp(28px, 5vw, 42px)',
+              fontWeight: 600,
+              color: '#1e1b4b',
+              marginBottom: '14px',
+              lineHeight: 1.2,
+            }}
+          >
+            Your application has been submitted successfully!
+          </h1>
+
+          <p
+            style={{
+              fontFamily: "'Poppins', sans-serif",
+              fontSize: '16px',
+              color: '#64748b',
+              lineHeight: 1.7,
+              maxWidth: '560px',
+              margin: '0 auto 28px',
+            }}
+          >
+            Thank you for applying to volunteer with Richmond Senior Center through TaskTogether.
+          </p>
+
+          <div
+            style={{
+              background: '#FAFAFF',
+              border: '1px solid #E9D5FF',
+              borderRadius: '20px',
+              padding: '24px',
+              textAlign: 'left',
+              maxWidth: '580px',
+              margin: '0 auto 32px',
+            }}
+          >
+            <h2
+              style={{
+                fontFamily: "'Fredoka', sans-serif",
+                fontSize: '22px',
+                fontWeight: 600,
+                color: '#6D28D9',
+                marginBottom: '18px',
+                textAlign: 'center',
+              }}
+            >
+              What happens next?
+            </h2>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '9999px', background: '#6D28D9', marginTop: '8px', flexShrink: 0 }} />
+                <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '15px', color: '#334155', lineHeight: 1.7, margin: 0 }}>
+                  The admin at the Richmond Senior Center will review your application.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '9999px', background: '#6D28D9', marginTop: '8px', flexShrink: 0 }} />
+                <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '15px', color: '#334155', lineHeight: 1.7, margin: 0 }}>
+                  You will receive an approval or rejection email after your application is reviewed.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '9999px', background: '#6D28D9', marginTop: '8px', flexShrink: 0 }} />
+                <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '15px', color: '#334155', lineHeight: 1.7, margin: 0 }}>
+                  If approved, you will set your password through the email link before logging in.
+                </p>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                <div style={{ width: '10px', height: '10px', borderRadius: '9999px', background: '#6D28D9', marginTop: '8px', flexShrink: 0 }} />
+                <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '15px', color: '#334155', lineHeight: 1.7, margin: 0 }}>
+                  Until then, you will need to wait for approval before you can log in.
+                </p>
               </div>
             </div>
+          </div>
 
-            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Your application has been submitted successfully!
-            </h1>
+          <div style={{ display: 'flex', gap: '14px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => navigate('/')}
+              className="tt-btn-primary"
+              style={{ padding: '12px 24px', fontSize: '15px' }}
+            >
+              Return to Home
+            </button>
 
-            <p className="text-gray-600 text-base sm:text-lg mb-8">
-              Thank you for applying to volunteer with the Richmond Senior Center through TaskTogether.
-            </p>
-
-            <div className="bg-gray-50 rounded-2xl p-5 sm:p-6 text-left mb-8">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 text-center sm:text-left">
-                What happens next?
-              </h2>
-
-              <div className="space-y-4 text-gray-700">
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500 shrink-0" />
-                  <p>
-                    The admin at the Richmond Senior Center will review your application.
-                  </p>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500 shrink-0" />
-                  <p>
-                    You will receive an email letting you know whether your application was approved or rejected.
-                  </p>
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <div className="mt-1 h-2.5 w-2.5 rounded-full bg-green-500 shrink-0" />
-                  <p>
-                    If approved, you will use the link in the email to set your password before logging in.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button
-                onClick={() => navigate('/')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-white font-medium hover:opacity-90 transition"
-              >
-                Return to Home
-              </button>
-
-              <button
-                onClick={() => navigate('/opportunities')}
-                className="w-full sm:w-auto px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition"
-              >
-                View Opportunities
-              </button>
-            </div>
+            <button
+              onClick={() => navigate('/opportunities')}
+              className="tt-btn-secondary"
+              style={{ padding: '12px 24px', fontSize: '15px' }}
+            >
+              View Opportunities
+            </button>
           </div>
         </div>
       </main>
