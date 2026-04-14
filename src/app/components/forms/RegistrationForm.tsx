@@ -76,27 +76,18 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
     return;
   }
 
-  if (!file.type.startsWith('video/')) {
-    toast.error('Please choose a video file.');
-    return;
-  }
-
-  // Optional size limit: 100 MB
-  if (file.size > 100 * 1024 * 1024) {
-    toast.error('Video is too large. Please upload a file under 100 MB.');
-    return;
-  }
-
   setIsUploadingVideo(true);
   setVideoUrl('');
 
   try {
-    console.log('picked file:', file.name, file.type, file.size);
+    console.log('STEP 1: file selected', file.name, file.type, file.size);
 
     const cleanName = file.name.replace(/\s+/g, '-');
     const filePath = `${Date.now()}-${cleanName}`;
 
-    const { error: uploadError } = await supabase.storage
+    console.log('STEP 2: starting upload', filePath);
+
+    const uploadPromise = supabase.storage
       .from('videos')
       .upload(filePath, file, {
         cacheControl: '3600',
@@ -104,29 +95,36 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
         contentType: file.type,
       });
 
-    if (uploadError) {
-      console.error('uploadError:', uploadError);
-      toast.error(uploadError.message);
-      return;
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Upload timed out after 20 seconds.')), 20000)
+    );
+
+    const result: any = await Promise.race([uploadPromise, timeoutPromise]);
+
+    console.log('STEP 3: upload finished', result);
+
+    if (result?.error) {
+      throw result.error;
     }
 
     const { data: publicUrlData } = supabase.storage
       .from('videos')
       .getPublicUrl(filePath);
 
+    console.log('STEP 4: public URL data', publicUrlData);
+
     const publicUrl = publicUrlData?.publicUrl || '';
 
     if (!publicUrl) {
-      toast.error('Video uploaded but URL was not created.');
-      return;
+      throw new Error('Video uploaded but URL was not created.');
     }
 
-    console.log('publicUrl:', publicUrl);
     setVideoUrl(publicUrl);
     toast.success('Video uploaded successfully!');
+    console.log('STEP 5: done', publicUrl);
   } catch (error: any) {
-    console.error('VIDEO UPLOAD FAILED:', error);
-    toast.error(error?.message || 'Video upload failed.');
+    console.error('VIDEO UPLOAD ERROR:', error);
+    toast.error(error.message || 'Video upload failed.');
   } finally {
     setIsUploadingVideo(false);
   }
