@@ -22,7 +22,8 @@ export const Navbar = () => {
                 <Heart size={20} className="text-white fill-white md:w-6 md:h-6" />
               </div>
               <span className="font-fredoka text-xl md:text-2xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
-                TaskTogether
+  Richmond Senior Center
+</span>
               </span>
             </div>
           </Link>
@@ -120,7 +121,7 @@ export const Navbar = () => {
                     onClick={() => setIsOpen(false)}
                   >
                     <Button fullWidth variant="secondary" className="justify-start gap-2">
-                      <User size={18} /> My Dashboard
+                      <User size={18} /> {user.role === 'admin' ? 'Admin Dashboard' : 'My Dashboard'}
                     </Button>
                   </Link>
                   <Button 
