@@ -48,7 +48,7 @@ function SuccessPopup({ onClose }: { onClose: () => void }) {
           marginBottom: '28px', border: '1px solid #FDE68A'
         }}>
           <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '14px', color: '#92400E', fontWeight: 500 }}>
-            Status: <strong>Pending Admin Approval</strong>
+            Status: <strong>Pending Director Approval</strong>
           </p>
           <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '13px', color: '#92400E', marginTop: '4px' }}>
             We'll reach out to you via email once reviewed!
