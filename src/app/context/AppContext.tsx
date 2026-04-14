@@ -34,13 +34,13 @@ interface AppContextType {
   volunteers: Volunteer[];
   opportunities: Opportunity[];
   currentVolunteer: Volunteer | null;
-  isAdminLoggedIn: boolean;
+  isDirectorLoggedIn: boolean;
   addVolunteer: (data: Omit<Volunteer, 'id' | 'status' | 'appliedAt' | 'assignedOpportunities'>) => void;
   updateVolunteerStatus: (id: string, status: VolunteerStatus) => void;
   loginVolunteer: (email: string, password: string) => { success: boolean; message: string };
   logoutVolunteer: () => void;
-  loginAdmin: (email: string, password: string) => boolean;
-  logoutAdmin: () => void;
+  loginDirector: (email: string, password: string) => boolean;
+  logoutDirector: () => void;
   addOpportunity: (data: Omit<Opportunity, 'id' | 'currentVolunteers'>) => void;
   updateOpportunity: (id: string, data: Partial<Opportunity>) => void;
   deleteOpportunity: (id: string) => void;
@@ -153,8 +153,8 @@ const MOCK_OPPORTUNITIES: Opportunity[] = [
   },
 ];
 
-const ADMIN_EMAIL = 'admin@tasktogether.org';
-const ADMIN_PASSWORD = 'Admin123!';
+const DIRECTOR_EMAIL = 'tasktogethercontact@gmail.com';
+const DIRECTOR_PASSWORD = 'TaskTogether123$';
 
 const AppContext = createContext<AppContextType | null>(null);
 
@@ -180,8 +180,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch { return null; }
   });
 
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem('tt_admin_logged_in') === 'true';
+  const [isDirectorLoggedIn, setIsDirectorLoggedIn] = useState<boolean>(() => {
+    return localStorage.getItem('tt_director_logged_in') === 'true';
   });
 
   useEffect(() => {
@@ -201,8 +201,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [currentVolunteer]);
 
   useEffect(() => {
-    localStorage.setItem('tt_admin_logged_in', String(isAdminLoggedIn));
-  }, [isAdminLoggedIn]);
+    localStorage.setItem('tt_director_logged_in', String(isDirectorLoggedIn));
+  }, [isDirectorLoggedIn]);
 
   const addVolunteer = (data: Omit<Volunteer, 'id' | 'status' | 'appliedAt' | 'assignedOpportunities'>) => {
     const newVolunteer: Volunteer = {
@@ -271,15 +271,15 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const logoutVolunteer = () => setCurrentVolunteer(null);
 
-  const loginAdmin = (email: string, password: string): boolean => {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      setIsAdminLoggedIn(true);
+  const loginDirector = (email: string, password: string): boolean => {
+    if (email === DIRECTOR_EMAIL && password === DIRECTOR_PASSWORD) {
+      setIsDirectorLoggedIn(true);
       return true;
     }
     return false;
   };
 
-  const logoutAdmin = () => setIsAdminLoggedIn(false);
+  const logoutDirector = () => setIsDirectorLoggedIn(false);
 
   const addOpportunity = (data: Omit<Opportunity, 'id' | 'currentVolunteers'>) => {
     const newOpp: Opportunity = {
@@ -376,9 +376,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <AppContext.Provider value={{
-      volunteers, opportunities, currentVolunteer, isAdminLoggedIn,
+      volunteers, opportunities, currentVolunteer, isDirectorLoggedIn,
       addVolunteer, updateVolunteerStatus, loginVolunteer, logoutVolunteer,
-      loginAdmin, logoutAdmin, addOpportunity, updateOpportunity, deleteOpportunity,
+      loginDirector, logoutDirector, addOpportunity, updateOpportunity, deleteOpportunity,
       applyForOpportunity,
     }}>
       {children}
