@@ -72,9 +72,14 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
   const file = event.target.files?.[0];
 
   if (!file) {
-    toast.error('No file selected.');
-    return;
-  }
+  toast.error('No file selected.');
+  return;
+}
+
+if (file.size > 50 * 1024 * 1024) {
+  toast.error('Video is too large. Please upload a file under 50 MB.');
+  return;
+}
 
   setIsUploadingVideo(true);
   setVideoUrl('');
@@ -96,8 +101,11 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
       });
 
     const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error('Upload timed out after 20 seconds.')), 20000)
-    );
+  setTimeout(
+    () => reject(new Error('Upload took too long. Please try a smaller video (under 50MB).')),
+    10000
+  )
+);
 
     const result: any = await Promise.race([uploadPromise, timeoutPromise]);
 
