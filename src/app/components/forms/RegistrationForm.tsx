@@ -286,9 +286,9 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
           fullWidth
           size="lg"
           className="mt-8 h-12 text-lg rounded-xl bg-violet-700 hover:bg-violet-800 shadow-md font-semibold text-white"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isUploadingVideo}
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Application'}
+          {isUploadingVideo ? 'Uploading Video...' : isSubmitting ? 'Submitting...' : 'Submit Application'}
         </Button>
       </form>
     </Card>
