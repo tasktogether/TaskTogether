@@ -17,7 +17,7 @@ const steps = [
   },
   {
     number: '02',
-    title: 'Admin Review',
+    title: 'Director Review',
     desc: 'The Richmond Senior Center team reviews your application and checks your consent forms.',
     icon: '🔍',
     color: 'bg-blue-50 border-blue-100',
