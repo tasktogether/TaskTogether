@@ -171,7 +171,7 @@ function StoryModal({ story, onClose }: { story: Story; onClose: () => void }) {
             <div>
               <p className="font-bold text-slate-800">{story.volunteerName}</p>
               <p className="text-sm text-slate-400 flex items-center gap-1">
-                <Calendar size={12} /> {timeAgo(story.submittedAt)} · TaskTogether Volunteer
+               <Calendar size={12} /> {timeAgo(story.submittedAt)} · Richmond Senior Center Volunteer
               </p>
             </div>
             <div className="ml-auto">
@@ -239,8 +239,8 @@ export default function StoriesPage() {
               Stories of <span className="text-violet-600">Kindness</span>
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              Heartfelt reflections from our teen volunteers — shared with their permission.
-              Every story is a reminder that small acts of kindness change the world.
+              Reflections from Richmond Senior Center volunteers, shared with permission.
+              Each story highlights the impact of serving seniors in the community.
             </p>
           </motion.div>
 
@@ -362,7 +362,7 @@ export default function StoriesPage() {
           <h2 className="text-3xl font-fredoka font-bold mb-3">Have a Story to Share?</h2>
           <p className="text-violet-100 max-w-xl mx-auto mb-6">
             After completing a task, you can opt in to share your reflection with the community.
-            Your story might inspire the next great volunteer!
+            Your story might inspire another Richmond Senior Center volunteer.
           </p>
           <a
             href="/login"
