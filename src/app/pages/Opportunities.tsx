@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, MapPin, Search, X, Check, ArrowRight, Building2 } from 'lucide-react';
+import { Calendar, Clock, MapPin, Search, X, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { Navbar } from '../components/layout/Navbar';
@@ -22,25 +22,18 @@ export default function Opportunities() {
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
-  const [selectedSeniorHome, setSelectedSeniorHome] = useState<string>('all');
-
-  // In a real app, this would come from an API call to get approved senior homes
-  const seniorHomes = [
-    { id: 'sh_richmond', name: 'Richmond Senior Center', city: 'Richmond', state: 'VA' },
-    { id: 'sh_fairfax', name: 'Fairfax Community Senior Home', city: 'Fairfax', state: 'VA' },
-    { id: 'sh_arlington', name: 'Arlington Senior Living', city: 'Arlington', state: 'VA' },
-  ];
 
   const handleOptIn = (opp: any) => {
     if (!user) {
       toast.error('Please log in to join this opportunity!', {
         action: {
           label: 'Login',
-          onClick: () => window.location.href = '/login'
-        }
+          onClick: () => (window.location.href = '/login'),
+        },
       });
       return;
     }
+
     toast.success(`You've successfully signed up for "${opp.title}"! 🎉`);
     setSelectedOpp(null);
   };
@@ -50,9 +43,10 @@ export default function Opportunities() {
       !searchQuery ||
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opp.description.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesFilter = activeFilter === 'All' || opp.timeSlot === activeFilter;
-    const matchesSeniorHome = selectedSeniorHome === 'all' || opp.seniorHomeId === selectedSeniorHome;
-    return matchesSearch && matchesFilter && matchesSeniorHome;
+
+    return matchesSearch && matchesFilter;
   });
 
   const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
@@ -64,49 +58,14 @@ export default function Opportunities() {
       <div className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-fredoka font-bold text-slate-900 mb-4">
-            Find Your Cause 🌟
+            Richmond Senior Center Opportunities 🌟
           </h1>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Browse available volunteer roles and find the perfect way to give back — on your schedule.
+            Browse volunteer opportunities at Richmond Senior Center and find what fits your schedule.
           </p>
         </div>
 
-        {/* Filters */}
-        <div className="mb-12 space-y-4">
-          {/* Senior Home Filter */}
-          <div className="bg-gradient-to-r from-violet-50 to-pink-50 p-4 rounded-2xl border border-violet-100">
-            <div className="flex items-center gap-3 mb-3">
-              <Building2 className="text-violet-600" size={20} />
-              <h3 className="font-bold text-slate-800">Filter by Senior Home</h3>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={() => setSelectedSeniorHome('all')}
-                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                  selectedSeniorHome === 'all'
-                    ? 'bg-violet-600 text-white shadow-md'
-                    : 'bg-white text-slate-600 hover:bg-violet-100'
-                }`}
-              >
-                All Locations
-              </button>
-              {seniorHomes.map(home => (
-                <button
-                  key={home.id}
-                  onClick={() => setSelectedSeniorHome(home.id)}
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                    selectedSeniorHome === home.id
-                      ? 'bg-violet-600 text-white shadow-md'
-                      : 'bg-white text-slate-600 hover:bg-violet-100'
-                  }`}
-                >
-                  {home.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Time Slot Filter */}
+        <div className="mb-12">
           <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
             <div className="relative w-full md:w-96">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
@@ -117,11 +76,15 @@ export default function Opportunities() {
                 className="w-full pl-12 pr-10 py-3 rounded-xl bg-slate-50 border-none focus:ring-2 focus:ring-violet-200 transition-all"
               />
               {searchQuery && (
-                <button onClick={() => setSearchQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                >
                   <X size={16} />
                 </button>
               )}
             </div>
+
             <div className="flex gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
               {filters.map(f => (
                 <button
@@ -140,12 +103,17 @@ export default function Opportunities() {
           </div>
         </div>
 
-        {/* Grid */}
         {filteredOpps.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-4xl mb-3">🔍</p>
             <p className="text-slate-500 font-medium">No opportunities match your search.</p>
-            <button onClick={() => { setSearchQuery(''); setActiveFilter('All'); }} className="mt-3 text-violet-600 font-bold text-sm hover:underline">
+            <button
+              onClick={() => {
+                setSearchQuery('');
+                setActiveFilter('All');
+              }}
+              className="mt-3 text-violet-600 font-bold text-sm hover:underline"
+            >
               Clear filters
             </button>
           </div>
@@ -158,7 +126,11 @@ export default function Opportunities() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.05 }}
               >
-                <Card hover className="overflow-hidden flex flex-col h-full p-0 cursor-pointer" onClick={() => setSelectedOpp(opp)}>
+                <Card
+                  hover
+                  className="overflow-hidden flex flex-col h-full p-0 cursor-pointer"
+                  onClick={() => setSelectedOpp(opp)}
+                >
                   <div className="h-48 overflow-hidden relative group">
                     <img
                       src={opp.imageUrl}
@@ -174,6 +146,7 @@ export default function Opportunities() {
                       Active
                     </div>
                   </div>
+
                   <div className="p-6 flex flex-col flex-1">
                     <h3 className="text-xl font-bold font-poppins text-slate-800 mb-2">{opp.title}</h3>
                     <p className="text-slate-600 text-sm mb-4 flex-1 line-clamp-3">{opp.description}</p>
@@ -189,7 +162,14 @@ export default function Opportunities() {
                       </div>
                     </div>
 
-                    <Button fullWidth variant="outline" onClick={(e) => { e.stopPropagation(); setSelectedOpp(opp); }}>
+                    <Button
+                      fullWidth
+                      variant="outline"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setSelectedOpp(opp);
+                      }}
+                    >
                       View Details
                     </Button>
                   </div>
@@ -202,10 +182,12 @@ export default function Opportunities() {
 
       <Footer />
 
-      {/* Opportunity Details Modal */}
       <AnimatePresence>
         {selectedOpp && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm" onClick={() => setSelectedOpp(null)}>
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm"
+            onClick={() => setSelectedOpp(null)}
+          >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -221,6 +203,7 @@ export default function Opportunities() {
                 >
                   <X size={20} className="text-slate-800" />
                 </button>
+
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-8">
                   <div className="flex items-center gap-2 mb-2">
                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${TIME_SLOT_COLORS[selectedOpp.timeSlot]}`}>
@@ -248,22 +231,37 @@ export default function Opportunities() {
                   <h3 className="text-xl font-bold text-slate-800 mb-3">About this Opportunity</h3>
                   <p className="text-slate-600 leading-relaxed text-lg">{selectedOpp.description}</p>
                   <p className="text-slate-600 leading-relaxed mt-4">
-                    Join us in making a difference! This role is perfect for anyone looking to gain community service experience while building meaningful connections with seniors. Training and support will be provided.
+                    This opportunity is part of the Richmond Senior Center volunteer program. Training and support will be provided.
                   </p>
                 </div>
 
                 <div>
                   <h3 className="text-xl font-bold text-slate-800 mb-3">Requirements</h3>
                   <ul className="space-y-2 text-slate-600">
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-violet-400 rounded-full" /> Must be 13 years or older</li>
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-violet-400 rounded-full" /> Parental consent required for volunteers under 18</li>
-                    <li className="flex items-center gap-2"><div className="w-1.5 h-1.5 bg-violet-400 rounded-full" /> Friendly, patient, and reliable attitude</li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                      Must be 13 years or older
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                      Parental consent required for volunteers under 18
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 bg-violet-400 rounded-full" />
+                      Friendly, patient, and reliable attitude
+                    </li>
                   </ul>
                 </div>
 
                 <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
-                  <Button variant="ghost" onClick={() => setSelectedOpp(null)}>Close</Button>
-                  <Button size="lg" className="px-8 shadow-lg shadow-violet-200" onClick={() => handleOptIn(selectedOpp)}>
+                  <Button variant="ghost" onClick={() => setSelectedOpp(null)}>
+                    Close
+                  </Button>
+                  <Button
+                    size="lg"
+                    className="px-8 shadow-lg shadow-violet-200"
+                    onClick={() => handleOptIn(selectedOpp)}
+                  >
                     Opt In & Join <ArrowRight size={18} className="ml-2" />
                   </Button>
                 </div>
