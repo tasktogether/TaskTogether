@@ -243,7 +243,11 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
           </label>
 
           <div className="bg-slate-50 border-2 border-dashed border-slate-300 rounded-xl p-8 text-center hover:bg-slate-100 transition-colors cursor-pointer group relative overflow-hidden">
-            <input type="file" accept="video/*" onChange={handleVideoUpload} />
+            <input
+  type="file"
+  accept="video/mp4,video/quicktime,video/webm"
+  onChange={handleVideoUpload}
+/>
 
             {isUploadingVideo ? (
   <div className="flex flex-col items-center gap-2 text-violet-700 animate-in zoom-in duration-300">
