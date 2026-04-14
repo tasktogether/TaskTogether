@@ -36,9 +36,9 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
 
-  if (!user || user.role !== 'admin') {
-    return <Navigate to="/login?role=admin" replace />;
-  }
+if (!user || user.role !== 'director') {
+  return <Navigate to="/login?role=director" replace />;
+}
 
   const pendingApps = applications.filter(app => app.status === 'pending');
   const approvedApps = applications.filter(app => app.status === 'approved');
