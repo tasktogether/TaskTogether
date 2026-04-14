@@ -412,7 +412,7 @@ export default function AdminDashboard() {
           <span className="font-fredoka text-xl font-bold text-slate-800 flex items-center gap-2">
             Richmond Senior Center
           </span>
-          <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">Admin Portal</span>
+          <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">Director Portal</span>
         </div>
 
         <div className="p-4 space-y-2 flex-1">
