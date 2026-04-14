@@ -19,7 +19,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AppProvider } from './context/AppContext';
 import SetPassword from './pages/SetPassword';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import ApplicationReceived from '@/app/pages/ApplicationReceived';
+import ApplicationReceived from './pages/ApplicationReceived';
 
 // Helper for scroll to top on route change
 function ScrollToTopHelper() {
