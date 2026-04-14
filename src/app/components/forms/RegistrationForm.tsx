@@ -26,92 +26,98 @@ export const RegistrationForm = () => {
   } = useForm<RegistrationData>();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [videoUrl, setVideoUrl] = useState('');
-
+const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+const [videoUrl, setVideoUrl] = useState('');
+  
   const age = watch('age');
   const isMinor = age && age < 18;
 
-  const onSubmit = async (data: RegistrationData) => {
-    if (isSubmitting) return;
+const onSubmit = async (data: RegistrationData) => {
+  if (isSubmitting || isUploadingVideo) return;
 
-    setIsSubmitting(true);
-    console.log('Submitting with videoUrl:', videoUrl);
+  setIsSubmitting(true);
+  console.log('Submitting with videoUrl:', videoUrl);
 
-    if (!videoUrl) {
-      toast.error('Please upload a video first.');
-      setIsSubmitting(false);
-      return;
-    }
-
-    const { error } = await supabase.from('volunteer_applications').insert([
-      {
-        full_name: data.fullName,
-        email: data.email,
-        age: String(data.age),
-        availability: '',
-        why_volunteer: '',
-        status: 'pending',
-        video_url: videoUrl,
-      },
-    ]);
-
-    if (error) {
-      console.error('SUBMIT ERROR:', error);
-      toast.error(error.message);
-      setIsSubmitting(false);
-      return;
-    }
-
-    toast.success('Application submitted successfully!');
-    registerUser(data.fullName, data.email);
+  if (!videoUrl) {
+    toast.error('Please wait for the video upload to finish first.');
     setIsSubmitting(false);
-    window.location.href = '/application-received';
-  };
+    return;
+  }
 
-  const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    console.log('picked file:', file);
+  const { error } = await supabase.from('volunteer_applications').insert([
+    {
+      full_name: data.fullName,
+      email: data.email,
+      age: String(data.age),
+      availability: '',
+      why_volunteer: '',
+      status: 'pending',
+      video_url: videoUrl,
+    },
+  ]);
 
-    if (!file) {
-      toast.error('No file selected.');
-      return;
-    }
+  if (error) {
+    console.error('SUBMIT ERROR:', error);
+    toast.error(error.message);
+    setIsSubmitting(false);
+    return;
+  }
 
-    const cleanName = file.name.replace(/\s+/g, '-');
-    const filePath = `${Date.now()}-${cleanName}`;
+  toast.success('Application submitted successfully!');
+  registerUser(data.fullName, data.email);
+  setIsSubmitting(false);
+  window.location.href = '/application-received';
+};
+const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0];
+  console.log('picked file:', file);
 
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('videos')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false,
-        contentType: file.type,
-      });
+  if (!file) {
+    toast.error('No file selected.');
+    return;
+  }
 
-    console.log('uploadData:', uploadData);
-    console.log('uploadError:', uploadError);
+  setIsUploadingVideo(true);
+  setVideoUrl('');
 
-    if (uploadError) {
-      toast.error(uploadError.message);
-      return;
-    }
+  const cleanName = file.name.replace(/\s+/g, '-');
+  const filePath = `${Date.now()}-${cleanName}`;
 
-    const { data: publicUrlData } = supabase.storage
-      .from('videos')
-      .getPublicUrl(filePath);
+  const { data: uploadData, error: uploadError } = await supabase.storage
+    .from('videos')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false,
+      contentType: file.type,
+    });
 
-    console.log('publicUrlData:', publicUrlData);
+  console.log('uploadData:', uploadData);
+  console.log('uploadError:', uploadError);
 
-    const publicUrl = publicUrlData?.publicUrl || '';
+  if (uploadError) {
+    toast.error(uploadError.message);
+    setIsUploadingVideo(false);
+    return;
+  }
 
-    if (!publicUrl) {
-      toast.error('Video uploaded but URL was not created.');
-      return;
-    }
+  const { data: publicUrlData } = supabase.storage
+    .from('videos')
+    .getPublicUrl(filePath);
 
-    setVideoUrl(publicUrl);
-    toast.success('Video uploaded successfully!');
-  };
+  console.log('publicUrlData:', publicUrlData);
+
+  const publicUrl = publicUrlData?.publicUrl || '';
+
+  if (!publicUrl) {
+    toast.error('Video uploaded but URL was not created.');
+    setIsUploadingVideo(false);
+    return;
+  }
+
+  setVideoUrl(publicUrl);
+  setIsUploadingVideo(false);
+  toast.success('Video uploaded successfully!');
+};
 
   return (
     <Card className="max-w-2xl mx-auto border border-slate-200 shadow-xl bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden">
