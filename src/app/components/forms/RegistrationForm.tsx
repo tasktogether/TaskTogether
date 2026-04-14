@@ -70,53 +70,66 @@ const onSubmit = async (data: RegistrationData) => {
 };
 const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
   const file = event.target.files?.[0];
-  console.log('picked file:', file);
 
   if (!file) {
     toast.error('No file selected.');
     return;
   }
 
+  if (!file.type.startsWith('video/')) {
+    toast.error('Please choose a video file.');
+    return;
+  }
+
+  // Optional size limit: 100 MB
+  if (file.size > 100 * 1024 * 1024) {
+    toast.error('Video is too large. Please upload a file under 100 MB.');
+    return;
+  }
+
   setIsUploadingVideo(true);
   setVideoUrl('');
 
-  const cleanName = file.name.replace(/\s+/g, '-');
-  const filePath = `${Date.now()}-${cleanName}`;
+  try {
+    console.log('picked file:', file.name, file.type, file.size);
 
-  const { data: uploadData, error: uploadError } = await supabase.storage
-    .from('videos')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: false,
-      contentType: file.type,
-    });
+    const cleanName = file.name.replace(/\s+/g, '-');
+    const filePath = `${Date.now()}-${cleanName}`;
 
-  console.log('uploadData:', uploadData);
-  console.log('uploadError:', uploadError);
+    const { error: uploadError } = await supabase.storage
+      .from('videos')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type,
+      });
 
-  if (uploadError) {
-    toast.error(uploadError.message);
+    if (uploadError) {
+      console.error('uploadError:', uploadError);
+      toast.error(uploadError.message);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from('videos')
+      .getPublicUrl(filePath);
+
+    const publicUrl = publicUrlData?.publicUrl || '';
+
+    if (!publicUrl) {
+      toast.error('Video uploaded but URL was not created.');
+      return;
+    }
+
+    console.log('publicUrl:', publicUrl);
+    setVideoUrl(publicUrl);
+    toast.success('Video uploaded successfully!');
+  } catch (error: any) {
+    console.error('VIDEO UPLOAD FAILED:', error);
+    toast.error(error?.message || 'Video upload failed.');
+  } finally {
     setIsUploadingVideo(false);
-    return;
   }
-
-  const { data: publicUrlData } = supabase.storage
-    .from('videos')
-    .getPublicUrl(filePath);
-
-  console.log('publicUrlData:', publicUrlData);
-
-  const publicUrl = publicUrlData?.publicUrl || '';
-
-  if (!publicUrl) {
-    toast.error('Video uploaded but URL was not created.');
-    setIsUploadingVideo(false);
-    return;
-  }
-
-  setVideoUrl(publicUrl);
-  setIsUploadingVideo(false);
-  toast.success('Video uploaded successfully!');
 };
 
   return (
