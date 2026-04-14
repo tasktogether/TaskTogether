@@ -72,14 +72,22 @@ const handleVideoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => 
   const file = event.target.files?.[0];
 
   if (!file) {
-  toast.error('No file selected.');
-  return;
-}
+    toast.error('No file selected.');
+    return;
+  }
 
-if (file.size > 50 * 1024 * 1024) {
-  toast.error('Video is too large. Please upload a file under 50 MB.');
-  return;
-}
+  const fileSizeMB = file.size / (1024 * 1024);
+  console.log('FILE DEBUG:', {
+    name: file.name,
+    type: file.type,
+    sizeBytes: file.size,
+    sizeMB: fileSizeMB,
+  });
+
+  if (fileSizeMB > 50) {
+    toast.error(`Video is too large (${fileSizeMB.toFixed(1)} MB). Please upload a file under 50 MB.`);
+    return;
+  }
 
   setIsUploadingVideo(true);
   setVideoUrl('');
@@ -101,11 +109,11 @@ if (file.size > 50 * 1024 * 1024) {
       });
 
     const timeoutPromise = new Promise((_, reject) =>
-  setTimeout(
-    () => reject(new Error('Upload took too long. Please try a smaller video (under 50MB).')),
-    10000
-  )
-);
+      setTimeout(
+        () => reject(new Error('Upload took too long. Please try again.')),
+        10000
+      )
+    );
 
     const result: any = await Promise.race([uploadPromise, timeoutPromise]);
 
@@ -119,8 +127,6 @@ if (file.size > 50 * 1024 * 1024) {
       .from('videos')
       .getPublicUrl(filePath);
 
-    console.log('STEP 4: public URL data', publicUrlData);
-
     const publicUrl = publicUrlData?.publicUrl || '';
 
     if (!publicUrl) {
@@ -129,7 +135,6 @@ if (file.size > 50 * 1024 * 1024) {
 
     setVideoUrl(publicUrl);
     toast.success('Video uploaded successfully!');
-    console.log('STEP 5: done', publicUrl);
   } catch (error: any) {
     console.error('VIDEO UPLOAD ERROR:', error);
     toast.error(error.message || 'Video upload failed.');
