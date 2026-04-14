@@ -16,7 +16,6 @@ export default function Login() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Check URL params for role=admin on mount (simulated)
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('role') === 'admin') {
@@ -25,39 +24,34 @@ export default function Login() {
   }, []);
 
   const onSubmit = async (data: any) => {
-  setLoading(true);
-  const role = isAdmin ? 'admin' : 'volunteer';
+    setLoading(true);
 
-  if (role === 'admin') {
-    const isPlatformAdmin = data.email === 'tasktogethercontact@gmail.com';
+    if (isAdmin) {
+      const result = await login(data.email, data.password, 'admin');
 
-    if (isPlatformAdmin && data.password !== 'TaskTogether123$') {
-      toast.error('Invalid password');
+      if (!result.success) {
+        toast.error(result.message || 'Login failed');
+        setLoading(false);
+        return;
+      }
+
+      navigate('/admin/dashboard');
+      setLoading(false);
       return;
     }
 
-    const result = await login(data.email, data.password, 'admin');
+    const result = await login(data.email, data.password, 'volunteer');
 
-    if (!result.success) {
+    if (!result.success || result.status !== 'approved') {
       toast.error(result.message || 'Login failed');
-setLoading(false);
-return;
+      setLoading(false);
+      return;
     }
 
-    navigate(isPlatformAdmin ? '/superadmin/dashboard' : '/admin/dashboard');
-    return;
-  }
+    navigate('/volunteer-dashboard');
+    setLoading(false);
+  };
 
-  const result = await login(data.email, data.password, 'volunteer');
-
-  if (!result.success || result.status !== 'approved') {
-    toast.error(result.message || 'Login failed');
-setLoading(false);
-return;
-  }
-
-  navigate('/volunteer-dashboard');
-};
   return (
     <div className="min-h-screen bg-slate-50 relative overflow-hidden flex flex-col">
       <Navbar />
@@ -67,10 +61,12 @@ return;
         <Card className="w-full max-w-md bg-white/80 backdrop-blur-md shadow-2xl border-white/50">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-fredoka font-bold text-slate-800 mb-2">
-              {isAdmin ? 'Admin Portal' : 'Welcome Back!'}
+              {isAdmin ? 'Richmond Senior Center Admin Portal' : 'Welcome Back!'}
             </h1>
             <p className="text-slate-500">
-              {isAdmin ? 'Please sign in to manage volunteers.' : 'Log in to see your opportunities.'}
+              {isAdmin
+                ? 'Sign in to manage Richmond Senior Center volunteers.'
+                : 'Log in to view your volunteer dashboard.'}
             </p>
           </div>
 
@@ -102,13 +98,13 @@ return;
             </div>
 
             <Button fullWidth size="lg" className="group" disabled={loading}>
-  {loading ? 'Signing in...' : 'Sign In'}{' '}
-  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-</Button>
+              {loading ? 'Signing in...' : 'Sign In'}{' '}
+              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+            </Button>
           </form>
 
           <div className="mt-6 text-center">
-            <button 
+            <button
               onClick={() => setIsAdmin(!isAdmin)}
               className="text-xs text-slate-400 hover:text-violet-600 underline decoration-dotted"
             >
