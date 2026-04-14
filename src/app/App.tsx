@@ -19,6 +19,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import { AppProvider } from './context/AppContext';
 import SetPassword from './pages/SetPassword';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import ApplicationReceived from '@/app/pages/ApplicationReceived';
 
 // Helper for scroll to top on route change
 function ScrollToTopHelper() {
@@ -55,6 +56,7 @@ export default function App() {
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/set-password" element={<SetPassword />} />
+                <Route path="/application-received" element={<ApplicationReceived />} />
               </Routes>
               <Toaster position="top-center" richColors />
             </StoriesProvider>
