@@ -2,7 +2,7 @@ import { supabase } from '../../lib/supabase';
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type UserRole = 'volunteer' | 'admin' | null;
+export type UserRole = 'volunteer' | 'director' | null;
 export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'not_found';
 
 export interface User {
@@ -267,32 +267,31 @@ const login = async (
   setAuthLoading(true);
 
   try {
-    if (role === 'admin') {
-      const adminEmail = 'tasktogethercontact@gmail.com';
-      const adminPassword = 'TaskTogether123$';
+   if (role === 'director') {
+  const directorEmail = 'tasktogethercontact@gmail.com';
+  const directorPassword = 'TaskTogether123$';
 
-      if (email !== adminEmail || password !== adminPassword) {
-        setAuthLoading(false);
-        return {
-          success: false,
-          message: 'Wrong admin email or password.',
-        };
-      }
+  if (email !== directorEmail || password !== directorPassword) {
+    setAuthLoading(false);
+    return {
+      success: false,
+      message: 'Wrong director email or password.',
+    };
+  }
 
-      setUser({
-        id: 'admin-1',
-        name: 'Richmond Senior Center Admin',
-        email,
-        role: 'admin',
-      });
+  setUser({
+    id: 'director-1',
+    name: 'Richmond Senior Center Director',
+    email,
+    role: 'director',
+  });
 
-      setAuthLoading(false);
+  setAuthLoading(false);
 
-      return {
-        success: true,
-      };
-    }
-
+  return {
+    success: true,
+  };
+}
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
         email,
