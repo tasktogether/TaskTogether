@@ -1,12 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Star, Users, Heart, Building2 } from 'lucide-react';
+import { Star, Users, Heart } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { BubbleBackground } from '../components/background/BubbleBackground';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 
 export default function Home() {
   return (
@@ -14,33 +13,37 @@ export default function Home() {
       <Navbar />
       <BubbleBackground />
 
-      {/* Hero Section */}
       <section className="pt-32 pb-20 px-6 relative">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 relative z-10">
             <div>
               <div className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-lg border border-pink-200">
                 <Star size={16} className="fill-pink-700" />
-                Making a difference, together.
+                Volunteer with Richmond Senior Center
               </div>
+
               <h1 className="text-5xl md:text-7xl font-fredoka font-bold leading-tight text-slate-900 mb-6">
-                Connecting <span className="text-violet-600 relative">
-                  Volunteers
+                Support <span className="text-violet-600 relative">
+                  Richmond
                   <div className="absolute -bottom-2 left-0 right-0 h-3 bg-violet-200/50 -z-10 rounded-full" />
-                </span> with <span className="text-blue-500 relative">
-                  Seniors
+                </span>{' '}
+                Senior Center <span className="text-blue-500 relative">
+                  Volunteers
                   <div className="absolute -bottom-2 left-0 right-0 h-3 bg-blue-200/50 -z-10 rounded-full" />
                 </span>
               </h1>
+
               <p className="text-lg text-slate-600 leading-relaxed max-w-lg mb-8">
-                Join a community of kind-hearted volunteers. Gain experience, make new friends, and brighten someone's day. Safe, organized, and open to all!
+                Join Richmond Senior Center as a volunteer. Help seniors, gain experience, and make a real difference in your local community.
               </p>
+
               <div className="flex flex-wrap gap-4">
                 <Link to="/apply">
                   <Button size="lg" className="shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700">
                     Apply Now
                   </Button>
                 </Link>
+
                 <Link to="/learn-more">
                   <Button variant="outline" size="lg" className="border-2 hover:bg-purple-50 transition-all duration-300">
                     Learn More
@@ -48,35 +51,28 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-            
-            <div className="flex items-center gap-4 text-sm text-slate-500 font-medium h-12">
-              {/* Placeholder for future social proof */}
-            </div>
+
+            <div className="flex items-center gap-4 text-sm text-slate-500 font-medium h-12" />
           </div>
 
-          <div className="relative">
-            {/* Empty placeholder - photo removed for professional design */}
-          </div>
+          <div className="relative" />
         </div>
       </section>
 
-      {/* Info Cards */}
       <section className="py-20 bg-white/50 backdrop-blur-sm relative">
-        {/* Decorative background elements - static */}
         <div className="absolute top-10 right-20 w-32 h-32 bg-purple-200/20 rounded-full blur-2xl" />
         <div className="absolute bottom-10 left-10 w-40 h-40 bg-pink-200/20 rounded-full blur-2xl" />
 
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 border-2 relative overflow-hidden" hover>
-              {/* Decorative corner */}
               <div className="absolute top-0 right-0 w-20 h-20 bg-purple-200/50 rounded-bl-full" />
               <div className="w-14 h-14 bg-purple-200 rounded-2xl flex items-center justify-center text-purple-600 mb-6 shadow-lg relative z-10">
                 <Heart size={28} className="fill-purple-600" />
               </div>
               <h3 className="text-xl font-bold font-poppins mb-3 text-slate-800">Our Mission</h3>
               <p className="text-slate-600 leading-relaxed">
-                To bridge the generational gap by fostering meaningful connections between dedicated volunteers and wise seniors.
+                To build meaningful connections between volunteers and seniors at Richmond Senior Center.
               </p>
             </Card>
 
@@ -87,7 +83,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold font-poppins mb-3 text-slate-800">Why It Matters</h3>
               <p className="text-slate-600 leading-relaxed">
-                Combat loneliness, build community resilience, and teach responsibility through service and care.
+                Volunteering helps reduce loneliness, strengthens community, and creates meaningful experiences for everyone involved.
               </p>
             </Card>
 
@@ -98,29 +94,29 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold font-poppins mb-3 text-slate-800">Get Involved</h3>
               <p className="text-slate-600 leading-relaxed">
-                Sign up, get verified, and start making a difference in your local neighborhood today.
+                Apply, get approved, and start volunteering with Richmond Senior Center.
               </p>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* CTA Strip */}
       <section className="py-16 px-6 bg-gradient-to-r from-violet-500 via-purple-500 to-fuchsia-500 text-white text-center relative overflow-hidden">
-        {/* Decorative static shapes */}
         <div className="absolute top-5 left-10 w-16 h-16 border-4 border-white/30 rounded-full opacity-50" />
         <div className="absolute bottom-5 right-20 w-20 h-20 bg-white/10 rounded-lg opacity-50" />
 
         <h2 className="text-3xl font-fredoka font-bold mb-3 relative z-10">Ready to get started?</h2>
         <p className="text-violet-100 mb-6 max-w-xl mx-auto relative z-10">
-          Volunteers of all ages and backgrounds welcome. Apply in minutes.
+          Apply to volunteer with Richmond Senior Center in just a few minutes.
         </p>
+
         <div className="flex flex-wrap justify-center gap-4 relative z-10">
           <Link to="/apply">
             <Button className="bg-white text-violet-700 hover:bg-violet-50 border-none shadow-lg font-bold px-8 hover:shadow-2xl transition-all duration-300">
               Apply Now
             </Button>
           </Link>
+
           <Link to="/learn-more">
             <Button variant="outline" className="border-2 border-white/60 text-white hover:bg-white/20 hover:text-white hover:border-white transition-all duration-300">
               Learn More
@@ -129,15 +125,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Your Journey Section */}
       <section className="py-20 px-6 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-fredoka font-bold text-slate-900 mb-4">
-              Your Journey with TaskTogether
+              Your Journey with Richmond Senior Center
             </h2>
             <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              From application to making a difference — here's how it works
+              From application to volunteering, here is how it works
             </p>
           </div>
 
@@ -149,7 +144,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-bold text-lg text-slate-800 mb-2">Apply</h3>
                 <p className="text-sm text-slate-600">
-                  Fill out a quick application form and upload your consent documents
+                  Fill out the volunteer application and upload your required documents.
                 </p>
               </Card>
             </div>
@@ -161,7 +156,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-bold text-lg text-slate-800 mb-2">Get Approved</h3>
                 <p className="text-sm text-slate-600">
-                  Our team reviews your application and you'll receive an email confirmation
+                  Richmond Senior Center reviews your application and sends you an update.
                 </p>
               </Card>
             </div>
@@ -173,7 +168,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-bold text-lg text-slate-800 mb-2">Choose Tasks</h3>
                 <p className="text-sm text-slate-600">
-                  Browse opportunities and pick tasks that match your schedule and interests
+                  Browse available volunteer opportunities and choose what fits your schedule.
                 </p>
               </Card>
             </div>
@@ -185,7 +180,7 @@ export default function Home() {
                 </div>
                 <h3 className="font-bold text-lg text-slate-800 mb-2">Make Impact</h3>
                 <p className="text-sm text-slate-600">
-                  Complete tasks, share reflections, and build meaningful connections
+                  Volunteer, build connections, and make a positive impact in your community.
                 </p>
               </Card>
             </div>
