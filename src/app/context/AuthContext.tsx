@@ -2,7 +2,7 @@ import { supabase } from '../../lib/supabase';
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { toast } from 'sonner';
 
-export type UserRole = 'volunteer' | 'admin' | 'platform_admin' | null;
+export type UserRole = 'volunteer' | 'admin' | null;
 export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'not_found';
 
 export interface User {
@@ -13,9 +13,6 @@ export interface User {
   status?: ApplicationStatus;
   totalHours?: number;
   joinDate?: string;
-  preferredSeniorHomeIds?: string[];
-  seniorHomeId?: string;
-  isPlatformAdmin?: boolean;
 }
 
 export interface Opportunity {
@@ -26,8 +23,6 @@ export interface Opportunity {
   imageUrl: string;
   timeSlot: 'After School' | 'Weekends' | 'Summer' | 'Flexible';
   location: string;
-  seniorHomeId?: string;
-  seniorHomeName?: string;
 }
 
 export interface Application {
@@ -273,14 +268,22 @@ const login = async (
 
   try {
     if (role === 'admin') {
-      const isPlatformAdmin = email === 'tasktogethercontact@gmail.com';
+      const adminEmail = 'tasktogethercontact@gmail.com';
+      const adminPassword = 'TaskTogether123$';
+
+      if (email !== adminEmail || password !== adminPassword) {
+        setAuthLoading(false);
+        return {
+          success: false,
+          message: 'Wrong admin email or password.',
+        };
+      }
 
       setUser({
         id: 'admin-1',
-        name: isPlatformAdmin ? 'Platform Admin' : 'Senior Home Admin',
+        name: 'Richmond Senior Center Admin',
         email,
         role: 'admin',
-        isPlatformAdmin,
       });
 
       setAuthLoading(false);
