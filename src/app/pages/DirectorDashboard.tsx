@@ -402,13 +402,15 @@ if (!user || user.role !== 'director') {
                     </div>
 
                     <h3 className="text-lg font-bold text-slate-800 mb-1">{opp.title}</h3>
-                    <p className="text-sm text-slate-500 mb-4">Requested by: {opp.requester}</p>
+                   <p className="text-sm text-slate-500 mb-4">
+  Richmond Senior Center
+</p>
 
                     <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                      <Calendar size={14} /> {opp.date}
+                      <Calendar size={14} /> {opp.opportunity_date}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Users size={14} /> {opp.volunteersNeeded} spots remaining
+                      <Users size={14} /> {opp.volunteer_limit} spots available
                     </div>
                   </div>
                 </Card>
