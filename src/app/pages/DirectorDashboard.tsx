@@ -32,7 +32,14 @@ const MOCK_OPPORTUNITIES = [
 ];
 
 export default function AdminDashboard() {
-  const { user, applications, updateApplicationStatus, logout } = useAuth();
+  const {
+  user,
+  applications,
+  updateApplicationStatus,
+  logout,
+  opportunities,
+  createOpportunity,
+} = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
 
@@ -128,7 +135,7 @@ if (!user || user.role !== 'director') {
                   <div>
                     <p className="text-sm font-medium text-slate-500">Active Opportunities</p>
                     <p className="text-2xl font-bold text-slate-800">
-                      {MOCK_OPPORTUNITIES.filter(o => o.status === 'open').length}
+                      {opportunities.length}
                     </p>
                   </div>
                 </div>
@@ -361,13 +368,25 @@ if (!user || user.role !== 'director') {
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-2xl font-bold font-poppins text-slate-800">Volunteer Opportunities</h1>
-              <Button className="gap-2">
-                <Briefcase size={16} /> Create New
-              </Button>
+              <Button
+  className="gap-2"
+  onClick={async () => {
+    await createOpportunity({
+      title: 'New Volunteer Opportunity',
+      description: 'Help support activities at the Richmond Senior Center.',
+      opportunity_date: '2026-05-01',
+      time_commitment: '2 hours',
+      location: 'Richmond Senior Center',
+      volunteer_limit: 5,
+    });
+  }}
+>
+  <Briefcase size={16} /> Create New
+</Button>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {MOCK_OPPORTUNITIES.map(opp => (
+              {opportunities.map(opp => (
                 <Card key={opp.id} className="relative overflow-hidden group">
                   <div className={`absolute top-0 left-0 w-1 h-full ${opp.status === 'open' ? 'bg-green-400' : 'bg-slate-300'}`} />
                   <div className="pl-4">
