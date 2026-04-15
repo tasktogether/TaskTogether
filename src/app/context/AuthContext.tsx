@@ -49,6 +49,14 @@ interface AuthContextType {
     status?: ApplicationStatus;
     message?: string;
   }>;
+  createOpportunity: (newOpp: {
+  title: string;
+  description: string;
+  opportunity_date: string;
+  time_commitment: string;
+  location: string;
+  volunteer_limit: number;
+}) => Promise<void>;
   logout: () => Promise<void>;
   register: (name: string, email: string) => void;
   updateUser: (updates: Partial<User>) => void;
@@ -450,7 +458,27 @@ const logout = async () => {
         : prev
     );
   };
+const createOpportunity = async (newOpp: {
+  title: string;
+  description: string;
+  opportunity_date: string;
+  time_commitment: string;
+  location: string;
+  volunteer_limit: number;
+}) => {
+  const { error } = await supabase
+    .from('opportunities')
+    .insert([newOpp]);
 
+  if (error) {
+    console.error('Error creating opportunity:', error);
+    toast.error('Failed to create opportunity.');
+    return;
+  }
+
+  toast.success('Opportunity created!');
+  fetchOpportunities(); // refresh list
+};
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => (prev ? { ...prev, ...updates } : null));
   };
@@ -465,8 +493,9 @@ const logout = async () => {
         updateUser,
         applications,
         updateApplicationStatus,
-        opportunities: MOCK_OPPORTUNITIES,
-        authLoading,
+        opportunities,
+createOpportunity,
+authLoading,
       }}
     >
       {children}
