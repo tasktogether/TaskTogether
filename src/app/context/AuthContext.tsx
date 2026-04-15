@@ -16,13 +16,14 @@ export interface User {
 }
 
 export interface Opportunity {
-  id: string;
+  id: number;
   title: string;
   description: string;
-  timeCommitment: string;
-  imageUrl: string;
-  timeSlot: 'After School' | 'Weekends' | 'Summer' | 'Flexible';
+  opportunity_date: string;
+  time_commitment: string;
   location: string;
+  volunteer_limit: number;
+  current_volunteers?: number;
 }
 
 export interface Application {
@@ -119,6 +120,7 @@ const MOCK_OPPORTUNITIES: Opportunity[] = [
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [authLoading, setAuthLoading] = useState(true);
 
   const fetchApplications = async () => {
@@ -215,6 +217,9 @@ useEffect(() => {
   };
 
   loadSession();
+
+  fetchApplications();
+fetchOpportunities();
 
   const {
     data: { subscription },
@@ -387,6 +392,19 @@ const logout = async () => {
   toast.success('You have been logged out.');
   setUser(null);
   window.location.href = '/login';
+};
+  const fetchOpportunities = async () => {
+  const { data, error } = await supabase
+    .from('opportunities')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error loading opportunities:', error);
+    return;
+  }
+
+  setOpportunities(data || []);
 };
 
   const updateApplicationStatus = async (
