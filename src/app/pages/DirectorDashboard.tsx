@@ -386,9 +386,7 @@ if (!user || user.role !== 'director') {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {opportunities.map(opp => (
-                <Card key={opp.id} className="relative overflow-hidden group">
-                  <div className={`absolute top-0 left-0 w-1 h-full ${opp.status === 'open' ? 'bg-green-400' : 'bg-slate-300'}`} />
+              <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
                   <div className="pl-4">
                     <div className="flex justify-between items-start mb-2">
                       <span
@@ -396,7 +394,7 @@ if (!user || user.role !== 'director') {
                           opp.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
                         }`}
                       >
-                        {opp.status}
+                        Open
                       </span>
                       <Button variant="ghost" size="icon" className="h-6 w-6">
                         <Edit3 size={14} />
