@@ -27,20 +27,25 @@ export default function Opportunities() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
 
-  const handleOptIn = (opp: any) => {
-    if (!user) {
-      toast.error('Please log in to join this opportunity!', {
-        action: {
-          label: 'Login',
-          onClick: () => (window.location.href = '/login'),
-        },
-      });
-      return;
-    }
+ const handleOptIn = async (opp: any) => {
+  if (!user) {
+    toast.error('Please log in to join this opportunity!', {
+      action: {
+        label: 'Login',
+        onClick: () => (window.location.href = '/login'),
+      },
+    });
+    return;
+  }
 
-    toast.success(`You've successfully signed up for "${opp.title}"! 🎉`);
-    setSelectedOpp(null);
-  };
+  await signUpForOpportunity(
+    opp.id,
+    user.name || 'Volunteer',
+    user.email || ''
+  );
+
+  setSelectedOpp(null);
+};
 
   const filteredOpps = opportunities.filter(opp => {
     const matchesSearch =
