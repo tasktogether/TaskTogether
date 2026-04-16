@@ -64,6 +64,7 @@ interface AuthContextType {
   updateApplicationStatus: (appId: string, status: ApplicationStatus) => Promise<void>;
   opportunities: Opportunity[];
   authLoading: boolean;
+  deleteOpportunity: (id: number) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -513,6 +514,7 @@ const createOpportunity = async (newOpp: {
         updateApplicationStatus,
         opportunities,
 createOpportunity,
+deleteOpportunity,
 authLoading,
       }}
     >
