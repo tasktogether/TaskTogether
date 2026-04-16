@@ -384,159 +384,163 @@ if (!user || user.role !== 'director') {
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-8">
-              <h1 className="text-2xl font-bold font-poppins text-slate-800">Volunteer Opportunities</h1>
+              <h1 className="text-2xl font-bold font-poppins text-slate-800">
+                Volunteer Opportunities
+              </h1>
+
               <Button
-  className="gap-2"
-  onClick={async () => {
-    const title = prompt('Opportunity title:');
-    if (!title) return;
+                className="gap-2"
+                onClick={async () => {
+                  const title = prompt('Opportunity title:');
+                  if (!title || !title.trim()) {
+                    alert('Title is required.');
+                    return;
+                  }
 
-    const description = prompt('Opportunity description:');
-    if (!description) return;
+                  const description = prompt('Opportunity description:');
+                  if (!description || !description.trim()) {
+                    alert('Description is required.');
+                    return;
+                  }
 
-    const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
-    if (!opportunityDate) return;
+                  const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
+                  if (!opportunityDate || !opportunityDate.trim()) {
+                    alert('Date is required.');
+                    return;
+                  }
 
-    const timeCommitment = prompt('Time commitment:');
-    if (!timeCommitment) return;
+                  const timeCommitment = prompt('Time commitment:');
+                  if (!timeCommitment || !timeCommitment.trim()) {
+                    alert('Time commitment is required.');
+                    return;
+                  }
 
-    const volunteerLimit = prompt('Volunteer limit:', '5');
+                  const volunteerLimitInput = prompt('Volunteer limit:', '5');
+                  const volunteerLimit = Number(volunteerLimitInput);
 
-    await createOpportunity({
-      title,
-      description,
-      opportunity_date: opportunityDate,
-      time_commitment: timeCommitment,
-      location: 'Richmond Senior Center',
-      volunteer_limit: Number(volunteerLimit) || 5,
-    });
-  }}
->
-  <Briefcase size={16} /> Create New
-</Button>
+                  if (!volunteerLimitInput || isNaN(volunteerLimit) || volunteerLimit < 1) {
+                    alert('Volunteer limit must be at least 1.');
+                    return;
+                  }
+
+                  await createOpportunity({
+                    title: title.trim(),
+                    description: description.trim(),
+                    opportunity_date: opportunityDate.trim(),
+                    time_commitment: timeCommitment.trim(),
+                    location: 'Richmond Senior Center',
+                    volunteer_limit: volunteerLimit,
+                  });
+                }}
+              >
+                <Briefcase size={16} /> Create New
+              </Button>
             </div>
 
-           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {[...opportunities]
-  .sort(
-    (a, b) =>
-      new Date(a.opportunity_date).getTime() -
-      new Date(b.opportunity_date).getTime()
-  )
-  .map(opp => (
-    <Card key={opp.id} className="relative overflow-hidden group">
-      <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...opportunities]
+                .sort(
+                  (a, b) =>
+                    new Date(a.opportunity_date).getTime() -
+                    new Date(b.opportunity_date).getTime()
+                )
+                .map(opp => (
+                  <Card key={opp.id} className="relative overflow-hidden group">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
-      <div className="pl-4">
-        <div className="flex justify-between items-start mb-2">
-          <span
-  className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${
-    getOpportunityStatus(opp.opportunity_date) === 'Past'
-      ? 'bg-slate-100 text-slate-600'
-      : 'bg-green-100 text-green-700'
-  }`}
->
-  {getOpportunityStatus(opp.opportunity_date)}
-</span>
+                    <div className="pl-4">
+                      <div className="flex justify-between items-start mb-2">
+                        <span className="text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide bg-green-100 text-green-700">
+                          Upcoming
+                        </span>
 
-          <div className="flex gap-1">
-  <Button
-  variant="ghost"
-  size="icon"
-  className="h-6 w-6"
- onClick={async () => {
-  const title = prompt('Opportunity title:');
-  if (!title || !title.trim()) {
-    alert('Title is required.');
-    return;
-  }
+                        <div className="flex gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6"
+                            onClick={async () => {
+                              const newTitle = prompt('Enter new title:', opp.title);
+                              if (!newTitle) return;
 
-  const description = prompt('Opportunity description:');
-  if (!description || !description.trim()) {
-    alert('Description is required.');
-    return;
-  }
+                              const newDescription = prompt(
+                                'Enter new description:',
+                                opp.description
+                              );
 
-  const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
-  if (!opportunityDate || !opportunityDate.trim()) {
-    alert('Date is required.');
-    return;
-  }
+                              const newDate = prompt(
+                                'Enter new date (YYYY-MM-DD):',
+                                opp.opportunity_date
+                              );
 
-  const timeCommitment = prompt('Time commitment:');
-  if (!timeCommitment || !timeCommitment.trim()) {
-    alert('Time commitment is required.');
-    return;
-  }
+                              const newLimit = prompt(
+                                'Enter volunteer limit:',
+                                String(opp.volunteer_limit)
+                              );
 
-  const volunteerLimitInput = prompt('Volunteer limit:', '5');
-  const volunteerLimit = Number(volunteerLimitInput);
+                              await updateOpportunity(opp.id, {
+                                title: newTitle,
+                                description: newDescription || opp.description,
+                                opportunity_date: newDate || opp.opportunity_date,
+                                volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+                              });
+                            }}
+                          >
+                            <Edit3 size={14} />
+                          </Button>
 
-  if (!volunteerLimitInput || isNaN(volunteerLimit) || volunteerLimit < 1) {
-    alert('Volunteer limit must be at least 1.');
-    return;
-  }
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-6 w-6 text-red-500 hover:bg-red-50"
+                            onClick={() => deleteOpportunity(opp.id)}
+                          >
+                            <X size={14} />
+                          </Button>
+                        </div>
+                      </div>
 
-  await createOpportunity({
-    title: title.trim(),
-    description: description.trim(),
-    opportunity_date: opportunityDate.trim(),
-    time_commitment: timeCommitment.trim(),
-    location: 'Richmond Senior Center',
-    volunteer_limit: volunteerLimit,
-  });
-}}
->
-  <Edit3 size={14} />
-</Button>
+                      <h3 className="text-lg font-bold text-slate-800 mb-1">
+                        {opp.title}
+                      </h3>
 
-  <Button
-    variant="ghost"
-    size="icon"
-    className="h-6 w-6 text-red-500 hover:bg-red-50"
-    onClick={() => deleteOpportunity(opp.id)}
-  >
-    <X size={14} />
-  </Button>
-</div>
-        </div>
+                      <p className="text-sm text-slate-500 mb-4">
+                        Richmond Senior Center
+                      </p>
 
-        <h3 className="text-lg font-bold text-slate-800 mb-1">{opp.title}</h3>
+                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+                        <Calendar size={14} /> {formatDate(opp.opportunity_date)}
+                      </div>
 
-        <p className="text-sm text-slate-500 mb-4">
-          Richmond Senior Center
-        </p>
+                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+                        <Briefcase size={14} /> {opp.time_commitment}
+                      </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-          <Calendar size={14} /> {formatDate(opp.opportunity_date)}
-        </div>
+                      <div className="flex items-center gap-2 text-sm text-slate-600">
+                        <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+                      </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-          <Briefcase size={14} /> {opp.time_commitment}
-        </div>
+                      <div className="mt-3">
+                        <p className="text-xs font-semibold text-slate-500 mb-1">
+                          Signed Up Volunteers
+                        </p>
 
-        <div className="flex items-center gap-2 text-sm text-slate-600">
-          <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
-          <div className="mt-3">
-  <p className="text-xs font-semibold text-slate-500 mb-1">Signed Up Volunteers</p>
-
-  {opp.signups && opp.signups.length > 0 ? (
-    <div className="space-y-1">
-      {opp.signups.map((signup: any, index: number) => (
-        <p key={index} className="text-xs text-slate-600">
-          {signup.volunteer_name}
-        </p>
-      ))}
-    </div>
-  ) : (
-    <p className="text-xs text-slate-400">No volunteers yet</p>
-  )}
-</div>
-        </div>
-      </div>
-    </Card>
-  ))}
-</div>
+                        {opp.signups && opp.signups.length > 0 ? (
+                          <div className="space-y-1">
+                            {opp.signups.map((signup: any, index: number) => (
+                              <p key={index} className="text-xs text-slate-600">
+                                {signup.volunteer_name}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-slate-400">No volunteers yet</p>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+            </div>
           </div>
         );
 
