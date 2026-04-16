@@ -474,7 +474,7 @@ const logout = async () => {
       prev && prev.role === 'volunteer' && prev.id === String(data.id)
         ? { ...prev, status: data.status }
         : prev
-    );
+    )
   };
 const createOpportunity = async (newOpp: {
   title: string;
