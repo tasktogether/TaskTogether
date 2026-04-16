@@ -421,7 +421,6 @@ if (!user || user.role !== 'director') {
       </div>
     </Card>
   ))}
-</div>
       default:
         return null;
     }
