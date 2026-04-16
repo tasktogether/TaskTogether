@@ -50,6 +50,14 @@ export default function AdminDashboard() {
     day: 'numeric',
     year: 'numeric',
   });
+    const getOpportunityStatus = (dateString: string) => {
+  const today = new Date();
+  const oppDate = new Date(dateString);
+
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  return oppDate < today ? 'Past' : 'Upcoming';
 };
 
 if (!user || user.role !== 'director') {
@@ -421,9 +429,15 @@ if (!user || user.role !== 'director') {
 
       <div className="pl-4">
         <div className="flex justify-between items-start mb-2">
-          <span className="text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide bg-green-100 text-green-700">
-            Open
-          </span>
+          <span
+  className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${
+    getOpportunityStatus(opp.opportunity_date) === 'Past'
+      ? 'bg-slate-100 text-slate-600'
+      : 'bg-green-100 text-green-700'
+  }`}
+>
+  {getOpportunityStatus(opp.opportunity_date)}
+</span>
 
           <div className="flex gap-1">
   <Button
