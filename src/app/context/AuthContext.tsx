@@ -70,6 +70,17 @@ interface AuthContextType {
   volunteerName: string,
   volunteerEmail: string
 ) => Promise<void>;
+  updateOpportunity: (
+  id: number,
+  updates: {
+    title?: string;
+    description?: string;
+    opportunity_date?: string;
+    time_commitment?: string;
+    location?: string;
+    volunteer_limit?: number;
+  }
+) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -513,6 +524,31 @@ const deleteOpportunity = async (id: number) => {
   toast.success('Opportunity deleted.');
   fetchOpportunities();
 };
+  const updateOpportunity = async (
+  id: number,
+  updates: {
+    title?: string;
+    description?: string;
+    opportunity_date?: string;
+    time_commitment?: string;
+    location?: string;
+    volunteer_limit?: number;
+  }
+) => {
+  const { error } = await supabase
+    .from('opportunities')
+    .update(updates)
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error updating opportunity:', error);
+    toast.error('Failed to update opportunity.');
+    return;
+  }
+
+  toast.success('Opportunity updated!');
+  fetchOpportunities();
+};
 
 const signUpForOpportunity = async (
   opportunityId: number,
@@ -561,9 +597,10 @@ return (
       updateApplicationStatus,
       opportunities,
       createOpportunity,
-      deleteOpportunity,
-      signUpForOpportunity,
-      authLoading,
+deleteOpportunity,
+updateOpportunity,
+signUpForOpportunity,
+authLoading,
     }}
   >
     {children}
