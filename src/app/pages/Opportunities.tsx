@@ -92,7 +92,7 @@ const filteredOpps = opportunities
       new Date(b.opportunity_date).getTime()
   );
     
-  const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
+const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
