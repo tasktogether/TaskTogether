@@ -528,6 +528,13 @@ const signUpForOpportunity = async (
         volunteer_email: volunteerEmail,
       },
     ]);
+  if (
+  opportunities.find(o => o.id === opportunityId)?.current_volunteers >=
+  opportunities.find(o => o.id === opportunityId)?.volunteer_limit
+) {
+  toast.error('This opportunity is already full.');
+  return;
+}
 
   if (error) {
     console.error('Signup failed:', error);
