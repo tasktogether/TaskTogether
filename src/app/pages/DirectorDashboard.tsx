@@ -209,7 +209,8 @@ if (!user || user.role !== 'director') {
     </div>
   </Card>
 </div>
-          );
+</div>
+        );
 
       case 'applications':
         return (
