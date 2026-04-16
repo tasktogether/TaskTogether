@@ -409,7 +409,13 @@ if (!user || user.role !== 'director') {
             </div>
 
            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-  {opportunities.map(opp => (
+  {[...opportunities]
+  .sort(
+    (a, b) =>
+      new Date(a.opportunity_date).getTime() -
+      new Date(b.opportunity_date).getTime()
+  )
+  .map(opp => (
     <Card key={opp.id} className="relative overflow-hidden group">
       <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
