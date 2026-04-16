@@ -42,6 +42,13 @@ export default function Opportunities() {
 
   const isFull = (opp: any) =>
     (opp.current_volunteers || 0) >= opp.volunteer_limit;
+const isAlreadySignedUp = (opp: any) => {
+  if (!user) return false;
+
+  return (opp.signups || []).some(
+    (signup: any) => signup.volunteer_email === user.email
+  );
+};
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -281,17 +288,21 @@ export default function Opportunities() {
                     Close
                   </Button>
                   <Button
-                    size="lg"
-                    className="px-8 shadow-lg shadow-violet-200"
-                    onClick={() => handleOptIn(selectedOpp)}
-                    disabled={isFull(selectedOpp)}
-                  >
-                    {isFull(selectedOpp) ? 'Opportunity Full' : (
-                      <>
-                        Opt In & Join <ArrowRight size={18} className="ml-2" />
-                      </>
-                    )}
-                  </Button>
+  size="lg"
+  className="px-8 shadow-lg shadow-violet-200"
+  onClick={() => handleOptIn(selectedOpp)}
+  disabled={isFull(selectedOpp) || isAlreadySignedUp(selectedOpp)}
+>
+  {isAlreadySignedUp(selectedOpp) ? (
+    'Already Signed Up'
+  ) : isFull(selectedOpp) ? (
+    'Opportunity Full'
+  ) : (
+    <>
+      Opt In & Join <ArrowRight size={18} className="ml-2" />
+    </>
+  )}
+</Button>
                 </div>
               </div>
             </motion.div>
