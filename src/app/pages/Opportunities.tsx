@@ -163,7 +163,7 @@ export default function Opportunities() {
                     <div className="space-y-2 mb-5">
                       <div className="flex items-center gap-2 text-sm text-slate-500">
   <Calendar size={14} className="text-green-400" />
-  {opp.current_volunteers || 0} signed up
+  {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
 </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <Clock size={14} className="text-violet-400" />
