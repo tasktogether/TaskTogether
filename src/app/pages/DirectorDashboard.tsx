@@ -44,6 +44,13 @@ export default function AdminDashboard() {
 } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
+  const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
 
 if (!user || user.role !== 'director') {
   return <Navigate to="/login?role=director" replace />;
@@ -465,7 +472,7 @@ if (!user || user.role !== 'director') {
         </p>
 
         <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-          <Calendar size={14} /> {opp.opportunity_date}
+          <Calendar size={14} /> {formatDate(opp.opportunity_date)}
         </div>
 
         <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
