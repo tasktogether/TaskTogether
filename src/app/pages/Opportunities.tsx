@@ -144,22 +144,34 @@ const isAlreadySignedUp = (opp: any) => {
             </div>
           </div>
         </div>
+{filteredOpps.length === 0 ? (
+  <div className="text-center py-20">
+    <p className="text-4xl mb-3">
+      {opportunities.length === 0 ? '📭' : '🔍'}
+    </p>
+    <p className="text-slate-500 font-medium">
+      {opportunities.length === 0
+        ? 'No volunteer opportunities have been posted yet.'
+        : 'No opportunities match your search.'}
+    </p>
 
-        {filteredOpps.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-4xl mb-3">🔍</p>
-            <p className="text-slate-500 font-medium">No opportunities match your search.</p>
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setActiveFilter('All');
-              }}
-              className="mt-3 text-violet-600 font-bold text-sm hover:underline"
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
+    {opportunities.length === 0 ? (
+      <p className="text-sm text-slate-400 mt-2">
+        Please check back soon for new Richmond Senior Center opportunities.
+      </p>
+    ) : (
+      <button
+        onClick={() => {
+          setSearchQuery('');
+          setActiveFilter('All');
+        }}
+        className="mt-3 text-violet-600 font-bold text-sm hover:underline"
+      >
+        Clear filters
+      </button>
+    )}
+  </div>
+) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredOpps.map((opp, i) => (
               <motion.div
