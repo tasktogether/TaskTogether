@@ -147,67 +147,66 @@ if (!user || user.role !== 'director') {
       </div>
     </div>
   </div>
-
-  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-              <Card
-                className="bg-violet-50 border-violet-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => setActiveTab('volunteers')}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-violet-100 rounded-xl text-violet-600">
-                    <Users size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-500">Total Volunteers</p>
-                    <p className="text-2xl font-bold text-slate-800">{approvedApps.length}</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card
-                className="bg-orange-50 border-orange-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => setActiveTab('applications')}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-orange-100 rounded-xl text-orange-600">
-                    <FileText size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-500">Pending Apps</p>
-                    <p className="text-2xl font-bold text-slate-800">{pendingApps.length}</p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card
-                className="bg-green-50 border-green-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
-                onClick={() => setActiveTab('opportunities')}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-green-100 rounded-xl text-green-600">
-                    <Briefcase size={24} />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-slate-500">Active Opportunities</p>
-                    <p className="text-2xl font-bold text-slate-800">
-                      {opportunities.length}
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>        
-        <Card className="bg-blue-50 border-blue-100 p-6">
-  <div className="flex items-center gap-4">
-    <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
-      <Check size={24} />
+<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+  <Card
+    className="bg-violet-50 border-violet-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
+    onClick={() => setActiveTab('volunteers')}
+  >
+    <div className="flex items-center gap-4">
+      <div className="p-3 bg-violet-100 rounded-xl text-violet-600">
+        <Users size={24} />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-slate-500">Total Volunteers</p>
+        <p className="text-2xl font-bold text-slate-800">{approvedApps.length}</p>
+      </div>
     </div>
-    <div>
-      <p className="text-sm font-medium text-slate-500">Filled Opportunities</p>
-      <p className="text-2xl font-bold text-slate-800">{filledOpportunities.length}</p>
+  </Card>
+
+  <Card
+    className="bg-orange-50 border-orange-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
+    onClick={() => setActiveTab('applications')}
+  >
+    <div className="flex items-center gap-4">
+      <div className="p-3 bg-orange-100 rounded-xl text-orange-600">
+        <FileText size={24} />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-slate-500">Pending Apps</p>
+        <p className="text-2xl font-bold text-slate-800">{pendingApps.length}</p>
+      </div>
     </div>
-  </div>
-</Card>
+  </Card>
+
+  <Card
+    className="bg-green-50 border-green-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
+    onClick={() => setActiveTab('opportunities')}
+  >
+    <div className="flex items-center gap-4">
+      <div className="p-3 bg-green-100 rounded-xl text-green-600">
+        <Briefcase size={24} />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-slate-500">Active Opportunities</p>
+        <p className="text-2xl font-bold text-slate-800">
+          {upcomingOpportunities.length}
+        </p>
+      </div>
+    </div>
+  </Card>
+
+  <Card className="bg-blue-50 border-blue-100 p-6">
+    <div className="flex items-center gap-4">
+      <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
+        <Check size={24} />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-slate-500">Filled Opportunities</p>
+        <p className="text-2xl font-bold text-slate-800">{filledOpportunities.length}</p>
+      </div>
+    </div>
+  </Card>
+</div>
           );
 
       case 'applications':
