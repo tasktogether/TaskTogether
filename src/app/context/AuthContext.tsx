@@ -571,6 +571,31 @@ if (existingSignup.data) {
   toast.error('You already signed up for this opportunity.');
   return;
 }
+const removeVolunteerFromOpportunity = async (
+  opportunityId: number,
+  volunteerEmail: string
+) => {
+  const confirmed = window.confirm(
+    'Remove this volunteer from the opportunity?'
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from('opportunity_signups')
+    .delete()
+    .eq('opportunity_id', opportunityId)
+    .eq('volunteer_email', volunteerEmail);
+
+  if (error) {
+    console.error('Remove failed:', error);
+    toast.error('Failed to remove volunteer.');
+    return;
+  }
+
+  toast.success('Volunteer removed.');
+  fetchOpportunities();
+};
   const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
 
 if (
@@ -612,21 +637,22 @@ const updateUser = (updates: Partial<User>) => {
 };
 return (
   <AuthContext.Provider
-    value={{
-      user,
-      login,
-      logout,
-      register,
-      updateUser,
-      applications,
-      updateApplicationStatus,
-      opportunities,
-      createOpportunity,
-deleteOpportunity,
-updateOpportunity,
-signUpForOpportunity,
-authLoading,
-    }}
+   value={{
+  user,
+  login,
+  logout,
+  register,
+  updateUser,
+  applications,
+  updateApplicationStatus,
+  opportunities,
+  createOpportunity,
+  deleteOpportunity,
+  updateOpportunity,
+  signUpForOpportunity,
+  removeVolunteerFromOpportunity,
+  authLoading,
+}}
   >
     {children}
   </AuthContext.Provider>
