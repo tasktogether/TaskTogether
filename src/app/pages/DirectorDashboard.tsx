@@ -424,30 +424,46 @@ if (!user || user.role !== 'director') {
   variant="ghost"
   size="icon"
   className="h-6 w-6"
-  onClick={async () => {
-  const newTitle = prompt('Enter new title:', opp.title);
-  if (!newTitle) return;
+ onClick={async () => {
+  const title = prompt('Opportunity title:');
+  if (!title || !title.trim()) {
+    alert('Title is required.');
+    return;
+  }
 
-  const newDescription = prompt(
-    'Enter new description:',
-    opp.description
-  );
+  const description = prompt('Opportunity description:');
+  if (!description || !description.trim()) {
+    alert('Description is required.');
+    return;
+  }
 
-  const newDate = prompt(
-    'Enter new date (YYYY-MM-DD):',
-    opp.opportunity_date
-  );
+  const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
+  if (!opportunityDate || !opportunityDate.trim()) {
+    alert('Date is required.');
+    return;
+  }
 
-  const newLimit = prompt(
-    'Enter volunteer limit:',
-    String(opp.volunteer_limit)
-  );
+  const timeCommitment = prompt('Time commitment:');
+  if (!timeCommitment || !timeCommitment.trim()) {
+    alert('Time commitment is required.');
+    return;
+  }
 
-  await updateOpportunity(opp.id, {
-    title: newTitle,
-    description: newDescription || opp.description,
-    opportunity_date: newDate || opp.opportunity_date,
-    volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+  const volunteerLimitInput = prompt('Volunteer limit:', '5');
+  const volunteerLimit = Number(volunteerLimitInput);
+
+  if (!volunteerLimitInput || isNaN(volunteerLimit) || volunteerLimit < 1) {
+    alert('Volunteer limit must be at least 1.');
+    return;
+  }
+
+  await createOpportunity({
+    title: title.trim(),
+    description: description.trim(),
+    opportunity_date: opportunityDate.trim(),
+    time_commitment: timeCommitment.trim(),
+    location: 'Richmond Senior Center',
+    volunteer_limit: volunteerLimit,
   });
 }}
 >
