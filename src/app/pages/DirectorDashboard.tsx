@@ -449,7 +449,7 @@ if (!user || user.role !== 'director') {
           </div>
         );
 
-      case 'opportunities':
+           case 'opportunities':
         return (
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-8">
@@ -507,145 +507,142 @@ if (!user || user.role !== 'director') {
             </div>
 
             {opportunities.length === 0 ? (
-  <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
-    <p className="text-slate-700 font-medium">No opportunities yet.</p>
-    <p className="text-slate-500 text-sm mt-1">
-      Create your first volunteer opportunity for Richmond Senior Center.
-    </p>
-  </div>
-) : (
-  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {[...opportunities]
-      .sort(
-                  (a, b) =>
-                    new Date(a.opportunity_date).getTime() -
-                    new Date(b.opportunity_date).getTime()
-                )
-                .map(opp => (
-                  <Card key={opp.id} className="relative overflow-hidden group">
-  <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
+              <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
+                <p className="text-slate-700 font-medium">No opportunities yet.</p>
+                <p className="text-slate-500 text-sm mt-1">
+                  Create your first volunteer opportunity for Richmond Senior Center.
+                </p>
+              </div>
+            ) : (
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...opportunities]
+                  .sort(
+                    (a, b) =>
+                      new Date(a.opportunity_date).getTime() -
+                      new Date(b.opportunity_date).getTime()
+                  )
+                  .map((opp) => {
+                    const status = getOpportunityStatus(
+                      opp.opportunity_date,
+                      opp.current_volunteers || 0,
+                      opp.volunteer_limit
+                    );
 
-  <div className="pl-4">
-                      <div className="flex justify-between items-start mb-2">
-                        {(() => {
-  const status = getOpportunityStatus(
-    opp.opportunity_date,
-    opp.current_volunteers || 0,
-    opp.volunteer_limit
-  );
+                    const statusClasses =
+                      status === 'Past'
+                        ? 'bg-slate-100 text-slate-600'
+                        : status === 'Full'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'bg-green-100 text-green-700';
 
-  const statusClasses =
-    status === 'Past'
-      ? 'bg-slate-100 text-slate-600'
-      : status === 'Full'
-      ? 'bg-blue-100 text-blue-700'
-      : 'bg-green-100 text-green-700';
+                    return (
+                      <Card key={opp.id} className="relative overflow-hidden group">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
-  return (
-    <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}>
-      {status}
-    </span>
-  );
-})()}
+                        <div className="pl-4">
+                          <div className="flex justify-between items-start mb-2">
+                            <span
+                              className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
+                            >
+                              {status}
+                            </span>
 
-                        <div className="flex gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6"
-                            onClick={async () => {
-                              const newTitle = prompt('Enter new title:', opp.title);
-                              if (!newTitle) return;
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={async () => {
+                                  const newTitle = prompt('Enter new title:', opp.title);
+                                  if (!newTitle) return;
 
-                              const newDescription = prompt(
-                                'Enter new description:',
-                                opp.description
-                              );
+                                  const newDescription = prompt(
+                                    'Enter new description:',
+                                    opp.description
+                                  );
 
-                              const newDate = prompt(
-                                'Enter new date (YYYY-MM-DD):',
-                                opp.opportunity_date
-                              );
+                                  const newDate = prompt(
+                                    'Enter new date (YYYY-MM-DD):',
+                                    opp.opportunity_date
+                                  );
 
-                              const newLimit = prompt(
-                                'Enter volunteer limit:',
-                                String(opp.volunteer_limit)
-                              );
+                                  const newLimit = prompt(
+                                    'Enter volunteer limit:',
+                                    String(opp.volunteer_limit)
+                                  );
 
-                              await updateOpportunity(opp.id, {
-                                title: newTitle,
-                                description: newDescription || opp.description,
-                                opportunity_date: newDate || opp.opportunity_date,
-                                volunteer_limit: Number(newLimit) || opp.volunteer_limit,
-                              });
-                            }}
-                          >
-                            <Edit3 size={14} />
-                          </Button>
+                                  await updateOpportunity(opp.id, {
+                                    title: newTitle,
+                                    description: newDescription || opp.description,
+                                    opportunity_date: newDate || opp.opportunity_date,
+                                    volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+                                  });
+                                }}
+                              >
+                                <Edit3 size={14} />
+                              </Button>
 
-                          <Button
-  variant="ghost"
-  size="icon"
-  className="h-6 w-6 text-red-500 hover:bg-red-50"
-  onClick={() => {
-    const confirmed = window.confirm(`Delete "${opp.title}"?`);
-    if (!confirmed) return;
-    deleteOpportunity(opp.id);
-  }}
->
-  <X size={14} />
-</Button>
-                        </div>
-                      </div>
-
-                      <h3 className="text-lg font-bold text-slate-800 mb-1">
-                        {opp.title}
-                      </h3>
-
-                      <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
-  <MapPin size={14} />
-  Richmond Senior Center
-</div>
-
-                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                        <Calendar size={14} /> {formatDate(opp.opportunity_date)}
-                      </div>
-
-                      <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-  <Clock3 size={14} /> {opp.time_commitment}
-</div>
-
-                      <div className="flex items-center gap-2 text-sm text-slate-600">
-                        <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
-                      </div>
-
-                      <div className="mt-3">
-                        <p className="text-xs font-semibold text-slate-500 mb-1">
-                          Signed Up Volunteers
-                        </p>
-
-                        {opp.signups && opp.signups.length > 0 ? (
-                          <div className="space-y-1">
-                            {opp.signups.map((signup: any, index: number) => (
-                              <p key={index} className="text-xs text-slate-600">
-                                {signup.volunteer_name}
-                              </p>
-                            ))}
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 text-red-500 hover:bg-red-50"
+                                onClick={() => {
+                                  const confirmed = window.confirm(`Delete "${opp.title}"?`);
+                                  if (!confirmed) return;
+                                  deleteOpportunity(opp.id);
+                                }}
+                              >
+                                <X size={14} />
+                              </Button>
+                            </div>
                           </div>
-                        ) : (
-                          <p className="text-xs text-slate-400">No volunteers yet</p>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
+
+                          <h3 className="text-lg font-bold text-slate-800 mb-1">
+                            {opp.title}
+                          </h3>
+
+                          <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
+                            <MapPin size={14} />
+                            Richmond Senior Center
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+                            <Calendar size={14} /> {formatDate(opp.opportunity_date)}
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+                            <Clock3 size={14} /> {opp.time_commitment}
+                          </div>
+
+                          <div className="flex items-center gap-2 text-sm text-slate-600">
+                            <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+                          </div>
+
+                          <div className="mt-3">
+                            <p className="text-xs font-semibold text-slate-500 mb-1">
+                              Signed Up Volunteers
+                            </p>
+
+                            {opp.signups && opp.signups.length > 0 ? (
+                              <div className="space-y-1">
+                                {opp.signups.map((signup: any, index: number) => (
+                                  <p key={index} className="text-xs text-slate-600">
+                                    {signup.volunteer_name}
+                                  </p>
                                 ))}
-          </div>
-)}
+                              </div>
+                            ) : (
+                              <p className="text-xs text-slate-400">No volunteers yet</p>
+                            )}
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         );
-
-      default:
-        return null;
     }
   };
 
