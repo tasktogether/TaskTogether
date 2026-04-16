@@ -373,13 +373,27 @@ if (!user || user.role !== 'director') {
               <Button
   className="gap-2"
   onClick={async () => {
+    const title = prompt('Opportunity title:');
+    if (!title) return;
+
+    const description = prompt('Opportunity description:');
+    if (!description) return;
+
+    const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
+    if (!opportunityDate) return;
+
+    const timeCommitment = prompt('Time commitment:');
+    if (!timeCommitment) return;
+
+    const volunteerLimit = prompt('Volunteer limit:', '5');
+
     await createOpportunity({
-      title: 'New Volunteer Opportunity',
-      description: 'Help support activities at the Richmond Senior Center.',
-      opportunity_date: '2026-05-01',
-      time_commitment: '2 hours',
+      title,
+      description,
+      opportunity_date: opportunityDate,
+      time_commitment: timeCommitment,
       location: 'Richmond Senior Center',
-      volunteer_limit: 5,
+      volunteer_limit: Number(volunteerLimit) || 5,
     });
   }}
 >
