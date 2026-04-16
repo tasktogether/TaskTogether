@@ -546,85 +546,87 @@ if (!user || user.role !== 'director') {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
-      <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed inset-y-0 z-20">
-        <div className="p-6 border-b border-slate-100">
-          <span className="font-fredoka text-xl font-bold text-slate-800 flex items-center gap-2">
-            Richmond Senior Center
-          </span>
-          <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">Director Portal</span>
-        </div>
+  <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
+    <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed inset-y-0 z-20">
+      <div className="p-6 border-b border-slate-100">
+        <span className="font-fredoka text-xl font-bold text-slate-800 flex items-center gap-2">
+          Richmond Senior Center
+        </span>
+        <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">
+          Director Portal
+        </span>
+      </div>
 
-        <div className="p-4 space-y-2 flex-1">
-          <Button
-            variant={activeTab === 'overview' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('overview')}
+      <div className="p-4 space-y-2 flex-1">
+        <Button
+          variant={activeTab === 'overview' ? 'primary' : 'ghost'}
+          fullWidth
+          className="justify-start gap-3"
+          onClick={() => setActiveTab('overview')}
+        >
+          <LayoutDashboard size={18} /> Overview
+        </Button>
+
+        <Button
+          variant={activeTab === 'applications' ? 'primary' : 'ghost'}
+          fullWidth
+          className="justify-start gap-3"
+          onClick={() => setActiveTab('applications')}
+        >
+          <FileText size={18} /> Applications
+          {pendingApps.length > 0 && (
+            <span className="ml-auto bg-orange-100 text-orange-700 text-xs font-bold py-0.5 px-2 rounded-full">
+              {pendingApps.length}
+            </span>
+          )}
+        </Button>
+
+        <Button
+          variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
+          fullWidth
+          className="justify-start gap-3"
+          onClick={() => setActiveTab('volunteers')}
+        >
+          <Users size={18} /> Volunteers
+        </Button>
+
+        <Button
+          variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
+          fullWidth
+          className="justify-start gap-3"
+          onClick={() => setActiveTab('opportunities')}
+        >
+          <Briefcase size={18} /> Opportunities
+        </Button>
+      </div>
+
+      <div className="p-4 border-t border-slate-100">
+        <Button
+          variant="ghost"
+          fullWidth
+          className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
+          onClick={logout}
+        >
+          <LogOut size={18} /> Sign Out
+        </Button>
+      </div>
+    </aside>
+
+    <main className="flex-1 md:ml-64 p-6 pt-20 md:pt-6">
+      <div className="max-w-6xl mx-auto">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
           >
-            <LayoutDashboard size={18} /> Overview
-          </Button>
-
-          <Button
-            variant={activeTab === 'applications' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('applications')}
-          >
-            <FileText size={18} /> Applications
-            {pendingApps.length > 0 && (
-              <span className="ml-auto bg-orange-100 text-orange-700 text-xs font-bold py-0.5 px-2 rounded-full">
-                {pendingApps.length}
-              </span>
-            )}
-          </Button>
-
-          <Button
-            variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('volunteers')}
-          >
-            <Users size={18} /> Volunteers
-          </Button>
-
-          <Button
-            variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('opportunities')}
-          >
-            <Briefcase size={18} /> Opportunities
-          </Button>
-        </div>
-
-        <div className="p-4 border-t border-slate-100">
-          <Button
-            variant="ghost"
-            fullWidth
-            className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
-            onClick={logout}
-          >
-            <LogOut size={18} /> Sign Out
-          </Button>
-        </div>
-      </aside>
-
-      <main className="flex-1 md:ml-64 p-6 pt-20 md:pt-6">
-        <div className="max-w-6xl mx-auto">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-            >
-              {renderContent()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </main>
-    </div>
-  );
+            {renderContent()}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    </main>
+  </div>
+);
 }
