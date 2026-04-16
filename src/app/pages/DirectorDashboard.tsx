@@ -43,14 +43,15 @@ export default function AdminDashboard() {
   updateOpportunity,
 } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
-  const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
   const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
   });
-    const getOpportunityStatus = (dateString: string) => {
+};
+
+const getOpportunityStatus = (dateString: string) => {
   const today = new Date();
   const oppDate = new Date(dateString);
 
