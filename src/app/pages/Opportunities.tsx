@@ -14,6 +14,7 @@ export default function Opportunities() {
   const { opportunities, signUpForOpportunity, user } = useAuth();
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
 
   const handleOptIn = async (opp: any) => {
@@ -27,17 +28,20 @@ export default function Opportunities() {
     return;
   }
 
-  await signUpForOpportunity(
-    opp.id,
-    user.name || 'Volunteer',
-    user.email || ''
-  );
+  setIsSigningUp(true);
 
-  toast.success('You are signed up!', {
-    description: `You have successfully joined "${opp.title}".`,
-  });
+await signUpForOpportunity(
+  opp.id,
+  user.name || 'Volunteer',
+  user.email || ''
+);
 
-  setSelectedOpp(null);
+toast.success('You are signed up!', {
+  description: `You have successfully joined "${opp.title}".`,
+});
+
+setSelectedOpp(null);
+setIsSigningUp(false);
 };
 
   const isFull = (opp: any) =>
@@ -291,21 +295,27 @@ const isAlreadySignedUp = (opp: any) => {
                   <Button variant="ghost" onClick={() => setSelectedOpp(null)}>
                     Close
                   </Button>
-                  <Button
+                 <Button
   size="lg"
   className="px-8 shadow-lg shadow-violet-200"
   onClick={() => handleOptIn(selectedOpp)}
-  disabled={isFull(selectedOpp) || isAlreadySignedUp(selectedOpp)}
+  disabled={
+    isFull(selectedOpp) ||
+    isAlreadySignedUp(selectedOpp) ||
+    isSigningUp
+  }
 >
-  {isAlreadySignedUp(selectedOpp) ? (
-    'Already Signed Up'
-  ) : isFull(selectedOpp) ? (
-    'Opportunity Full'
-  ) : (
-    <>
-      Opt In & Join <ArrowRight size={18} className="ml-2" />
-    </>
-  )}
+  {isSigningUp
+    ? 'Signing up...'
+    : isAlreadySignedUp(selectedOpp)
+    ? 'Already Signed Up'
+    : isFull(selectedOpp)
+    ? 'Opportunity Full'
+    : (
+        <>
+          Opt In & Join <ArrowRight size={18} className="ml-2" />
+        </>
+      )}
 </Button>
                 </div>
               </div>
