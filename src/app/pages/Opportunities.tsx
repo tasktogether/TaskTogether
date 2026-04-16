@@ -8,91 +8,75 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
-const TIME_SLOT_COLORS: Record<string, string> = {
-  'After School': 'bg-blue-100 text-blue-700',
-  'Weekends': 'bg-green-100 text-green-700',
-  'Summer': 'bg-orange-100 text-orange-700',
-  'Flexible': 'bg-violet-100 text-violet-700',
-};
-
-type FilterSlot = 'All' | 'After School' | 'Weekends' | 'Summer' | 'Flexible';
+type FilterSlot = 'All';
 
 export default function Opportunities() {
-  const {
-  opportunities,
-  signUpForOpportunity,
-  user
-} = useAuth();
+  const { opportunities, signUpForOpportunity, user } = useAuth();
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
+
+  const handleOptIn = async (opp: any) => {
+    if (!user) {
+      toast.error('Please log in to join this opportunity!', {
+        action: {
+          label: 'Login',
+          onClick: () => (window.location.href = '/login'),
+        },
+      });
+      return;
+    }
+
+    await signUpForOpportunity(
+      opp.id,
+      user.name || 'Volunteer',
+      user.email || ''
+    );
+
+    setSelectedOpp(null);
+  };
+
+  const isFull = (opp: any) =>
+    (opp.current_volunteers || 0) >= opp.volunteer_limit;
+
   const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-
- const handleOptIn = async (opp: any) => {
-  if (!user) {
-    toast.error('Please log in to join this opportunity!', {
-      action: {
-        label: 'Login',
-        onClick: () => (window.location.href = '/login'),
-      },
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
     });
-    return;
-  }
+  };
 
-  await signUpForOpportunity(
-    opp.id,
-    user.name || 'Volunteer',
-    user.email || ''
-  );
+  const getOpportunityStatus = (dateString: string) => {
+    const today = new Date();
+    const oppDate = new Date(dateString);
 
-  setSelectedOpp(null);
-};
-const isFull = (opp: any) =>
-  (opp.current_volunteers || 0) >= opp.volunteer_limit;
+    today.setHours(0, 0, 0, 0);
+    oppDate.setHours(0, 0, 0, 0);
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-  });
-};
+    return oppDate < today ? 'Past' : 'Upcoming';
+  };
 
-const getOpportunityStatus = (dateString: string) => {
-  const today = new Date();
-  const oppDate = new Date(dateString);
+  const filteredOpps = opportunities
+    .filter(opp => {
+      const matchesSearch =
+        !searchQuery ||
+        opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-  today.setHours(0, 0, 0, 0);
-  oppDate.setHours(0, 0, 0, 0);
+      const isUpcoming =
+        new Date(opp.opportunity_date).getTime() >=
+        new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 
-  return oppDate < today ? 'Past' : 'Upcoming';
-};
+      return matchesSearch && isUpcoming;
+    })
+    .sort(
+      (a, b) =>
+        new Date(a.opportunity_date).getTime() -
+        new Date(b.opportunity_date).getTime()
+    );
 
-const filteredOpps = opportunities
-  .filter(opp => {
-    const matchesSearch =
-      !searchQuery ||
-      opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      opp.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const isUpcoming =
-      new Date(opp.opportunity_date).getTime() >=
-      new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-
-    return matchesSearch && isUpcoming;
-  })
-  .sort(
-    (a, b) =>
-      new Date(a.opportunity_date).getTime() -
-      new Date(b.opportunity_date).getTime()
-  );
-    
-const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
+  const filters: FilterSlot[] = ['All'];
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
@@ -174,26 +158,14 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
                   className="overflow-hidden flex flex-col h-full p-0 cursor-pointer"
                   onClick={() => setSelectedOpp(opp)}
                 >
-                  <div className="h-48 overflow-hidden relative group">
-                    <img
-                      src={opp.imageUrl}
-                      alt={opp.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${TIME_SLOT_COLORS[opp.timeSlot]}`}>
-                        {opp.timeSlot}
-                      </span>
+                  <div className="h-48 overflow-hidden relative group bg-slate-100 flex items-center justify-center">
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm text-violet-600">
+                      {isFull(opp)
+                        ? 'Full'
+                        : getOpportunityStatus(opp.opportunity_date) === 'Past'
+                        ? 'Past'
+                        : 'Upcoming'}
                     </div>
-                    <div className={`absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
-  isFull(opp) ? 'text-red-600' : 'text-violet-600'
-}`}>
-  {isFull(opp)
-  ? 'Full'
-  : getOpportunityStatus(opp.opportunity_date) === 'Past'
-  ? 'Past'
-  : 'Upcoming'}
-</div>
                   </div>
 
                   <div className="p-6 flex flex-col flex-1">
@@ -202,9 +174,9 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
 
                     <div className="space-y-2 mb-5">
                       <div className="flex items-center gap-2 text-sm text-slate-500">
-  <Calendar size={14} className="text-green-400" />
-  {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
-</div>
+                        <Calendar size={14} className="text-green-400" />
+                        {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+                      </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <Clock size={14} className="text-violet-400" />
                         {opp.time_commitment}
@@ -248,8 +220,7 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
               className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden max-h-[90vh] overflow-y-auto"
               onClick={e => e.stopPropagation()}
             >
-              <div className="relative h-64">
-                <img src={selectedOpp.imageUrl} alt={selectedOpp.title} className="w-full h-full object-cover" />
+              <div className="relative h-64 bg-slate-100">
                 <button
                   onClick={() => setSelectedOpp(null)}
                   className="absolute top-4 right-4 bg-white/50 backdrop-blur-md p-2 rounded-full hover:bg-white transition-colors"
@@ -258,11 +229,6 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
                 </button>
 
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-8">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${TIME_SLOT_COLORS[selectedOpp.timeSlot]}`}>
-                      {selectedOpp.timeSlot}
-                    </span>
-                  </div>
                   <h2 className="text-3xl font-bold text-white">{selectedOpp.title}</h2>
                 </div>
               </div>
@@ -310,18 +276,18 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
                   <Button variant="ghost" onClick={() => setSelectedOpp(null)}>
                     Close
                   </Button>
-                 <Button
-  size="lg"
-  className="px-8 shadow-lg shadow-violet-200"
-  onClick={() => handleOptIn(selectedOpp)}
-  disabled={isFull(selectedOpp)}
->
-  {isFull(selectedOpp) ? 'Opportunity Full' : (
-    <>
-      Opt In & Join <ArrowRight size={18} className="ml-2" />
-    </>
-  )}
-</Button>
+                  <Button
+                    size="lg"
+                    className="px-8 shadow-lg shadow-violet-200"
+                    onClick={() => handleOptIn(selectedOpp)}
+                    disabled={isFull(selectedOpp)}
+                  >
+                    {isFull(selectedOpp) ? 'Opportunity Full' : (
+                      <>
+                        Opt In & Join <ArrowRight size={18} className="ml-2" />
+                      </>
+                    )}
+                  </Button>
                 </div>
               </div>
             </motion.div>
