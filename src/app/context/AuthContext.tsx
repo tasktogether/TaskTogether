@@ -65,6 +65,11 @@ interface AuthContextType {
   opportunities: Opportunity[];
   authLoading: boolean;
   deleteOpportunity: (id: number) => Promise<void>;
+  signUpForOpportunity: (
+  opportunityId: number,
+  volunteerName: string,
+  volunteerEmail: string
+) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -498,6 +503,29 @@ const createOpportunity = async (newOpp: {
   toast.success('Opportunity deleted.');
   fetchOpportunities();
 };
+  const signUpForOpportunity = async (
+  opportunityId: number,
+  volunteerName: string,
+  volunteerEmail: string
+) => {
+  const { error } = await supabase
+    .from('opportunity_signups')
+    .insert([
+      {
+        opportunity_id: opportunityId,
+        volunteer_name: volunteerName,
+        volunteer_email: volunteerEmail,
+      },
+    ]);
+
+  if (error) {
+    console.error('Signup failed:', error);
+    toast.error('Failed to sign up.');
+    return;
+  }
+
+  toast.success('You successfully signed up!');
+};
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => (prev ? { ...prev, ...updates } : null));
   };
@@ -515,6 +543,7 @@ const createOpportunity = async (newOpp: {
         opportunities,
 createOpportunity,
 deleteOpportunity,
+signUpForOpportunity,
 authLoading,
       }}
     >
