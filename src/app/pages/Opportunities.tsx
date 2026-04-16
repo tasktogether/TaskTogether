@@ -260,8 +260,20 @@ const isAlreadySignedUp = (opp: any) => {
                 </button>
 
                 <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/80 to-transparent p-8">
-                  <h2 className="text-3xl font-bold text-white">{selectedOpp.title}</h2>
-                </div>
+  <div className="mb-3">
+    <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-white/90 text-violet-700">
+      {isAlreadySignedUp(selectedOpp)
+        ? 'Already Signed Up'
+        : isFull(selectedOpp)
+        ? 'Full'
+        : getOpportunityStatus(selectedOpp.opportunity_date) === 'Past'
+        ? 'Past'
+        : 'Open'}
+    </span>
+  </div>
+
+  <h2 className="text-3xl font-bold text-white">{selectedOpp.title}</h2>
+</div>
               </div>
 
               <div className="p-8 space-y-8">
