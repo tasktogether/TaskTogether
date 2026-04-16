@@ -18,7 +18,11 @@ const TIME_SLOT_COLORS: Record<string, string> = {
 type FilterSlot = 'All' | 'After School' | 'Weekends' | 'Summer' | 'Flexible';
 
 export default function Opportunities() {
-  const { opportunities, user } = useAuth();
+  const {
+  opportunities,
+  signUpForOpportunity,
+  user
+} = useAuth();
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
