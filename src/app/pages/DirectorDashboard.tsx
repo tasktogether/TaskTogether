@@ -640,41 +640,38 @@ if (!user || user.role !== 'director') {
                               Signed Up Volunteers
                             </p>
 
-                            {opp.signups.map((signup: any, index: number) => (
-  <div
-    key={index}
-    className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
-  >
-    <span>{signup.volunteer_name}</span>
+                            <div className="mt-3">
+  <p className="text-xs font-semibold text-slate-500 mb-1">
+    Signed Up Volunteers
+  </p>
 
-    <button
-      className="text-red-500 hover:underline ml-2"
-      onClick={() =>
-        removeVolunteerFromOpportunity(
-          opp.id,
-          signup.volunteer_email
-        )
-      }
-    >
-      Remove
-    </button>
-  </div>
-))}
-                              </div>
-                            ) : (
-                              <p className="text-xs text-slate-400">No volunteers yet</p>
-                            )}
-                          </div>
-                        </div>
-                      </Card>
-                    );
-                  })}
-              </div>
-            )}
-          </div>
-        );
-    }
-  };
+  {opp.signups && opp.signups.length > 0 ? (
+    <div className="space-y-1">
+      {opp.signups.map((signup: any, index: number) => (
+        <div
+          key={index}
+          className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
+        >
+          <span>{signup.volunteer_name}</span>
+
+          <button
+            className="text-red-500 hover:underline ml-2"
+            onClick={() =>
+              removeVolunteerFromOpportunity(
+                opp.id,
+                signup.volunteer_email
+              )
+            }
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-xs text-slate-400">No volunteers yet</p>
+  )}
+</div>
 
   return (
   <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
