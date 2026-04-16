@@ -16,6 +16,7 @@ export default function Opportunities() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSigningUp, setIsSigningUp] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
+  const [signupSuccess, setSignupSuccess] = useState(false);
 
   const handleOptIn = async (opp: any) => {
   if (!user) {
@@ -40,8 +41,13 @@ toast.success('You are signed up!', {
   description: `You have successfully joined "${opp.title}".`,
 });
 
-setSelectedOpp(null);
+setSignupSuccess(true);
 setIsSigningUp(false);
+
+setTimeout(() => {
+  setSignupSuccess(false);
+  setSelectedOpp(null);
+}, 1500);
 };
 
   const isFull = (opp: any) =>
@@ -275,7 +281,11 @@ const isAlreadySignedUp = (opp: any) => {
   <h2 className="text-3xl font-bold text-white">{selectedOpp.title}</h2>
 </div>
               </div>
-
+{signupSuccess && (
+  <div className="bg-green-50 border border-green-200 text-green-700 px-6 py-4 text-center font-bold">
+    ✓ Successfully signed up!
+  </div>
+)}
               <div className="p-8 space-y-8">
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-violet-50 text-violet-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
