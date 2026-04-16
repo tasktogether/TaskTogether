@@ -557,24 +557,25 @@ const updateUser = (updates: Partial<User>) => {
 };
 return (
   <AuthContext.Provider
-      value={{
-        user,
-        login,
-        logout,
-        register,
-        updateUser,
-        applications,
-        updateApplicationStatus,
-        opportunities,
-createOpportunity,
-deleteOpportunity,
-signUpForOpportunity,
-authLoading,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+    value={{
+      user,
+      login,
+      logout,
+      register,
+      updateUser,
+      applications,
+      updateApplicationStatus,
+      opportunities,
+      createOpportunity,
+      deleteOpportunity,
+      signUpForOpportunity,
+      authLoading,
+    }}
+  >
+    {children}
+  </AuthContext.Provider>
+);
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
