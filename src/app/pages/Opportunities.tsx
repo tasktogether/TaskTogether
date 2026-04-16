@@ -63,14 +63,18 @@ export default function Opportunities() {
 };
 const isFull = (opp: any) =>
   (opp.current_volunteers || 0) >= opp.volunteer_limit;
- const filteredOpps = opportunities
+const filteredOpps = opportunities
   .filter(opp => {
     const matchesSearch =
       !searchQuery ||
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesSearch;
+    const isUpcoming =
+      new Date(opp.opportunity_date).getTime() >=
+      new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+
+    return matchesSearch && isUpcoming;
   })
   .sort(
     (a, b) =>
