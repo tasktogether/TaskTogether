@@ -512,7 +512,7 @@ const createOpportunity = async (newOpp: {
   toast.success('Opportunity deleted.');
   fetchOpportunities();
 };
-  const signUpForOpportunity = async (
+ const signUpForOpportunity = async (
   opportunityId: number,
   volunteerName: string,
   volunteerEmail: string
@@ -534,15 +534,15 @@ const createOpportunity = async (newOpp: {
   }
 
   toast.success('You successfully signed up!');
-fetchOpportunities();
+  fetchOpportunities();
 };
-  const updateUser = (updates: Partial<User>) => {
-    setUser(prev => (prev ? { ...prev, ...updates } : null));
-  };
 
+const updateUser = (updates: Partial<User>) => {
+  setUser(prev => (prev ? { ...prev, ...updates } : null));
+};
 
-  return (
-    <AuthContext.Provider
+return (
+  <AuthContext.Provider
       value={{
         user,
         login,
