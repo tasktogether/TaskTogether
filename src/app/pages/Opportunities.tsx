@@ -207,7 +207,7 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
 </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <Clock size={14} className="text-violet-400" />
-                        {opp.timeCommitment}
+                        {opp.time_commitment}
                       </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <MapPin size={14} className="text-pink-400" />
@@ -270,7 +270,7 @@ const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Fle
               <div className="p-8 space-y-8">
                 <div className="flex flex-wrap gap-4">
                   <div className="bg-violet-50 text-violet-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <Clock size={18} /> {selectedOpp.timeCommitment}
+                    <Clock size={18} /> {selectedOpp.time_commitment}
                   </div>
                   <div className="bg-pink-50 text-pink-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                     <MapPin size={18} /> {selectedOpp.location}
