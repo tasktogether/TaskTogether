@@ -24,6 +24,7 @@ export interface Opportunity {
   location: string;
   volunteer_limit: number;
   current_volunteers?: number;
+  signups?: { volunteer_name: string; volunteer_email: string }[];
 }
 
 export interface Application {
@@ -177,9 +178,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { data, error } = await supabase
       .from('opportunities')
       .select(`
-        *,
-        opportunity_signups(count)
-      `)
+  *,
+  opportunity_signups(
+    volunteer_name,
+    volunteer_email
+  )
+`)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -188,9 +192,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const mappedOpportunities = (data || []).map((opp: any) => ({
-      ...opp,
-      current_volunteers: opp.opportunity_signups?.[0]?.count || 0,
-    }));
+  ...opp,
+  current_volunteers: opp.opportunity_signups?.length || 0,
+  signups: opp.opportunity_signups || [],
+}));
 
     setOpportunities(mappedOpportunities);
   };
