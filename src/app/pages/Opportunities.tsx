@@ -55,16 +55,20 @@ export default function Opportunities() {
 };
 const isFull = (opp: any) =>
   (opp.current_volunteers || 0) >= opp.volunteer_limit;
-  const filteredOpps = opportunities.filter(opp => {
+ const filteredOpps = opportunities
+  .filter(opp => {
     const matchesSearch =
       !searchQuery ||
       opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesFilter = activeFilter === 'All' || opp.timeSlot === activeFilter;
-
-    return matchesSearch && matchesFilter;
-  });
+    return matchesSearch;
+  })
+  .sort(
+    (a, b) =>
+      new Date(a.opportunity_date).getTime() -
+      new Date(b.opportunity_date).getTime()
+  );
 
   const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
 
