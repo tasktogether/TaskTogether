@@ -403,11 +403,32 @@ if (!user || user.role !== 'director') {
   variant="ghost"
   size="icon"
   className="h-6 w-6"
-  onClick={() =>
-    updateOpportunity(opp.id, {
-      title: `${opp.title} (Updated)`,
-    })
-  }
+  onClick={async () => {
+  const newTitle = prompt('Enter new title:', opp.title);
+  if (!newTitle) return;
+
+  const newDescription = prompt(
+    'Enter new description:',
+    opp.description
+  );
+
+  const newDate = prompt(
+    'Enter new date (YYYY-MM-DD):',
+    opp.opportunity_date
+  );
+
+  const newLimit = prompt(
+    'Enter volunteer limit:',
+    String(opp.volunteer_limit)
+  );
+
+  await updateOpportunity(opp.id, {
+    title: newTitle,
+    description: newDescription || opp.description,
+    opportunity_date: newDate || opp.opportunity_date,
+    volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+  });
+}}
 >
   <Edit3 size={14} />
 </Button>
