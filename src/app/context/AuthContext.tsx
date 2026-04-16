@@ -555,6 +555,26 @@ const signUpForOpportunity = async (
   volunteerName: string,
   volunteerEmail: string
 ) => {
+  const existingSignup = await supabase
+  .from('opportunity_signups')
+  .select('id')
+  .eq('opportunity_id', opportunityId)
+  .eq('volunteer_email', volunteerEmail)
+  .maybeSingle();
+
+if (existingSignup.data) {
+  toast.error('You already signed up for this opportunity.');
+  return;
+}
+  const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
+
+if (
+  selectedOpportunity &&
+  (selectedOpportunity.current_volunteers || 0) >= selectedOpportunity.volunteer_limit
+) {
+  toast.error('This opportunity is already full.');
+  return;
+}
   const { error } = await supabase
     .from('opportunity_signups')
     .insert([
