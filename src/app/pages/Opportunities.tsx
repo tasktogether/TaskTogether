@@ -17,24 +17,28 @@ export default function Opportunities() {
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
 
   const handleOptIn = async (opp: any) => {
-    if (!user) {
-      toast.error('Please log in to join this opportunity!', {
-        action: {
-          label: 'Login',
-          onClick: () => (window.location.href = '/login'),
-        },
-      });
-      return;
-    }
+  if (!user) {
+    toast.error('Please log in to join this opportunity!', {
+      action: {
+        label: 'Login',
+        onClick: () => (window.location.href = '/login'),
+      },
+    });
+    return;
+  }
 
-    await signUpForOpportunity(
-      opp.id,
-      user.name || 'Volunteer',
-      user.email || ''
-    );
+  await signUpForOpportunity(
+    opp.id,
+    user.name || 'Volunteer',
+    user.email || ''
+  );
 
-    setSelectedOpp(null);
-  };
+  toast.success('You are signed up!', {
+    description: `You have successfully joined "${opp.title}".`,
+  });
+
+  setSelectedOpp(null);
+};
 
   const isFull = (opp: any) =>
     (opp.current_volunteers || 0) >= opp.volunteer_limit;
