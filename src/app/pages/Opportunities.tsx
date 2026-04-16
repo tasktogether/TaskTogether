@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 type FilterSlot = 'All';
 
 export default function Opportunities() {
-  const { opportunities, signUpForOpportunity, user } = useAuth();
+  const { opportunities, signUpForOpportunity, user, authLoading } = useAuth();
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSigningUp, setIsSigningUp] = useState(false);
@@ -150,7 +150,21 @@ const isAlreadySignedUp = (opp: any) => {
             </div>
           </div>
         </div>
-{filteredOpps.length === 0 ? (
+{authLoading ? (
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {[1, 2, 3].map((i) => (
+      <div
+        key={i}
+        className="bg-white rounded-2xl border border-slate-200 p-6 animate-pulse"
+      >
+        <div className="h-40 bg-slate-200 rounded-xl mb-4" />
+        <div className="h-5 bg-slate-200 rounded mb-2" />
+        <div className="h-4 bg-slate-200 rounded w-2/3 mb-4" />
+        <div className="h-10 bg-slate-200 rounded" />
+      </div>
+    ))}
+  </div>
+) : filteredOpps.length === 0 ? (
   <div className="text-center py-20">
     <p className="text-4xl mb-3">
       {opportunities.length === 0 ? '📭' : '🔍'}
