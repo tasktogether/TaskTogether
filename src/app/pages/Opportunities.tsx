@@ -185,9 +185,13 @@ const isAlreadySignedUp = (opp: any) => {
 
                     <div className="space-y-2 mb-5">
                       <div className="flex items-center gap-2 text-sm text-slate-500">
-                        <Calendar size={14} className="text-green-400" />
-                        {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
-                      </div>
+  <Calendar size={14} className="text-green-400" />
+  {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+</div>
+
+<div className="inline-flex items-center w-fit px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-bold">
+  {Math.max(opp.volunteer_limit - (opp.current_volunteers || 0), 0)} spots remaining
+</div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <Clock size={14} className="text-violet-400" />
                         {opp.time_commitment}
