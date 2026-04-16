@@ -26,6 +26,13 @@ export default function Opportunities() {
   const [selectedOpp, setSelectedOpp] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<FilterSlot>('All');
+  const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
 
  const handleOptIn = async (opp: any) => {
   if (!user) {
@@ -239,7 +246,7 @@ const isFull = (opp: any) =>
                     <MapPin size={18} /> {selectedOpp.location}
                   </div>
                   <div className="bg-orange-50 text-orange-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <Calendar size={18} /> {selectedOpp.timeSlot}
+                    <Calendar size={18} /> {formatDate(selectedOpp.opportunity_date)}
                   </div>
                 </div>
 
