@@ -534,10 +534,11 @@ const createOpportunity = async (newOpp: {
   }
 
   toast.success('You successfully signed up!');
+fetchOpportunities();
 };
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => (prev ? { ...prev, ...updates } : null));
-  );
+  };
 
 
   return (
