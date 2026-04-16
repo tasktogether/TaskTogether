@@ -32,6 +32,14 @@ export default function Opportunities() {
     day: 'numeric',
     year: 'numeric',
   });
+    const getOpportunityStatus = (dateString: string) => {
+  const today = new Date();
+  const oppDate = new Date(dateString);
+
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  return oppDate < today ? 'Past' : 'Upcoming';
 };
 
  const handleOptIn = async (opp: any) => {
@@ -166,7 +174,11 @@ const isFull = (opp: any) =>
                     <div className={`absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
   isFull(opp) ? 'text-red-600' : 'text-violet-600'
 }`}>
-  {isFull(opp) ? 'Full' : 'Active'}
+  {isFull(opp)
+  ? 'Full'
+  : getOpportunityStatus(opp.opportunity_date) === 'Past'
+  ? 'Past'
+  : 'Upcoming'}
 </div>
                   </div>
 
