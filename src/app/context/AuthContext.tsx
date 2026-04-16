@@ -492,9 +492,10 @@ const createOpportunity = async (newOpp: {
   }
 
   toast.success('Opportunity created!');
-  fetchOpportunities(); // refresh list
+  fetchOpportunities();
 };
-  const deleteOpportunity = async (id: number) => {
+
+const deleteOpportunity = async (id: number) => {
   const confirmed = window.confirm('Delete this opportunity?');
   if (!confirmed) return;
 
@@ -512,7 +513,8 @@ const createOpportunity = async (newOpp: {
   toast.success('Opportunity deleted.');
   fetchOpportunities();
 };
- const signUpForOpportunity = async (
+
+const signUpForOpportunity = async (
   opportunityId: number,
   volunteerName: string,
   volunteerEmail: string
@@ -540,7 +542,6 @@ const createOpportunity = async (newOpp: {
 const updateUser = (updates: Partial<User>) => {
   setUser(prev => (prev ? { ...prev, ...updates } : null));
 };
-
 return (
   <AuthContext.Provider
       value={{
