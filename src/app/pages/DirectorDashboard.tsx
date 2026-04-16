@@ -459,7 +459,22 @@ if (!user || user.role !== 'director') {
         </div>
 
         <div className="flex items-center gap-2 text-sm text-slate-600">
-          <Users size={14} /> {opp.volunteer_limit} spots available
+          <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+          <div className="mt-3">
+  <p className="text-xs font-semibold text-slate-500 mb-1">Signed Up Volunteers</p>
+
+  {opp.signups && opp.signups.length > 0 ? (
+    <div className="space-y-1">
+      {opp.signups.map((signup: any, index: number) => (
+        <p key={index} className="text-xs text-slate-600">
+          {signup.volunteer_name}
+        </p>
+      ))}
+    </div>
+  ) : (
+    <p className="text-xs text-slate-400">No volunteers yet</p>
+  )}
+</div>
         </div>
       </div>
     </Card>
