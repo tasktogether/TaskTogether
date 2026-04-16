@@ -39,6 +39,7 @@ export default function AdminDashboard() {
   logout,
   opportunities,
   createOpportunity,
+  deleteOpportunity,
 } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
@@ -396,9 +397,20 @@ if (!user || user.role !== 'director') {
             Open
           </span>
 
-          <Button variant="ghost" size="icon" className="h-6 w-6">
-            <Edit3 size={14} />
-          </Button>
+          <div className="flex gap-1">
+  <Button variant="ghost" size="icon" className="h-6 w-6">
+    <Edit3 size={14} />
+  </Button>
+
+  <Button
+    variant="ghost"
+    size="icon"
+    className="h-6 w-6 text-red-500 hover:bg-red-50"
+    onClick={() => deleteOpportunity(opp.id)}
+  >
+    <X size={14} />
+  </Button>
+</div>
         </div>
 
         <h3 className="text-lg font-bold text-slate-800 mb-1">{opp.title}</h3>
