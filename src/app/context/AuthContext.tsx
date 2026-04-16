@@ -135,21 +135,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
-  const [authLoading, setAuthLoading] = useState(true);
+ const [authLoading, setAuthLoading] = useState(true);
 
- const fetchOpportunities = async () => {
+const fetchApplications = async () => {
   const { data, error } = await supabase
-    .from('opportunities')
-    .select(`
-      *,
-      opportunity_signups(count)
-    `)
+    .from('volunteer_applications')
+    .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error loading opportunities:', error);
+    console.error('Error loading applications:', error);
     return;
   }
+
+  const mappedApplications: Application[] = (data || []).map((app: any) => ({
+    id: String(app.id),
+    userId: String(app.id),
+    userName: app.full_name,
+    userEmail: app.email,
+    videoUrl: app.video_url,
+    age: app.age,
+    status: app.status,
+    submittedAt: new Date(app.created_at),
+    processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
+  }));
+
+  setApplications(mappedApplications);
+};
 
   const mappedOpportunities = (data || []).map((opp: any) => ({
     ...opp,
@@ -158,21 +170,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   setOpportunities(mappedOpportunities);
 };
-
-    const mappedApplications: Application[] = (data || []).map((app: any) => ({
-      id: String(app.id),
-      userId: String(app.id),
-      userName: app.full_name,
-      userEmail: app.email,
-      videoUrl: app.video_url,
-      age: app.age,
-      status: app.status,
-      submittedAt: new Date(app.created_at),
-      processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
-    }));
-
-    setApplications(mappedApplications);
-  };
 
 useEffect(() => {
   let mounted = true;
