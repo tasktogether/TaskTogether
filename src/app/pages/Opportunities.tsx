@@ -322,7 +322,15 @@ const isAlreadySignedUp = (opp: any) => {
                  <Button
   size="lg"
   className="px-8 shadow-lg shadow-violet-200"
-  onClick={() => handleOptIn(selectedOpp)}
+  onClick={() => {
+  const confirmed = window.confirm(
+    `Are you sure you want to sign up for "${selectedOpp.title}"?`
+  );
+
+  if (!confirmed) return;
+
+  handleOptIn(selectedOpp);
+}}
   disabled={
     isFull(selectedOpp) ||
     isAlreadySignedUp(selectedOpp) ||
