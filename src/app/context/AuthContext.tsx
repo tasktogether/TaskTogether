@@ -537,7 +537,8 @@ const createOpportunity = async (newOpp: {
 };
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => (prev ? { ...prev, ...updates } : null));
-  };
+  );
+
 
   return (
     <AuthContext.Provider
