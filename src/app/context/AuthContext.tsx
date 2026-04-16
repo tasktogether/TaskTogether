@@ -137,16 +137,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const fetchApplications = async () => {
-    const { data, error } = await supabase
-      .from('volunteer_applications')
-      .select('*')
-      .order('created_at', { ascending: false });
+ const fetchOpportunities = async () => {
+  const { data, error } = await supabase
+    .from('opportunities')
+    .select(`
+      *,
+      opportunity_signups(count)
+    `)
+    .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error loading applications:', error);
-      return;
-    }
+  if (error) {
+    console.error('Error loading opportunities:', error);
+    return;
+  }
+
+  const mappedOpportunities = (data || []).map((opp: any) => ({
+    ...opp,
+    current_volunteers: opp.opportunity_signups?.[0]?.count || 0,
+  }));
+
+  setOpportunities(mappedOpportunities);
+};
 
     const mappedApplications: Application[] = (data || []).map((app: any) => ({
       id: String(app.id),
@@ -400,6 +411,7 @@ const login = async (
     });
 
     toast.success('Application submitted successfully!');
+    fetchOpportunities();
   };
 const logout = async () => {
   await supabase.auth.signOut();
