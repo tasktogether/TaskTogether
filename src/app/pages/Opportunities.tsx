@@ -46,7 +46,8 @@ export default function Opportunities() {
 
   setSelectedOpp(null);
 };
-
+const isFull = (opp: any) =>
+  (opp.current_volunteers || 0) >= opp.volunteer_limit;
   const filteredOpps = opportunities.filter(opp => {
     const matchesSearch =
       !searchQuery ||
@@ -151,9 +152,11 @@ export default function Opportunities() {
                         {opp.timeSlot}
                       </span>
                     </div>
-                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold text-violet-600 shadow-sm">
-                      Active
-                    </div>
+                    <div className={`absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
+  isFull(opp) ? 'text-red-600' : 'text-violet-600'
+}`}>
+  {isFull(opp) ? 'Full' : 'Active'}
+</div>
                   </div>
 
                   <div className="p-6 flex flex-col flex-1">
@@ -270,13 +273,18 @@ export default function Opportunities() {
                   <Button variant="ghost" onClick={() => setSelectedOpp(null)}>
                     Close
                   </Button>
-                  <Button
-                    size="lg"
-                    className="px-8 shadow-lg shadow-violet-200"
-                    onClick={() => handleOptIn(selectedOpp)}
-                  >
-                    Opt In & Join <ArrowRight size={18} className="ml-2" />
-                  </Button>
+                 <Button
+  size="lg"
+  className="px-8 shadow-lg shadow-violet-200"
+  onClick={() => handleOptIn(selectedOpp)}
+  disabled={isFull(selectedOpp)}
+>
+  {isFull(selectedOpp) ? 'Opportunity Full' : (
+    <>
+      Opt In & Join <ArrowRight size={18} className="ml-2" />
+    </>
+  )}
+</Button>
                 </div>
               </div>
             </motion.div>
