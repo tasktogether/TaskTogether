@@ -479,6 +479,24 @@ const createOpportunity = async (newOpp: {
   toast.success('Opportunity created!');
   fetchOpportunities(); // refresh list
 };
+  const deleteOpportunity = async (id: number) => {
+  const confirmed = window.confirm('Delete this opportunity?');
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from('opportunities')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting opportunity:', error);
+    toast.error('Failed to delete opportunity.');
+    return;
+  }
+
+  toast.success('Opportunity deleted.');
+  fetchOpportunities();
+};
   const updateUser = (updates: Partial<User>) => {
     setUser(prev => (prev ? { ...prev, ...updates } : null));
   };
