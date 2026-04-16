@@ -429,20 +429,7 @@ const logout = async () => {
   setUser(null);
   window.location.href = '/login';
 };
-  const fetchOpportunities = async () => {
-  const { data, error } = await supabase
-    .from('opportunities')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Error loading opportunities:', error);
-    return;
-  }
-
-  setOpportunities(data || []);
-};
-
+  
   const updateApplicationStatus = async (
     appId: string,
     status: ApplicationStatus
