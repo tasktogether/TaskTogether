@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
   Users,
@@ -8,15 +8,14 @@ import {
   X,
   Eye,
   LogOut,
-  MessageCircle,
   PlayCircle,
-  Filter,
-  Download,
   Search,
   Settings,
   Calendar,
   Edit3,
   LayoutDashboard,
+  MapPin,
+  Clock3,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -24,12 +23,6 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { emailService } from '../utils/emailService';
-
-const MOCK_OPPORTUNITIES = [
-  { id: 1, title: 'Grocery Run', requester: 'Richmond Senior Center', date: 'Weekly', status: 'open', volunteersNeeded: 1 },
-  { id: 2, title: 'Tech Help', requester: 'Richmond Senior Center', date: 'Feb 28, 10:00 AM', status: 'filled', volunteersNeeded: 0 },
-  { id: 3, title: 'Garden Cleanup', requester: 'Richmond Senior Center', date: 'Mar 15, 09:00 AM', status: 'open', volunteersNeeded: 5 },
-];
 
 export default function AdminDashboard() {
   const {
@@ -42,7 +35,10 @@ export default function AdminDashboard() {
   deleteOpportunity,
   updateOpportunity,
 } = useAuth();
-  const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
+    const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
+  const [isSendingEmail, setIsSendingEmail] = useState<string | number | null>(null);
+  const [volunteerSearch, setVolunteerSearch] = useState('');
+
   const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     month: 'long',
@@ -51,24 +47,44 @@ export default function AdminDashboard() {
   });
 };
 
-const getOpportunityStatus = (dateString: string) => {
+const getOpportunityStatus = (dateString: string, currentVolunteers = 0, volunteerLimit = 0) => {
   const today = new Date();
   const oppDate = new Date(dateString);
 
   today.setHours(0, 0, 0, 0);
   oppDate.setHours(0, 0, 0, 0);
 
-  return oppDate < today ? 'Past' : 'Upcoming';
+  if (oppDate < today) return 'Past';
+  if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
+  return 'Upcoming';
 };
-
 if (!user || user.role !== 'director') {
   return <Navigate to="/login?role=director" replace />;
 }
 
-  const pendingApps = applications.filter(app => app.status === 'pending');
+    const pendingApps = applications.filter(app => app.status === 'pending');
   const approvedApps = applications.filter(app => app.status === 'approved');
   const rejectedApps = applications.filter(app => app.status === 'rejected');
 
+  const filteredApprovedApps = useMemo(() => {
+    return approvedApps.filter(app =>
+      `${app.userName} ${app.userEmail}`
+        .toLowerCase()
+        .includes(volunteerSearch.toLowerCase())
+    );
+  }, [approvedApps, volunteerSearch]);
+
+  const upcomingOpportunities = opportunities.filter(opp => {
+    const oppDate = new Date(opp.opportunity_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    oppDate.setHours(0, 0, 0, 0);
+    return oppDate >= today;
+  });
+
+  const filledOpportunities = opportunities.filter(
+    opp => (opp.current_volunteers || 0) >= opp.volunteer_limit
+  );
   const handleApprove = async (app: any) => {
     const confirmed = window.confirm(`Approve ${app.userName}?`);
     if (!confirmed) return;
@@ -109,9 +125,30 @@ if (!user || user.role !== 'director') {
       case 'overview':
         return (
           <div className="space-y-6">
-            <h1 className="text-2xl font-bold font-poppins text-slate-800">Richmond Senior Center Dashboard</h1>
+  <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div>
+        <p className="text-sm font-medium text-violet-600">Director Dashboard</p>
+        <h1 className="text-3xl font-bold font-poppins text-slate-800">
+          Richmond Senior Center
+        </h1>
+        <p className="text-slate-500 mt-1">
+          Manage volunteers, review applications, and oversee opportunities.
+        </p>
+      </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3">
+        <p className="text-xs uppercase tracking-wide text-slate-400 font-semibold">
+          Quick Summary
+        </p>
+        <p className="text-sm text-slate-600 mt-1">
+          {approvedApps.length} approved volunteers • {pendingApps.length} pending applications • {upcomingOpportunities.length} upcoming opportunities
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card
                 className="bg-violet-50 border-violet-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
                 onClick={() => setActiveTab('volunteers')}
@@ -159,8 +196,19 @@ if (!user || user.role !== 'director') {
                 </div>
               </Card>
             </div>
-          </div>
-        );
+          </div>        
+        <Card className="bg-blue-50 border-blue-100 p-6">
+  <div className="flex items-center gap-4">
+    <div className="p-3 bg-blue-100 rounded-xl text-blue-600">
+      <Check size={24} />
+    </div>
+    <div>
+      <p className="text-sm font-medium text-slate-500">Filled Opportunities</p>
+      <p className="text-2xl font-bold text-slate-800">{filledOpportunities.length}</p>
+    </div>
+  </div>
+</Card>
+          );
 
       case 'applications':
         return (
@@ -252,27 +300,34 @@ if (!user || user.role !== 'director') {
 
                       <div className="flex md:flex-col justify-center gap-3 min-w-[160px] border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-6">
                         <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 shadow-green-200 w-full justify-center"
-                          onClick={() => handleApprove(app)}
-                          disabled={isSendingEmail === app.id}
-                        >
-                          <Check size={16} className="mr-2" /> Approve
-                        </Button>
+  size="sm"
+  className="bg-green-600 hover:bg-green-700 shadow-green-200 w-full justify-center"
+  onClick={() => handleApprove(app)}
+  disabled={isSendingEmail === app.id}
+>
+  <Check size={16} className="mr-2" />
+  {isSendingEmail === app.id ? 'Sending...' : 'Approve'}
+</Button>
 
                         <Button
-                          size="sm"
-                          variant="ghost"
-                          className="text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center"
-                          onClick={() => handleReject(app)}
-                          disabled={isSendingEmail === app.id}
-                        >
-                          <X size={16} className="mr-2" /> Reject
-                        </Button>
+  size="sm"
+  variant="ghost"
+  className="text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center"
+  onClick={() => handleReject(app)}
+  disabled={isSendingEmail === app.id}
+>
+  <X size={16} className="mr-2" />
+  {isSendingEmail === app.id ? 'Updating...' : 'Reject'}
+</Button>
 
-                        <Button size="sm" variant="ghost" className="text-slate-400 hover:text-slate-600 w-full justify-center">
-                          <MessageCircle size={16} className="mr-2" /> Message
-                        </Button>
+                        <Button
+  size="sm"
+  variant="ghost"
+  className="text-slate-400 hover:text-slate-600 w-full justify-center"
+  disabled
+>
+  <Eye size={16} className="mr-2" /> Review
+</Button>
                       </div>
                     </div>
                   </Card>
@@ -283,38 +338,44 @@ if (!user || user.role !== 'director') {
             <div className="mt-12">
               <h2 className="text-lg font-bold text-slate-700 mb-4">Rejected Applications</h2>
 
-              <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-                <table className="w-full text-sm text-left">
-                  <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-medium">
-                    <tr>
-                      <th className="px-6 py-4">Name</th>
-                      <th className="px-6 py-4">Status</th>
-                      <th className="px-6 py-4">Date Processed</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {rejectedApps.map(app => (
-                      <tr key={app.id} className="hover:bg-slate-50/50">
-                        <td className="px-6 py-4 font-medium text-slate-800">{app.userName}</td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">
-                            Rejected
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-slate-500">
-                          {app.processedAt ? new Date(app.processedAt).toLocaleDateString() : 'N/A'}
-                        </td>
-                        <td className="px-6 py-4 text-right">
-                          <button className="text-slate-400 hover:text-violet-600">
-                            <Eye size={16} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {rejectedApps.length === 0 ? (
+  <div className="text-center py-10 bg-white rounded-3xl border border-dashed border-slate-300">
+    <p className="text-slate-500">No rejected applications.</p>
+  </div>
+) : (
+  <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
+    <table className="w-full text-sm text-left">
+      <thead className="bg-slate-50 border-b border-slate-100 text-slate-500 font-medium">
+        <tr>
+          <th className="px-6 py-4">Name</th>
+          <th className="px-6 py-4">Status</th>
+          <th className="px-6 py-4">Date Processed</th>
+          <th className="px-6 py-4 text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-slate-100">
+        {rejectedApps.map(app => (
+          <tr key={app.id} className="hover:bg-slate-50/50">
+            <td className="px-6 py-4 font-medium text-slate-800">{app.userName}</td>
+            <td className="px-6 py-4">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700">
+                Rejected
+              </span>
+            </td>
+            <td className="px-6 py-4 text-slate-500">
+              {app.processedAt ? new Date(app.processedAt).toLocaleDateString() : 'N/A'}
+            </td>
+            <td className="px-6 py-4 text-right">
+              <button className="text-slate-400 hover:text-violet-600">
+                <Eye size={16} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+)}
             </div>
           </div>
         );
@@ -328,10 +389,12 @@ if (!user || user.role !== 'director') {
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                   <input
-                    type="text"
-                    placeholder="Search volunteers..."
-                    className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 w-64"
-                  />
+  type="text"
+  placeholder="Search volunteers..."
+  value={volunteerSearch}
+  onChange={(e) => setVolunteerSearch(e.target.value)}
+  className="pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-violet-200 w-64"
+/>
                 </div>
               </div>
             </div>
@@ -342,7 +405,12 @@ if (!user || user.role !== 'director') {
               </div>
             ) : (
               <div className="grid gap-4">
-                {approvedApps.map(app => (
+                {filteredApprovedApps.length === 0 ? (
+  <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
+    <p className="text-slate-500">No volunteers match that search.</p>
+  </div>
+) : (
+  filteredApprovedApps.map(app => (
                   <div
                     key={app.id}
                     className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition-shadow"
@@ -375,7 +443,8 @@ if (!user || user.role !== 'director') {
                       <Settings size={16} className="text-slate-400" />
                     </Button>
                   </div>
-                ))}
+                                ))
+              )}
               </div>
             )}
           </div>
@@ -438,22 +507,47 @@ if (!user || user.role !== 'director') {
               </Button>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...opportunities]
-                .sort(
+            {opportunities.length === 0 ? (
+  <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
+    <p className="text-slate-700 font-medium">No opportunities yet.</p>
+    <p className="text-slate-500 text-sm mt-1">
+      Create your first volunteer opportunity for Richmond Senior Center.
+    </p>
+  </div>
+) : (
+  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {[...opportunities]
+      .sort(
                   (a, b) =>
                     new Date(a.opportunity_date).getTime() -
                     new Date(b.opportunity_date).getTime()
                 )
                 .map(opp => (
                   <Card key={opp.id} className="relative overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
+  <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
-                    <div className="pl-4">
+  <div className="pl-4">
                       <div className="flex justify-between items-start mb-2">
-                        <span className="text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide bg-green-100 text-green-700">
-                          Upcoming
-                        </span>
+                        {(() => {
+  const status = getOpportunityStatus(
+    opp.opportunity_date,
+    opp.current_volunteers || 0,
+    opp.volunteer_limit
+  );
+
+  const statusClasses =
+    status === 'Past'
+      ? 'bg-slate-100 text-slate-600'
+      : status === 'Full'
+      ? 'bg-blue-100 text-blue-700'
+      : 'bg-green-100 text-green-700';
+
+  return (
+    <span className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}>
+      {status}
+    </span>
+  );
+})()}
 
                         <div className="flex gap-1">
                           <Button
@@ -491,13 +585,17 @@ if (!user || user.role !== 'director') {
                           </Button>
 
                           <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-6 w-6 text-red-500 hover:bg-red-50"
-                            onClick={() => deleteOpportunity(opp.id)}
-                          >
-                            <X size={14} />
-                          </Button>
+  variant="ghost"
+  size="icon"
+  className="h-6 w-6 text-red-500 hover:bg-red-50"
+  onClick={() => {
+    const confirmed = window.confirm(`Delete "${opp.title}"?`);
+    if (!confirmed) return;
+    deleteOpportunity(opp.id);
+  }}
+>
+  <X size={14} />
+</Button>
                         </div>
                       </div>
 
@@ -505,17 +603,18 @@ if (!user || user.role !== 'director') {
                         {opp.title}
                       </h3>
 
-                      <p className="text-sm text-slate-500 mb-4">
-                        Richmond Senior Center
-                      </p>
+                      <div className="flex items-center gap-2 text-sm text-slate-500 mb-4">
+  <MapPin size={14} />
+  Richmond Senior Center
+</div>
 
                       <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
                         <Calendar size={14} /> {formatDate(opp.opportunity_date)}
                       </div>
 
                       <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                        <Briefcase size={14} /> {opp.time_commitment}
-                      </div>
+  <Clock3 size={14} /> {opp.time_commitment}
+</div>
 
                       <div className="flex items-center gap-2 text-sm text-slate-600">
                         <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
@@ -540,8 +639,9 @@ if (!user || user.role !== 'director') {
                       </div>
                     </div>
                   </Card>
-                ))}
-            </div>
+                                ))}
+          </div>
+)}
           </div>
         );
 
