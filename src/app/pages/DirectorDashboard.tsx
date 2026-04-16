@@ -40,6 +40,7 @@ export default function AdminDashboard() {
   opportunities,
   createOpportunity,
   deleteOpportunity,
+  updateOpportunity,
 } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('applications');
   const [isSendingEmail, setIsSendingEmail] = useState<string | null>(null);
@@ -398,9 +399,18 @@ if (!user || user.role !== 'director') {
           </span>
 
           <div className="flex gap-1">
-  <Button variant="ghost" size="icon" className="h-6 w-6">
-    <Edit3 size={14} />
-  </Button>
+  <Button
+  variant="ghost"
+  size="icon"
+  className="h-6 w-6"
+  onClick={() =>
+    updateOpportunity(opp.id, {
+      title: `${opp.title} (Updated)`,
+    })
+  }
+>
+  <Edit3 size={14} />
+</Button>
 
   <Button
     variant="ghost"
