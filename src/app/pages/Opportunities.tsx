@@ -32,15 +32,6 @@ export default function Opportunities() {
     day: 'numeric',
     year: 'numeric',
   });
-    const getOpportunityStatus = (dateString: string) => {
-  const today = new Date();
-  const oppDate = new Date(dateString);
-
-  today.setHours(0, 0, 0, 0);
-  oppDate.setHours(0, 0, 0, 0);
-
-  return oppDate < today ? 'Past' : 'Upcoming';
-};
 
  const handleOptIn = async (opp: any) => {
   if (!user) {
@@ -63,6 +54,25 @@ export default function Opportunities() {
 };
 const isFull = (opp: any) =>
   (opp.current_volunteers || 0) >= opp.volunteer_limit;
+
+const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+};
+
+const getOpportunityStatus = (dateString: string) => {
+  const today = new Date();
+  const oppDate = new Date(dateString);
+
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  return oppDate < today ? 'Past' : 'Upcoming';
+};
+
 const filteredOpps = opportunities
   .filter(opp => {
     const matchesSearch =
@@ -81,7 +91,7 @@ const filteredOpps = opportunities
       new Date(a.opportunity_date).getTime() -
       new Date(b.opportunity_date).getTime()
   );
-
+    
   const filters: FilterSlot[] = ['All', 'After School', 'Weekends', 'Summer', 'Flexible'];
 
   return (
