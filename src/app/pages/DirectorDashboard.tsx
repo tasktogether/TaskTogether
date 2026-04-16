@@ -385,40 +385,43 @@ if (!user || user.role !== 'director') {
 </Button>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
-                  <div className="pl-4">
-                    <div className="flex justify-between items-start mb-2">
-                      <span
-                        className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${
-                          opp.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'
-                        }`}
-                      >
-                        Open
-                      </span>
-                      <Button variant="ghost" size="icon" className="h-6 w-6">
-                        <Edit3 size={14} />
-                      </Button>
-                    </div>
+           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {opportunities.map(opp => (
+    <Card key={opp.id} className="relative overflow-hidden group">
+      <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
-                    <h3 className="text-lg font-bold text-slate-800 mb-1">{opp.title}</h3>
-                   <p className="text-sm text-slate-500 mb-4">
-  Richmond Senior Center
-</p>
+      <div className="pl-4">
+        <div className="flex justify-between items-start mb-2">
+          <span className="text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide bg-green-100 text-green-700">
+            Open
+          </span>
 
-                    <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
-                      <Calendar size={14} /> {opp.opportunity_date}
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <Users size={14} /> {opp.volunteer_limit} spots available
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-        );
+          <Button variant="ghost" size="icon" className="h-6 w-6">
+            <Edit3 size={14} />
+          </Button>
+        </div>
 
+        <h3 className="text-lg font-bold text-slate-800 mb-1">{opp.title}</h3>
+
+        <p className="text-sm text-slate-500 mb-4">
+          Richmond Senior Center
+        </p>
+
+        <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+          <Calendar size={14} /> {opp.opportunity_date}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-slate-600 mb-2">
+          <Briefcase size={14} /> {opp.time_commitment}
+        </div>
+
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <Users size={14} /> {opp.volunteer_limit} spots available
+        </div>
+      </div>
+    </Card>
+  ))}
+</div>
       default:
         return null;
     }
