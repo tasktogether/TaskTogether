@@ -61,6 +61,15 @@ const getOpportunityStatus = (dateString: string, currentVolunteers = 0, volunte
   if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
   return 'Upcoming';
 };
+const isRecentlyCreated = (dateString: string) => {
+  const createdDate = new Date(dateString);
+  const today = new Date();
+
+  const diffTime = today.getTime() - createdDate.getTime();
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+  return diffDays <= 7;
+};
 if (!user || user.role !== 'director') {
   return <Navigate to="/login?role=director" replace />;
 }
@@ -558,11 +567,19 @@ case 'opportunities':
 
                   <div className="pl-4">
                     <div className="flex justify-between items-start mb-2">
-                      <span
-                        className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
-                      >
-                        {status}
-                      </span>
+                      <div className="flex gap-2">
+  <span
+    className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
+  >
+    {status}
+  </span>
+
+  {isRecentlyCreated(opp.opportunity_date) && (
+    <span className="text-xs font-bold px-2 py-1 rounded-md bg-violet-100 text-violet-700">
+      New
+    </span>
+  )}
+</div>
 
                       <div className="flex gap-1">
                         <Button
