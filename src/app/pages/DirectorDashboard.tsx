@@ -46,6 +46,7 @@ const [newOpportunity, setNewOpportunity] = useState({
   title: '',
   description: '',
   opportunity_date: '',
+  opportunity_time: '',
   time_commitment: '',
   volunteer_limit: '5',
 });
@@ -155,17 +156,17 @@ if (!user || user.role !== 'director') {
     }
   };
   const handleCreateOpportunity = async () => {
-  if (
-    !newOpportunity.title.trim() ||
-    !newOpportunity.description.trim() ||
-    !newOpportunity.opportunity_date.trim() ||
-    !newOpportunity.time_commitment.trim()
-  ) {
+  const title = newOpportunity.title.trim();
+  const description = newOpportunity.description.trim();
+  const date = newOpportunity.opportunity_date.trim();
+  const time = newOpportunity.opportunity_time.trim();
+  const duration = newOpportunity.time_commitment.trim();
+  const volunteerLimit = Number(newOpportunity.volunteer_limit);
+
+  if (!title || !description || !date || !time || !duration) {
     toast.error('Please fill in all fields.');
     return;
   }
-
-  const volunteerLimit = Number(newOpportunity.volunteer_limit);
 
   if (isNaN(volunteerLimit) || volunteerLimit < 1) {
     toast.error('Volunteer limit must be at least 1.');
@@ -173,10 +174,10 @@ if (!user || user.role !== 'director') {
   }
 
   await createOpportunity({
-    title: newOpportunity.title.trim(),
-    description: newOpportunity.description.trim(),
-    opportunity_date: newOpportunity.opportunity_date.trim(),
-    time_commitment: newOpportunity.time_commitment.trim(),
+    title,
+    description,
+    opportunity_date: date,
+    time_commitment: `${time} • ${duration}`,
     location: 'Richmond Senior Center',
     volunteer_limit: volunteerLimit,
   });
@@ -185,11 +186,13 @@ if (!user || user.role !== 'director') {
     title: '',
     description: '',
     opportunity_date: '',
+    opportunity_time: '',
     time_commitment: '',
     volunteer_limit: '5',
   });
 
   setIsCreateOpportunityOpen(false);
+  toast.success('Opportunity created successfully');
 };
 
   const renderContent = () => {
@@ -879,48 +882,64 @@ case 'opportunities':
                     placeholder="Help run bingo for seniors..."
                   />
                 </div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Date
+    </label>
+    <input
+      type="date"
+      value={newOpportunity.opportunity_date}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          opportunity_date: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      value={newOpportunity.opportunity_date}
-                      onChange={(e) =>
-                        setNewOpportunity({
-                          ...newOpportunity,
-                          opportunity_date: e.target.value,
-                        })
-                      }
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                    />
-                  </div>
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Time
+    </label>
+    <input
+      type="time"
+      value={newOpportunity.opportunity_time}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          opportunity_time: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                      Volunteer Limit
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={newOpportunity.volunteer_limit}
-                      onChange={(e) =>
-                        setNewOpportunity({
-                          ...newOpportunity,
-                          volunteer_limit: e.target.value,
-                        })
-                      }
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                    />
-                  </div>
-                </div>
+  <div className="md:col-span-2">
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Volunteer Limit
+    </label>
+    <input
+      type="number"
+      min="1"
+      value={newOpportunity.volunteer_limit}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          volunteer_limit: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
+</div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Time Commitment
-                  </label>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+  Duration
+</label>
                   <input
                     type="text"
                     value={newOpportunity.time_commitment}
