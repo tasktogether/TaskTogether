@@ -934,6 +934,7 @@ case 'opportunities':
     placeholder="2 hours"
   />
 </div>
+</div>
               </div>
 
               <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
