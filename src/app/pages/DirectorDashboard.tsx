@@ -561,58 +561,6 @@ case 'opportunities':
         <h1 className="text-2xl font-bold font-poppins text-slate-800">
           Volunteer Opportunities
         </h1>
-
-        <Button
-          className="gap-2"
-          onClick={async () => {
-            const formInput = prompt(
-              `Enter opportunity details in this format:
-
-Title | Description | Date (YYYY-MM-DD) | Time Commitment | Volunteer Limit
-
-Example:
-Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
-            );
-
-            if (!formInput || !formInput.trim()) return;
-
-            const parts = formInput.split('|').map(part => part.trim());
-
-            if (parts.length !== 5) {
-              alert('Please enter all 5 parts separated by |');
-              return;
-            }
-
-            const [
-              title,
-              description,
-              opportunityDate,
-              timeCommitment,
-              volunteerLimitInput,
-            ] = parts;
-
-            const volunteerLimit = Number(volunteerLimitInput);
-
-            if (
-              !title ||
-              !description ||
-              !opportunityDate ||
-              !timeCommitment ||
-              isNaN(volunteerLimit) ||
-              volunteerLimit < 1
-            ) {
-              alert('Please enter valid opportunity details.');
-              return;
-            }
-
-            await createOpportunity({
-              title,
-              description,
-              opportunity_date: opportunityDate,
-              time_commitment: timeCommitment,
-              location: 'Richmond Senior Center',
-              volunteer_limit: volunteerLimit,
-            });
           }}
         <Button
   className="gap-2"
@@ -809,7 +757,7 @@ Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
           </p>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-6">
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">
               Title
