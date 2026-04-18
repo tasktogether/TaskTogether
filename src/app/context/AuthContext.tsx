@@ -695,31 +695,6 @@ const removeVolunteerFromOpportunity = async (
   toast.success('Volunteer removed.');
   fetchOpportunities();
 };
-  const removeVolunteerFromOpportunity = async (
-  opportunityId: number,
-  volunteerEmail: string
-) => {
-  const confirmed = window.confirm(
-    'Remove this volunteer from the opportunity?'
-  );
-
-  if (!confirmed) return;
-
-  const { error } = await supabase
-    .from('opportunity_signups')
-    .delete()
-    .eq('opportunity_id', opportunityId)
-    .eq('volunteer_email', volunteerEmail);
-
-  if (error) {
-    console.error('Remove failed:', error);
-    toast.error('Failed to remove volunteer.');
-    return;
-  }
-
-  toast.success('Volunteer removed.');
-  fetchOpportunities();
-};
   const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
 
 if (
