@@ -521,43 +521,51 @@ case 'opportunities':
         <Button
           className="gap-2"
           onClick={async () => {
-            const title = prompt('Opportunity title:');
-            if (!title || !title.trim()) {
-              alert('Title is required.');
+            const formInput = prompt(
+              `Enter opportunity details in this format:
+
+Title | Description | Date (YYYY-MM-DD) | Time Commitment | Volunteer Limit
+
+Example:
+Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
+            );
+
+            if (!formInput || !formInput.trim()) return;
+
+            const parts = formInput.split('|').map(part => part.trim());
+
+            if (parts.length !== 5) {
+              alert('Please enter all 5 parts separated by |');
               return;
             }
 
-            const description = prompt('Opportunity description:');
-            if (!description || !description.trim()) {
-              alert('Description is required.');
-              return;
-            }
+            const [
+              title,
+              description,
+              opportunityDate,
+              timeCommitment,
+              volunteerLimitInput,
+            ] = parts;
 
-            const opportunityDate = prompt('Opportunity date (YYYY-MM-DD):');
-            if (!opportunityDate || !opportunityDate.trim()) {
-              alert('Date is required.');
-              return;
-            }
-
-            const timeCommitment = prompt('Time commitment:');
-            if (!timeCommitment || !timeCommitment.trim()) {
-              alert('Time commitment is required.');
-              return;
-            }
-
-            const volunteerLimitInput = prompt('Volunteer limit:', '5');
             const volunteerLimit = Number(volunteerLimitInput);
 
-            if (!volunteerLimitInput || isNaN(volunteerLimit) || volunteerLimit < 1) {
-              alert('Volunteer limit must be at least 1.');
+            if (
+              !title ||
+              !description ||
+              !opportunityDate ||
+              !timeCommitment ||
+              isNaN(volunteerLimit) ||
+              volunteerLimit < 1
+            ) {
+              alert('Please enter valid opportunity details.');
               return;
             }
 
             await createOpportunity({
-              title: title.trim(),
-              description: description.trim(),
-              opportunity_date: opportunityDate.trim(),
-              time_commitment: timeCommitment.trim(),
+              title,
+              description,
+              opportunity_date: opportunityDate,
+              time_commitment: timeCommitment,
               location: 'Richmond Senior Center',
               volunteer_limit: volunteerLimit,
             });
@@ -602,25 +610,11 @@ case 'opportunities':
 
                   <div className="pl-4">
                     <div className="flex justify-between items-start mb-2">
- <div className="flex flex-wrap gap-2">
-  <span
-    className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
-  >
-    {status}
-  </span>
-
-  {isRecentlyCreated(opp.opportunity_date) && (
-    <span className="text-xs font-bold px-2 py-1 rounded-md bg-violet-100 text-violet-700">
-      New
-    </span>
-  )}
-
-  {status === 'Upcoming' && isReadySoon(opp.opportunity_date) && (
-    <span className="text-xs font-bold px-2 py-1 rounded-md bg-amber-100 text-amber-700">
-      Ready Soon
-    </span>
-  )}
-</div>
+                      <span
+                        className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
+                      >
+                        {status}
+                      </span>
 
                       <div className="flex gap-1">
                         <Button
@@ -628,49 +622,40 @@ case 'opportunities':
                           size="icon"
                           className="h-6 w-6"
                           onClick={async () => {
-  const formInput = prompt(
-    `Enter opportunity details in this format:
+                            const newTitle = prompt('Enter new title:', opp.title);
+                            if (!newTitle || !newTitle.trim()) return;
 
-Title | Description | Date (YYYY-MM-DD) | Time Commitment | Volunteer Limit
+                            const newDescription = prompt(
+                              'Enter new description:',
+                              opp.description
+                            );
+                            if (!newDescription || !newDescription.trim()) return;
 
-Example:
-Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
-  );
+                            const newDate = prompt(
+                              'Enter new date (YYYY-MM-DD):',
+                              opp.opportunity_date
+                            );
+                            if (!newDate || !newDate.trim()) return;
 
-  if (!formInput || !formInput.trim()) return;
+                            const newTimeCommitment = prompt(
+                              'Enter time commitment:',
+                              opp.time_commitment
+                            );
+                            if (!newTimeCommitment || !newTimeCommitment.trim()) return;
 
-  const parts = formInput.split('|').map(part => part.trim());
+                            const newLimit = prompt(
+                              'Enter volunteer limit:',
+                              String(opp.volunteer_limit)
+                            );
 
-  if (parts.length !== 5) {
-    alert('Please enter all 5 parts separated by |');
-    return;
-  }
-
-  const [title, description, opportunityDate, timeCommitment, volunteerLimitInput] = parts;
-
-  const volunteerLimit = Number(volunteerLimitInput);
-
-  if (
-    !title ||
-    !description ||
-    !opportunityDate ||
-    !timeCommitment ||
-    isNaN(volunteerLimit) ||
-    volunteerLimit < 1
-  ) {
-    alert('Please enter valid opportunity details.');
-    return;
-  }
-
-  await createOpportunity({
-    title,
-    description,
-    opportunity_date: opportunityDate,
-    time_commitment: timeCommitment,
-    location: 'Richmond Senior Center',
-    volunteer_limit: volunteerLimit,
-  });
-}}
+                            await updateOpportunity(opp.id, {
+                              title: newTitle.trim(),
+                              description: newDescription.trim(),
+                              opportunity_date: newDate.trim(),
+                              time_commitment: newTimeCommitment.trim(),
+                              volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+                            });
+                          }}
                         >
                           <Edit3 size={14} />
                         </Button>
@@ -681,8 +666,8 @@ Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
                           className="h-6 w-6 text-red-500 hover:bg-red-50"
                           onClick={() => {
                             const confirmed = window.confirm(
-  `Delete "${opp.title}"? This cannot be undone.`
-);
+                              `Delete "${opp.title}"? This cannot be undone.`
+                            );
                             if (!confirmed) return;
                             deleteOpportunity(opp.id);
                           }}
@@ -754,7 +739,6 @@ Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
       )}
     </div>
   );
-
     default:
       return null;
   }
