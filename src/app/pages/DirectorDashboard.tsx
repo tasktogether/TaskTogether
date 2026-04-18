@@ -628,40 +628,49 @@ case 'opportunities':
                           size="icon"
                           className="h-6 w-6"
                           onClick={async () => {
-                            const newTitle = prompt('Enter new title:', opp.title);
-if (!newTitle || !newTitle.trim()) return;
+  const formInput = prompt(
+    `Enter opportunity details in this format:
 
-const newDescription = prompt(
-  'Enter new description:',
-  opp.description
-);
-if (!newDescription || !newDescription.trim()) return;
+Title | Description | Date (YYYY-MM-DD) | Time Commitment | Volunteer Limit
 
-const newDate = prompt(
-  'Enter new date (YYYY-MM-DD):',
-  opp.opportunity_date
-);
-if (!newDate || !newDate.trim()) return;
+Example:
+Bingo Night | Help run bingo for seniors | 2026-04-20 | 2 hours | 5`
+  );
 
-const newTimeCommitment = prompt(
-  'Enter time commitment:',
-  opp.time_commitment
-);
-if (!newTimeCommitment || !newTimeCommitment.trim()) return;
+  if (!formInput || !formInput.trim()) return;
 
-const newLimit = prompt(
-  'Enter volunteer limit:',
-  String(opp.volunteer_limit)
-);
+  const parts = formInput.split('|').map(part => part.trim());
 
-await updateOpportunity(opp.id, {
-  title: newTitle.trim(),
-  description: newDescription.trim(),
-  opportunity_date: newDate.trim(),
-  time_commitment: newTimeCommitment.trim(),
-  volunteer_limit: Number(newLimit) || opp.volunteer_limit,
-});
-                          }}
+  if (parts.length !== 5) {
+    alert('Please enter all 5 parts separated by |');
+    return;
+  }
+
+  const [title, description, opportunityDate, timeCommitment, volunteerLimitInput] = parts;
+
+  const volunteerLimit = Number(volunteerLimitInput);
+
+  if (
+    !title ||
+    !description ||
+    !opportunityDate ||
+    !timeCommitment ||
+    isNaN(volunteerLimit) ||
+    volunteerLimit < 1
+  ) {
+    alert('Please enter valid opportunity details.');
+    return;
+  }
+
+  await createOpportunity({
+    title,
+    description,
+    opportunity_date: opportunityDate,
+    time_commitment: timeCommitment,
+    location: 'Richmond Senior Center',
+    volunteer_limit: volunteerLimit,
+  });
+}}
                         >
                           <Edit3 size={14} />
                         </Button>
