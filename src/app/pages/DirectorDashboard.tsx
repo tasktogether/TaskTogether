@@ -629,29 +629,38 @@ case 'opportunities':
                           className="h-6 w-6"
                           onClick={async () => {
                             const newTitle = prompt('Enter new title:', opp.title);
-                            if (!newTitle) return;
+if (!newTitle || !newTitle.trim()) return;
 
-                            const newDescription = prompt(
-                              'Enter new description:',
-                              opp.description
-                            );
+const newDescription = prompt(
+  'Enter new description:',
+  opp.description
+);
+if (!newDescription || !newDescription.trim()) return;
 
-                            const newDate = prompt(
-                              'Enter new date (YYYY-MM-DD):',
-                              opp.opportunity_date
-                            );
+const newDate = prompt(
+  'Enter new date (YYYY-MM-DD):',
+  opp.opportunity_date
+);
+if (!newDate || !newDate.trim()) return;
 
-                            const newLimit = prompt(
-                              'Enter volunteer limit:',
-                              String(opp.volunteer_limit)
-                            );
+const newTimeCommitment = prompt(
+  'Enter time commitment:',
+  opp.time_commitment
+);
+if (!newTimeCommitment || !newTimeCommitment.trim()) return;
 
-                            await updateOpportunity(opp.id, {
-                              title: newTitle,
-                              description: newDescription || opp.description,
-                              opportunity_date: newDate || opp.opportunity_date,
-                              volunteer_limit: Number(newLimit) || opp.volunteer_limit,
-                            });
+const newLimit = prompt(
+  'Enter volunteer limit:',
+  String(opp.volunteer_limit)
+);
+
+await updateOpportunity(opp.id, {
+  title: newTitle.trim(),
+  description: newDescription.trim(),
+  opportunity_date: newDate.trim(),
+  time_commitment: newTimeCommitment.trim(),
+  volunteer_limit: Number(newLimit) || opp.volunteer_limit,
+});
                           }}
                         >
                           <Edit3 size={14} />
