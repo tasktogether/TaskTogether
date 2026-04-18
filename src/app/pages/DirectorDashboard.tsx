@@ -677,6 +677,13 @@ case 'opportunities':
     </div>
   );
 
+    default:
+      return null;
+  }
+};
+
+  return (
+
   return (
   <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
     <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed inset-y-0 z-20">
