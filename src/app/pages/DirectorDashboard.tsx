@@ -641,7 +641,9 @@ case 'opportunities':
                           size="icon"
                           className="h-6 w-6 text-red-500 hover:bg-red-50"
                           onClick={() => {
-                            const confirmed = window.confirm(`Delete "${opp.title}"?`);
+                            const confirmed = window.confirm(
+  `Delete "${opp.title}"? This cannot be undone.`
+);
                             if (!confirmed) return;
                             deleteOpportunity(opp.id);
                           }}
