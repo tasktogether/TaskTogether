@@ -122,10 +122,36 @@ export default function VolunteerDashboard() {
 
   // Mock Data (moved to state for interactivity)
   const [myTasks, setMyTasks] = useState<Task[]>([
-    { id: 1, title: 'Grocery Run for Mrs. Potts', date: 'Tomorrow, 2:00 PM', status: 'Upcoming', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-    { id: 2, title: 'Tech Help at the Center', date: 'Feb 28, 10:00 AM', status: 'Upcoming', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-    { id: 3, title: 'Garden Cleanup Party', date: 'Feb 15', status: 'Completed', color: 'bg-green-100 text-green-700 border-green-200', savedReflection: 'Had so much fun today! Mrs. Flores showed me how to prune roses. I learned that gardening is really about the stories you share while you dig.' },
-  ]);
+  {
+    id: 1,
+    title: 'Grocery Run for Mrs. Potts',
+    date: 'Tomorrow, 2:00 PM',
+    status: 'Upcoming',
+    color: 'bg-orange-100 text-orange-700 border-orange-200',
+    hours: 2,
+  },
+  {
+    id: 2,
+    title: 'Tech Help at the Center',
+    date: 'Feb 28, 10:00 AM',
+    status: 'Upcoming',
+    color: 'bg-blue-100 text-blue-700 border-blue-200',
+    hours: 2,
+  },
+  {
+    id: 3,
+    title: 'Garden Cleanup Party',
+    date: 'Feb 15',
+    status: 'Completed',
+    color: 'bg-green-100 text-green-700 border-green-200',
+    hours: 3,
+    savedReflection:
+      'Had so much fun today! Mrs. Flores showed me how to prune roses. I learned that gardening is really about the stories you share while you dig.',
+  },
+]);
+  const totalCompletedHours = myTasks
+  .filter(task => task.status === 'Completed')
+  .reduce((total, task) => total + (task.hours || 0), 0);
 
   const [myNotes, setMyNotes] = useState([
     { id: 1, content: "Mrs. Potts loves chamomile tea! 🍵 Don't forget to pick some up.", color: 'bg-yellow-100 rotate-1' },
@@ -202,12 +228,17 @@ if (!user || user.role !== 'volunteer' || user.status !== 'approved') {
       toast.error("Please write a short reflection.");
       return;
     }
-
-    setMyTasks(myTasks.map(t =>
-      t.id === selectedTaskForCompletion
-        ? { ...t, status: 'Completed', color: 'bg-green-100 text-green-700 border-green-200', savedReflection: reflection }
-        : t
-    ));
+setMyTasks(myTasks.map(t =>
+  t.id === selectedTaskForCompletion
+    ? {
+        ...t,
+        status: 'Completed',
+        color: 'bg-green-100 text-green-700 border-green-200',
+        savedReflection: reflection,
+        hours: t.hours || 2,
+      }
+    : t
+));
 
     if (shareStory) {
       const task = myTasks.find(t => t.id === selectedTaskForCompletion);
@@ -308,11 +339,21 @@ if (!user || user.role !== 'volunteer' || user.status !== 'approved') {
                         <p className="text-slate-500 font-medium flex items-center gap-2">
                           <Clock size={16} /> {task.date}
                         </p>
-                        {task.status === 'Completed' && task.savedReflection && (
-                          <p className="text-xs text-slate-400 mt-1 italic line-clamp-1 max-w-xs">
-                            "{task.savedReflection}"
-                          </p>
-                        )}
+                        {task.status === 'Completed' && (
+  <div className="mt-1 space-y-1">
+    {task.hours && (
+      <p className="text-xs font-semibold text-green-600">
+        {task.hours} volunteer hour{task.hours !== 1 ? 's' : ''} completed
+      </p>
+    )}
+
+    {task.savedReflection && (
+      <p className="text-xs text-slate-400 italic line-clamp-1 max-w-xs">
+        "{task.savedReflection}"
+      </p>
+    )}
+  </div>
+)}
                       </div>
                     </div>
 
@@ -389,7 +430,7 @@ if (!user || user.role !== 'volunteer' || user.status !== 'approved') {
 
           {/* Right Column: Badges & Stats */}
           <div className="lg:col-span-1 space-y-8">
-            <StatsColumn logout={logout} />
+            <StatsColumn logout={logout} totalCompletedHours={totalCompletedHours} />
           </div>
         </div>
       </main>
@@ -674,7 +715,13 @@ if (!user || user.role !== 'volunteer' || user.status !== 'approved') {
 }
 
 // Subcomponents
-function StatsColumn({ logout }: { logout: () => void }) {
+function StatsColumn({
+  logout,
+  totalCompletedHours,
+}: {
+  logout: () => void;
+  totalCompletedHours: number;
+}) {
   const badges = [
     { id: 1, name: 'First Steps', icon: '👣', desc: 'Completed 1st Task', earned: true, color: 'bg-sky-100 border-sky-200 text-sky-600' },
     { id: 2, name: 'Tech Whiz', icon: '💻', desc: 'Helped 3 seniors with tech', earned: true, color: 'bg-violet-100 border-violet-200 text-violet-600' },
@@ -708,7 +755,9 @@ function StatsColumn({ logout }: { logout: () => void }) {
 
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-pink-50 p-6 rounded-3xl border-2 border-pink-100 text-center">
-          <h3 className="text-4xl font-bold text-pink-500 mb-1">12</h3>
+          <h3 className="text-4xl font-bold text-pink-500 mb-1">
+  {totalCompletedHours}
+</h3>
           <p className="font-bold text-pink-800 text-sm uppercase tracking-wide">Hours<br />Volunteered</p>
         </div>
         <div className="bg-sky-50 p-6 rounded-3xl border-2 border-sky-100 text-center">
