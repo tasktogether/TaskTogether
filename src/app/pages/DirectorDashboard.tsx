@@ -498,10 +498,10 @@ if (!user || user.role !== 'director') {
                           <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
                         </div>
                       </div>
-
-                      <Button variant="ghost" size="icon">
-                        <Settings size={16} className="text-slate-400" />
-                      </Button>
+                      
+<span className="inline-flex items-center rounded-full bg-green-50 text-green-700 text-xs font-semibold px-3 py-1 border border-green-100">
+  Approved
+</span>
                     </div>
                   ))
                 )}
