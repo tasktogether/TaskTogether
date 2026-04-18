@@ -614,7 +614,9 @@ const signUpForOpportunity = async (
     return;
   }
 
-  const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
+  const selectedOpportunity = opportunities.find(
+    o => o.id === opportunityId
+  );
 
   if (!selectedOpportunity) {
     toast.error('Opportunity not found.');
@@ -629,12 +631,13 @@ const signUpForOpportunity = async (
     return;
   }
 
-  const { data: existingSignup, error: existingSignupError } = await supabase
-    .from('opportunity_signups')
-    .select('id')
-    .eq('opportunity_id', opportunityId)
-    .eq('volunteer_email', volunteerEmail)
-    .maybeSingle();
+  const { data: existingSignup, error: existingSignupError } =
+    await supabase
+      .from('opportunity_signups')
+      .select('id')
+      .eq('opportunity_id', opportunityId)
+      .eq('volunteer_email', volunteerEmail)
+      .maybeSingle();
 
   if (existingSignupError) {
     console.error('Error checking signup:', existingSignupError);
@@ -647,13 +650,15 @@ const signUpForOpportunity = async (
     return;
   }
 
-  const { error } = await supabase.from('opportunity_signups').insert([
-    {
-      opportunity_id: opportunityId,
-      volunteer_name: volunteerName.trim(),
-      volunteer_email: volunteerEmail.trim(),
-    },
-  ]);
+  const { error } = await supabase
+    .from('opportunity_signups')
+    .insert([
+      {
+        opportunity_id: opportunityId,
+        volunteer_name: volunteerName.trim(),
+        volunteer_email: volunteerEmail.trim(),
+      },
+    ]);
 
   if (error) {
     console.error('Signup failed:', error);
@@ -662,6 +667,32 @@ const signUpForOpportunity = async (
   }
 
   toast.success('You successfully signed up!');
+  fetchOpportunities();
+};
+
+const removeVolunteerFromOpportunity = async (
+  opportunityId: number,
+  volunteerEmail: string
+) => {
+  const confirmed = window.confirm(
+    'Remove this volunteer from the opportunity?'
+  );
+
+  if (!confirmed) return;
+
+  const { error } = await supabase
+    .from('opportunity_signups')
+    .delete()
+    .eq('opportunity_id', opportunityId)
+    .eq('volunteer_email', volunteerEmail);
+
+  if (error) {
+    console.error('Remove failed:', error);
+    toast.error('Failed to remove volunteer.');
+    return;
+  }
+
+  toast.success('Volunteer removed.');
   fetchOpportunities();
 };
   const removeVolunteerFromOpportunity = async (
