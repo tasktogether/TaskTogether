@@ -561,7 +561,7 @@ case 'opportunities':
         <h1 className="text-2xl font-bold font-poppins text-slate-800">
           Volunteer Opportunities
         </h1>
-          }}
+        
         <Button
   className="gap-2"
   onClick={() => setIsCreateOpportunityOpen(true)}
@@ -731,136 +731,136 @@ case 'opportunities':
               );
             })}
         </div>
-      <AnimatePresence>
-  {isCreateOpportunityOpen && (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => setIsCreateOpportunityOpen(false)}
-    >
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 10 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 10 }}
-        transition={{ duration: 0.2 }}
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
-      >
-        <div className="px-6 py-5 border-b border-slate-100 bg-slate-50">
-          <h2 className="text-xl font-bold text-slate-800">
-            Create New Opportunity
-          </h2>
-          <p className="text-sm text-slate-500 mt-1">
-            Richmond Senior Center
-          </p>
-        </div>
-
-        <div className="p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Title
-            </label>
-            <input
-              type="text"
-              value={newOpportunity.title}
-              onChange={(e) =>
-                setNewOpportunity({ ...newOpportunity, title: e.target.value })
-              }
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-              placeholder="Bingo Night"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Description
-            </label>
-            <textarea
-              value={newOpportunity.description}
-              onChange={(e) =>
-                setNewOpportunity({
-                  ...newOpportunity,
-                  description: e.target.value,
-                })
-              }
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200 min-h-[100px]"
-              placeholder="Help run bingo for seniors..."
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
-                Date
-              </label>
-              <input
-                type="date"
-                value={newOpportunity.opportunity_date}
-                onChange={(e) =>
-                  setNewOpportunity({
-                    ...newOpportunity,
-                    opportunity_date: e.target.value,
-                  })
-                }
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
-                Volunteer Limit
-              </label>
-              <input
-                type="number"
-                min="1"
-                value={newOpportunity.volunteer_limit}
-                onChange={(e) =>
-                  setNewOpportunity({
-                    ...newOpportunity,
-                    volunteer_limit: e.target.value,
-                  })
-                }
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Time Commitment
-            </label>
-            <input
-              type="text"
-              value={newOpportunity.time_commitment}
-              onChange={(e) =>
-                setNewOpportunity({
-                  ...newOpportunity,
-                  time_commitment: e.target.value,
-                })
-              }
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-              placeholder="2 hours"
-            />
-          </div>
-        </div>
-
-        <div className="px-6 py-4 border-t border-slate-100 bg-white flex justify-end gap-3">
-          <Button
-            variant="ghost"
+          <AnimatePresence>
+        {isCreateOpportunityOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setIsCreateOpportunityOpen(false)}
           >
-            Cancel
-          </Button>
-          <Button onClick={handleCreateOpportunity}>
-            Create Opportunity
-          </Button>
-        </div>
-      </motion.div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 10 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 10 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+            >
+              <div className="px-6 py-5 border-b border-slate-100 bg-slate-50">
+                <h2 className="text-xl font-bold text-slate-800">
+                  Create New Opportunity
+                </h2>
+                <p className="text-sm text-slate-500 mt-1">
+                  Richmond Senior Center
+                </p>
+              </div>
+
+              <div className="p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={newOpportunity.title}
+                    onChange={(e) =>
+                      setNewOpportunity({ ...newOpportunity, title: e.target.value })
+                    }
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                    placeholder="Bingo Night"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                    Description
+                  </label>
+                  <textarea
+                    value={newOpportunity.description}
+                    onChange={(e) =>
+                      setNewOpportunity({
+                        ...newOpportunity,
+                        description: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200 min-h-[100px]"
+                    placeholder="Help run bingo for seniors..."
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      value={newOpportunity.opportunity_date}
+                      onChange={(e) =>
+                        setNewOpportunity({
+                          ...newOpportunity,
+                          opportunity_date: e.target.value,
+                        })
+                      }
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1">
+                      Volunteer Limit
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      value={newOpportunity.volunteer_limit}
+                      onChange={(e) =>
+                        setNewOpportunity({
+                          ...newOpportunity,
+                          volunteer_limit: e.target.value,
+                        })
+                      }
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-1">
+                    Time Commitment
+                  </label>
+                  <input
+                    type="text"
+                    value={newOpportunity.time_commitment}
+                    onChange={(e) =>
+                      setNewOpportunity({
+                        ...newOpportunity,
+                        time_commitment: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                    placeholder="2 hours"
+                  />
+                </div>
+              </div>
+
+              <div className="px-6 py-4 border-t border-slate-100 bg-white flex justify-end gap-3">
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsCreateOpportunityOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={handleCreateOpportunity}>
+                  Create Opportunity
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       )}
     </div>
   );
