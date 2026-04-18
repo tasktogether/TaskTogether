@@ -731,7 +731,94 @@ case 'opportunities':
               );
             })}
         </div>
-          <AnimatePresence>
+      )}
+    </div>
+  );
+    default:
+      return null;
+  }
+};
+
+    return (
+    <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
+      <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed inset-y-0 z-20">
+        <div className="p-6 border-b border-slate-100">
+          <span className="font-fredoka text-xl font-bold text-slate-800 flex items-center gap-2">
+            Richmond Senior Center
+          </span>
+          <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">
+            Director Portal
+          </span>
+        </div>
+
+        <div className="p-4 space-y-2 flex-1">
+          <Button
+            variant={activeTab === 'overview' ? 'primary' : 'ghost'}
+            fullWidth
+            className="justify-start gap-3"
+            onClick={() => setActiveTab('overview')}
+          >
+            <LayoutDashboard size={18} /> Overview
+          </Button>
+
+          <Button
+            variant={activeTab === 'applications' ? 'primary' : 'ghost'}
+            fullWidth
+            className="justify-start gap-3"
+            onClick={() => setActiveTab('applications')}
+          >
+            <FileText size={18} /> Applications
+          </Button>
+
+          <Button
+            variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
+            fullWidth
+            className="justify-start gap-3"
+            onClick={() => setActiveTab('volunteers')}
+          >
+            <Users size={18} /> Volunteers
+          </Button>
+
+          <Button
+            variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
+            fullWidth
+            className="justify-start gap-3"
+            onClick={() => setActiveTab('opportunities')}
+          >
+            <Briefcase size={18} /> Opportunities
+          </Button>
+        </div>
+
+        <div className="p-4 border-t border-slate-100">
+          <Button
+            variant="ghost"
+            fullWidth
+            className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
+            onClick={logout}
+          >
+            <LogOut size={18} /> Sign Out
+          </Button>
+        </div>
+      </aside>
+
+      <main className="flex-1 md:ml-64 p-6 pt-20 md:pt-6">
+        <div className="max-w-6xl mx-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+            >
+              {renderContent()}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </main>
+
+      {/* CREATE OPPORTUNITY MODAL — GLOBAL */}
+      <AnimatePresence>
         {isCreateOpportunityOpen && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
@@ -766,9 +853,12 @@ case 'opportunities':
                     type="text"
                     value={newOpportunity.title}
                     onChange={(e) =>
-                      setNewOpportunity({ ...newOpportunity, title: e.target.value })
+                      setNewOpportunity({
+                        ...newOpportunity,
+                        title: e.target.value,
+                      })
                     }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
                     placeholder="Bingo Night"
                   />
                 </div>
@@ -785,68 +875,53 @@ case 'opportunities':
                         description: e.target.value,
                       })
                     }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200 min-h-[100px]"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
                     placeholder="Help run bingo for seniors..."
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                      Date
-                    </label>
-                    <input
-                      type="date"
-                      value={newOpportunity.opportunity_date}
-                      onChange={(e) =>
-                        setNewOpportunity({
-                          ...newOpportunity,
-                          opportunity_date: e.target.value,
-                        })
-                      }
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-slate-700 mb-1">
-                      Volunteer Limit
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      value={newOpportunity.volunteer_limit}
-                      onChange={(e) =>
-                        setNewOpportunity({
-                          ...newOpportunity,
-                          volunteer_limit: e.target.value,
-                        })
-                      }
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Time Commitment
-                  </label>
+                <div className="grid grid-cols-2 gap-4">
                   <input
-                    type="text"
-                    value={newOpportunity.time_commitment}
+                    type="date"
+                    value={newOpportunity.opportunity_date}
                     onChange={(e) =>
                       setNewOpportunity({
                         ...newOpportunity,
-                        time_commitment: e.target.value,
+                        opportunity_date: e.target.value,
                       })
                     }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-violet-200"
-                    placeholder="2 hours"
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
+                  />
+
+                  <input
+                    type="number"
+                    min="1"
+                    value={newOpportunity.volunteer_limit}
+                    onChange={(e) =>
+                      setNewOpportunity({
+                        ...newOpportunity,
+                        volunteer_limit: e.target.value,
+                      })
+                    }
+                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
                   />
                 </div>
+
+                <input
+                  type="text"
+                  value={newOpportunity.time_commitment}
+                  onChange={(e) =>
+                    setNewOpportunity({
+                      ...newOpportunity,
+                      time_commitment: e.target.value,
+                    })
+                  }
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3"
+                  placeholder="2 hours"
+                />
               </div>
 
-              <div className="px-6 py-4 border-t border-slate-100 bg-white flex justify-end gap-3">
+              <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
                 <Button
                   variant="ghost"
                   onClick={() => setIsCreateOpportunityOpen(false)}
@@ -861,96 +936,6 @@ case 'opportunities':
           </motion.div>
         )}
       </AnimatePresence>
-      )}
     </div>
   );
-    default:
-      return null;
-  }
-};
-
-  return (
-  <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
-    <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col fixed inset-y-0 z-20">
-      <div className="p-6 border-b border-slate-100">
-        <span className="font-fredoka text-xl font-bold text-slate-800 flex items-center gap-2">
-          Richmond Senior Center
-        </span>
-        <span className="text-xs font-bold text-violet-500 uppercase tracking-widest ml-1">
-          Director Portal
-        </span>
-      </div>
-
-      <div className="p-4 space-y-2 flex-1">
-        <Button
-          variant={activeTab === 'overview' ? 'primary' : 'ghost'}
-          fullWidth
-          className="justify-start gap-3"
-          onClick={() => setActiveTab('overview')}
-        >
-          <LayoutDashboard size={18} /> Overview
-        </Button>
-
-        <Button
-          variant={activeTab === 'applications' ? 'primary' : 'ghost'}
-          fullWidth
-          className="justify-start gap-3"
-          onClick={() => setActiveTab('applications')}
-        >
-          <FileText size={18} /> Applications
-          {pendingApps.length > 0 && (
-            <span className="ml-auto bg-orange-100 text-orange-700 text-xs font-bold py-0.5 px-2 rounded-full">
-              {pendingApps.length}
-            </span>
-          )}
-        </Button>
-
-        <Button
-          variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
-          fullWidth
-          className="justify-start gap-3"
-          onClick={() => setActiveTab('volunteers')}
-        >
-          <Users size={18} /> Volunteers
-        </Button>
-
-        <Button
-          variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
-          fullWidth
-          className="justify-start gap-3"
-          onClick={() => setActiveTab('opportunities')}
-        >
-          <Briefcase size={18} /> Opportunities
-        </Button>
-      </div>
-
-      <div className="p-4 border-t border-slate-100">
-        <Button
-          variant="ghost"
-          fullWidth
-          className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
-          onClick={logout}
-        >
-          <LogOut size={18} /> Sign Out
-        </Button>
-      </div>
-    </aside>
-
-    <main className="flex-1 md:ml-64 p-6 pt-20 md:pt-6">
-      <div className="max-w-6xl mx-auto">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {renderContent()}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-    </main>
-  </div>
-);
 }
