@@ -695,31 +695,8 @@ const removeVolunteerFromOpportunity = async (
   toast.success('Volunteer removed.');
   fetchOpportunities();
 };
-  const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
-
-if (
-  selectedOpportunity &&
-  (selectedOpportunity.current_volunteers || 0) >= selectedOpportunity.volunteer_limit
-) {
-  toast.error('This opportunity is already full.');
-  return;
-}
-  const { error } = await supabase
-    .from('opportunity_signups')
-    .insert([
-      {
-        opportunity_id: opportunityId,
-        volunteer_name: volunteerName,
-        volunteer_email: volunteerEmail,
-      },
-    ]);
-  if (
-  opportunities.find(o => o.id === opportunityId)?.current_volunteers >=
-  opportunities.find(o => o.id === opportunityId)?.volunteer_limit
-) {
-  toast.error('This opportunity is already full.');
-  return;
-}
+  const selectedOpportunity = opportunities.find(o => o.id === opportunityId
+);
 
   if (error) {
     console.error('Signup failed:', error);
