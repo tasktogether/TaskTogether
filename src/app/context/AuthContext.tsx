@@ -695,19 +695,7 @@ const removeVolunteerFromOpportunity = async (
   toast.success('Volunteer removed.');
   fetchOpportunities();
 };
-  const selectedOpportunity = opportunities.find(o => o.id === opportunityId
-);
-
-  if (error) {
-    console.error('Signup failed:', error);
-    toast.error('Failed to sign up.');
-    return;
-  }
-
-  toast.success('You successfully signed up!');
-  fetchOpportunities();
-};
-
+  
 const updateUser = (updates: Partial<User>) => {
   setUser(prev => (prev ? { ...prev, ...updates } : null));
 };
@@ -733,6 +721,7 @@ return (
     {children}
   </AuthContext.Provider>
 );
+};
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
