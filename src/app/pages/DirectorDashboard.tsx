@@ -563,10 +563,10 @@ case 'opportunities':
         </h1>
         
         <Button
-  className="gap-2"
+  className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
   onClick={() => setIsCreateOpportunityOpen(true)}
 >
-  <Briefcase size={16} /> Create New
+  <Briefcase size={16} /> Create New Opportunity
 </Button>
       </div>
 
@@ -880,45 +880,60 @@ case 'opportunities':
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="date"
-                    value={newOpportunity.opportunity_date}
-                    onChange={(e) =>
-                      setNewOpportunity({
-                        ...newOpportunity,
-                        opportunity_date: e.target.value,
-                      })
-                    }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Date
+    </label>
+    <input
+      type="date"
+      value={newOpportunity.opportunity_date}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          opportunity_date: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 
-                  <input
-                    type="number"
-                    min="1"
-                    value={newOpportunity.volunteer_limit}
-                    onChange={(e) =>
-                      setNewOpportunity({
-                        ...newOpportunity,
-                        volunteer_limit: e.target.value,
-                      })
-                    }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                  />
-                </div>
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Volunteer Limit
+    </label>
+    <input
+      type="number"
+      min="1"
+      value={newOpportunity.volunteer_limit}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          volunteer_limit: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
+</div>
 
-                <input
-                  type="text"
-                  value={newOpportunity.time_commitment}
-                  onChange={(e) =>
-                    setNewOpportunity({
-                      ...newOpportunity,
-                      time_commitment: e.target.value,
-                    })
-                  }
-                  className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                  placeholder="2 hours"
-                />
+<div>
+  <label className="block text-sm font-semibold text-slate-700 mb-1">
+    Time Commitment
+  </label>
+  <input
+    type="text"
+    value={newOpportunity.time_commitment}
+    onChange={(e) =>
+      setNewOpportunity({
+        ...newOpportunity,
+        time_commitment: e.target.value,
+      })
+    }
+    className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    placeholder="2 hours"
+  />
+</div>
               </div>
 
               <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
