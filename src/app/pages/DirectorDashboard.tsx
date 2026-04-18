@@ -97,6 +97,10 @@ if (!user || user.role !== 'director') {
   const filledOpportunities = opportunities.filter(
     opp => (opp.current_volunteers || 0) >= opp.volunteer_limit
   );
+  const totalSignups = opportunities.reduce(
+  (total, opp) => total + (opp.current_volunteers || 0),
+  0
+);
   const handleApprove = async (app: any) => {
     const confirmed = window.confirm(`Approve ${app.userName}?`);
     if (!confirmed) return;
@@ -159,7 +163,7 @@ if (!user || user.role !== 'director') {
       </div>
     </div>
   </div>
-<div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div className="grid grid-cols-1 md:grid-cols-5 gap-6">
   <Card
     className="bg-violet-50 border-violet-100 p-6 cursor-pointer hover:shadow-lg transition-shadow"
     onClick={() => setActiveTab('volunteers')}
@@ -218,6 +222,22 @@ if (!user || user.role !== 'director') {
       </div>
     </div>
   </Card>
+  
+  <Card className="bg-indigo-50 border-indigo-100 p-6">
+  <div className="flex items-center gap-4">
+    <div className="p-3 bg-indigo-100 rounded-xl text-indigo-600">
+      <Users size={24} />
+    </div>
+    <div>
+      <p className="text-sm font-medium text-slate-500">
+        Total Signups
+      </p>
+      <p className="text-2xl font-bold text-slate-800">
+        {totalSignups}
+      </p>
+    </div>
+  </div>
+</Card>
 </div>
 </div>
         );
