@@ -82,6 +82,10 @@ interface AuthContextType {
     volunteer_limit?: number;
   }
 ) => Promise<void>;
+removeVolunteerFromOpportunity: (
+  opportunityId: number,
+  volunteerEmail: string
+) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -497,9 +501,31 @@ const createOpportunity = async (newOpp: {
   location: string;
   volunteer_limit: number;
 }) => {
-  const { error } = await supabase
-    .from('opportunities')
-    .insert([newOpp]);
+  if (
+    !newOpp.title.trim() ||
+    !newOpp.description.trim() ||
+    !newOpp.opportunity_date.trim() ||
+    !newOpp.time_commitment.trim()
+  ) {
+    toast.error('Please fill in all required fields.');
+    return;
+  }
+
+  if (newOpp.volunteer_limit < 1) {
+    toast.error('Volunteer limit must be at least 1.');
+    return;
+  }
+
+  const { error } = await supabase.from('opportunities').insert([
+    {
+      ...newOpp,
+      title: newOpp.title.trim(),
+      description: newOpp.description.trim(),
+      opportunity_date: newOpp.opportunity_date.trim(),
+      time_commitment: newOpp.time_commitment.trim(),
+      location: 'Richmond Senior Center',
+    },
+  ]);
 
   if (error) {
     console.error('Error creating opportunity:', error);
@@ -510,11 +536,7 @@ const createOpportunity = async (newOpp: {
   toast.success('Opportunity created!');
   fetchOpportunities();
 };
-
 const deleteOpportunity = async (id: number) => {
-  const confirmed = window.confirm('Delete this opportunity?');
-  if (!confirmed) return;
-
   const { error } = await supabase
     .from('opportunities')
     .delete()
@@ -529,7 +551,7 @@ const deleteOpportunity = async (id: number) => {
   toast.success('Opportunity deleted.');
   fetchOpportunities();
 };
-  const updateOpportunity = async (
+const updateOpportunity = async (
   id: number,
   updates: {
     title?: string;
@@ -540,9 +562,36 @@ const deleteOpportunity = async (id: number) => {
     volunteer_limit?: number;
   }
 ) => {
+  const cleanedUpdates = {
+    ...updates,
+    title: updates.title?.trim(),
+    description: updates.description?.trim(),
+    opportunity_date: updates.opportunity_date?.trim(),
+    time_commitment: updates.time_commitment?.trim(),
+    location: 'Richmond Senior Center',
+  };
+
+  if (
+    !cleanedUpdates.title ||
+    !cleanedUpdates.description ||
+    !cleanedUpdates.opportunity_date ||
+    !cleanedUpdates.time_commitment
+  ) {
+    toast.error('All opportunity fields are required.');
+    return;
+  }
+
+  if (
+    cleanedUpdates.volunteer_limit !== undefined &&
+    cleanedUpdates.volunteer_limit < 1
+  ) {
+    toast.error('Volunteer limit must be at least 1.');
+    return;
+  }
+
   const { error } = await supabase
     .from('opportunities')
-    .update(updates)
+    .update(cleanedUpdates)
     .eq('id', id);
 
   if (error) {
@@ -560,18 +609,62 @@ const signUpForOpportunity = async (
   volunteerName: string,
   volunteerEmail: string
 ) => {
-  const existingSignup = await supabase
-  .from('opportunity_signups')
-  .select('id')
-  .eq('opportunity_id', opportunityId)
-  .eq('volunteer_email', volunteerEmail)
-  .maybeSingle();
+  if (!volunteerName.trim() || !volunteerEmail.trim()) {
+    toast.error('Missing volunteer information.');
+    return;
+  }
 
-if (existingSignup.data) {
-  toast.error('You already signed up for this opportunity.');
-  return;
-}
-const removeVolunteerFromOpportunity = async (
+  const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
+
+  if (!selectedOpportunity) {
+    toast.error('Opportunity not found.');
+    return;
+  }
+
+  if (
+    (selectedOpportunity.current_volunteers || 0) >=
+    selectedOpportunity.volunteer_limit
+  ) {
+    toast.error('This opportunity is already full.');
+    return;
+  }
+
+  const { data: existingSignup, error: existingSignupError } = await supabase
+    .from('opportunity_signups')
+    .select('id')
+    .eq('opportunity_id', opportunityId)
+    .eq('volunteer_email', volunteerEmail)
+    .maybeSingle();
+
+  if (existingSignupError) {
+    console.error('Error checking signup:', existingSignupError);
+    toast.error('Could not check existing signup.');
+    return;
+  }
+
+  if (existingSignup) {
+    toast.error('You already signed up for this opportunity.');
+    return;
+  }
+
+  const { error } = await supabase.from('opportunity_signups').insert([
+    {
+      opportunity_id: opportunityId,
+      volunteer_name: volunteerName.trim(),
+      volunteer_email: volunteerEmail.trim(),
+    },
+  ]);
+
+  if (error) {
+    console.error('Signup failed:', error);
+    toast.error('Failed to sign up.');
+    return;
+  }
+
+  toast.success('You successfully signed up!');
+  fetchOpportunities();
+};
+  const removeVolunteerFromOpportunity = async (
   opportunityId: number,
   volunteerEmail: string
 ) => {
