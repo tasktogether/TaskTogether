@@ -70,6 +70,18 @@ const isRecentlyCreated = (dateString: string) => {
 
   return diffDays <= 7;
 };
+const isReadySoon = (dateString: string) => {
+  const today = new Date();
+  const oppDate = new Date(dateString);
+
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  const diffTime = oppDate.getTime() - today.getTime();
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+  return diffDays >= 0 && diffDays <= 3;
+};
 if (!user || user.role !== 'director') {
   return <Navigate to="/login?role=director" replace />;
 }
@@ -149,8 +161,11 @@ if (!user || user.role !== 'director') {
           Richmond Senior Center
         </h1>
         <p className="text-slate-500 mt-1">
-          Manage volunteers, review applications, and oversee opportunities.
-        </p>
+  Manage volunteers, review applications, and oversee opportunities.
+</p>
+<p className="text-xs text-slate-400 mt-2">
+  Last updated: {new Date().toLocaleDateString()}
+</p>
       </div>
 
       <div className="bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3">
@@ -587,7 +602,7 @@ case 'opportunities':
 
                   <div className="pl-4">
                     <div className="flex justify-between items-start mb-2">
-                      <div className="flex gap-2">
+ <div className="flex flex-wrap gap-2">
   <span
     className={`text-xs font-bold px-2 py-1 rounded-md uppercase tracking-wide ${statusClasses}`}
   >
@@ -597,6 +612,12 @@ case 'opportunities':
   {isRecentlyCreated(opp.opportunity_date) && (
     <span className="text-xs font-bold px-2 py-1 rounded-md bg-violet-100 text-violet-700">
       New
+    </span>
+  )}
+
+  {status === 'Upcoming' && isReadySoon(opp.opportunity_date) && (
+    <span className="text-xs font-bold px-2 py-1 rounded-md bg-amber-100 text-amber-700">
+      Ready Soon
     </span>
   )}
 </div>
