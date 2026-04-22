@@ -91,62 +91,6 @@ removeVolunteerFromOpportunity: (
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const DIRECTOR_SESSION_KEY = 'tasktogether_director_session';
 
-const MOCK_OPPORTUNITIES: Opportunity[] = [
-  {
-    id: '1',
-    title: 'Senior Tech Buddy',
-    description: 'Help seniors learn how to use their smartphones and tablets to stay connected with family.',
-    timeCommitment: '2 hours / week',
-    imageUrl: 'https://images.unsplash.com/photo-1576267460635-dad0eede4415?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'After School',
-    location: 'Richmond Senior Center',
-  },
-  {
-    id: '2',
-    title: 'Community Garden Helper',
-    description: 'Assist in maintaining the local community garden alongside senior gardening experts.',
-    timeCommitment: '3 hours / weekend',
-    imageUrl: 'https://images.unsplash.com/photo-1628243989859-db92e2de1340?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'Weekends',
-    location: 'Community Garden',
-  },
-  {
-    id: '3',
-    title: 'Grocery Delivery Assistant',
-    description: 'Help pack and deliver groceries to homebound seniors in your neighborhood.',
-    timeCommitment: 'Flexible',
-    imageUrl: 'https://images.unsplash.com/photo-1593113598332-cd288d649433?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'Flexible',
-    location: 'Local neighborhoods',
-  },
-  {
-    id: '4',
-    title: 'Reading Circle Companion',
-    description: 'Lead or join weekly reading circles — share books, stories, and great conversation with seniors.',
-    timeCommitment: '1–2 hours / week',
-    imageUrl: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'After School',
-    location: 'Richmond Senior Center',
-  },
-  {
-    id: '5',
-    title: 'Summer Activity Leader',
-    description: 'Plan and run fun summer activities — from arts & crafts to outdoor games — for senior residents.',
-    timeCommitment: '4–6 hours / week',
-    imageUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'Summer',
-    location: 'Richmond Senior Center',
-  },
-  {
-    id: '6',
-    title: 'Weekend Companion Visit',
-    description: 'Drop in for a friendly visit — chat, play cards, or simply keep a senior company on the weekend.',
-    timeCommitment: '1–3 hours / weekend',
-    imageUrl: 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
-    timeSlot: 'Weekends',
-    location: 'Richmond Senior Center',
-  },
-];
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
