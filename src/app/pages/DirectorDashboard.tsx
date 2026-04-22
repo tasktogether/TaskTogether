@@ -48,7 +48,6 @@ const [newOpportunity, setNewOpportunity] = useState({
   title: '',
   description: '',
   opportunity_date: '',
-  opportunity_time: '',
   time_commitment: '',
   volunteer_limit: '5',
 });
@@ -178,11 +177,10 @@ if (!user || user.role !== 'director') {
   const title = newOpportunity.title.trim();
   const description = newOpportunity.description.trim();
   const date = newOpportunity.opportunity_date.trim();
-  const time = newOpportunity.opportunity_time.trim();
-  const duration = newOpportunity.time_commitment.trim();
+  const time = newOpportunity.time_commitment.trim();
   const volunteerLimit = Number(newOpportunity.volunteer_limit);
 
-  if (!title || !description || !date || !time || !duration) {
+   if (!title || !description || !date || !time) {
     toast.error('Please complete all opportunity fields.');
     return;
   }
@@ -208,20 +206,19 @@ if (!user || user.role !== 'director') {
   setIsCreatingOpportunity(true);
 
   try {
-    await createOpportunity({
-      title,
-      description,
-      opportunity_date: date,
-      time_commitment: `${time},
-      location: 'Richmond Senior Center',
-      volunteer_limit: volunteerLimit,
-    });
+await createOpportunity({
+  title,
+  description,
+  opportunity_date: date,
+  time_commitment: time,
+  location: 'Richmond Senior Center',
+  volunteer_limit: volunteerLimit,
+});
 
     setNewOpportunity({
       title: '',
       description: '',
       opportunity_date: '',
-      opportunity_time: '',
       time_commitment: '',
       volunteer_limit: '5',
     });
@@ -247,7 +244,7 @@ const handleEditOpportunity = async (opp: any) => {
   const newDate = prompt('Enter new date (YYYY-MM-DD):', opp.opportunity_date);
   if (!newDate || !newDate.trim()) return;
 
-  const newTimeCommitment = prompt('Enter time and duration:', opp.time_commitment);
+  const newTimeCommitment = prompt('Enter time:', opp.time_commitment);
   if (!newTimeCommitment || !newTimeCommitment.trim()) return;
 
   const newLimit = prompt('Enter volunteer limit:', String(opp.volunteer_limit));
