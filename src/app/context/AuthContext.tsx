@@ -388,10 +388,11 @@ const logout = async () => {
   window.location.href = '/';
 };
   
-  const updateApplicationStatus = async (
-    appId: string,
-    status: ApplicationStatus
-  ) => {
+const updateApplicationStatus = async (
+  appId: string,
+  status: 'approved' | 'rejected' | 'pending'
+) => {
+  try {
     const now = new Date().toISOString();
 
     const { data, error } = await supabase
