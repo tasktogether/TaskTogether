@@ -39,7 +39,8 @@ export default function AdminDashboard() {
   removeVolunteerFromOpportunity,
 } = useAuth();
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
-  const [isSendingEmail, setIsSendingEmail] = useState<string | number | null>(null);
+  const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
+const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
 const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
 const [volunteerSearch, setVolunteerSearch] = useState('');
 const [isCreateOpportunityOpen, setIsCreateOpportunityOpen] = useState(false);
@@ -123,39 +124,46 @@ if (!user || user.role !== 'director') {
   0
 );
   const handleApprove = async (app: any) => {
-    const confirmed = window.confirm(`Approve ${app.userName}?`);
-    if (!confirmed) return;
+  if (processingApplicationId === app.id) return;
 
-    setIsSendingEmail(app.id);
+  const confirmed = window.confirm(`Approve ${app.userName}?`);
+  if (!confirmed) return;
 
-    try {
-      await updateApplicationStatus(app.id, 'approved');
-      await emailService.sendApprovalEmail(app.userEmail, app.userName);
-      toast.success(`${app.userName} was approved.`);
-    } catch (error: any) {
-      console.error('Approve failed:', error);
-      toast.error(error.message || 'Failed to approve application.');
-    } finally {
-      setIsSendingEmail(null);
-    }
-  };
+  setProcessingApplicationId(app.id);
+  setProcessingAction('approve');
 
-  const handleReject = async (app: any) => {
-    const confirmed = window.confirm(`Reject ${app.userName}?`);
-    if (!confirmed) return;
+  try {
+    await updateApplicationStatus(app.id, 'approved');
+    await emailService.sendApprovalEmail(app.userEmail, app.userName);
+    toast.success(`${app.userName} was approved successfully.`);
+  } catch (error: any) {
+    console.error('Approve failed:', error);
+    toast.error(error?.message || `Failed to approve ${app.userName}. Please try again.`);
+  } finally {
+    setProcessingApplicationId(null);
+    setProcessingAction(null);
+  }
+};
+ const handleReject = async (app: any) => {
+  if (processingApplicationId === app.id) return;
 
-    setIsSendingEmail(app.id);
+  const confirmed = window.confirm(`Reject ${app.userName}?`);
+  if (!confirmed) return;
 
-    try {
-      await updateApplicationStatus(app.id, 'rejected');
-      toast.success(`${app.userName} was rejected.`);
-    } catch (error) {
-      console.error('Reject failed:', error);
-      toast.error('Failed to reject application.');
-    } finally {
-      setIsSendingEmail(null);
-    }
-  };
+  setProcessingApplicationId(app.id);
+  setProcessingAction('reject');
+
+  try {
+    await updateApplicationStatus(app.id, 'rejected');
+    toast.success(`${app.userName} was rejected.`);
+  } catch (error: any) {
+    console.error('Reject failed:', error);
+    toast.error(error?.message || `Failed to reject ${app.userName}. Please try again.`);
+  } finally {
+    setProcessingApplicationId(null);
+    setProcessingAction(null);
+  }
+};
  const handleCreateOpportunity = async () => {
   if (isCreatingOpportunity) return;
 
@@ -422,21 +430,24 @@ if (!user || user.role !== 'director') {
   size="sm"
   className="bg-green-600 hover:bg-green-700 shadow-green-200 w-full justify-center"
   onClick={() => handleApprove(app)}
-  disabled={isSendingEmail === app.id}
+  disabled={processingApplicationId === app.id}
 >
   <Check size={16} className="mr-2" />
-  {isSendingEmail === app.id ? 'Sending...' : 'Approve'}
+  {processingApplicationId === app.id && processingAction === 'approve'
+    ? 'Approving...'
+    : 'Approve'}
 </Button>
-
                         <Button
   size="sm"
   variant="ghost"
   className="text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center"
   onClick={() => handleReject(app)}
-  disabled={isSendingEmail === app.id}
+  disabled={processingApplicationId === app.id}
 >
   <X size={16} className="mr-2" />
-  {isSendingEmail === app.id ? 'Updating...' : 'Reject'}
+  {processingApplicationId === app.id && processingAction === 'reject'
+    ? 'Rejecting...'
+    : 'Reject'}
 </Button>
 
                         <Button
