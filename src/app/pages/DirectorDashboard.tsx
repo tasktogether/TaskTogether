@@ -39,11 +39,14 @@ export default function AdminDashboard() {
   removeVolunteerFromOpportunity,
 } = useAuth();
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
-  const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
+const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
 const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
 const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
 const [volunteerSearch, setVolunteerSearch] = useState('');
 const [isCreateOpportunityOpen, setIsCreateOpportunityOpen] = useState(false);
+const [editingOpportunityId, setEditingOpportunityId] = useState<string | number | null>(null);
+const [deletingOpportunityId, setDeletingOpportunityId] = useState<string | number | null>(null);
+const [removingSignupKey, setRemovingSignupKey] = useState<string | null>(null);
 const [newOpportunity, setNewOpportunity] = useState({
   title: '',
   description: '',
@@ -227,7 +230,92 @@ if (!user || user.role !== 'director') {
     setIsCreatingOpportunity(false);
   }
 };
+const handleEditOpportunity = async (opp: any) => {
+  if (editingOpportunityId === opp.id) return;
 
+  const newTitle = prompt('Enter new title:', opp.title);
+  if (!newTitle || !newTitle.trim()) return;
+
+  const newDescription = prompt('Enter new description:', opp.description);
+  if (!newDescription || !newDescription.trim()) return;
+
+  const newDate = prompt('Enter new date (YYYY-MM-DD):', opp.opportunity_date);
+  if (!newDate || !newDate.trim()) return;
+
+  const newTimeCommitment = prompt('Enter time and duration:', opp.time_commitment);
+  if (!newTimeCommitment || !newTimeCommitment.trim()) return;
+
+  const newLimit = prompt('Enter volunteer limit:', String(opp.volunteer_limit));
+  const parsedLimit = Number(newLimit);
+
+  if (isNaN(parsedLimit) || parsedLimit < 1) {
+    toast.error('Volunteer limit must be at least 1.');
+    return;
+  }
+
+  setEditingOpportunityId(opp.id);
+
+  try {
+    await updateOpportunity(opp.id, {
+      title: newTitle.trim(),
+      description: newDescription.trim(),
+      opportunity_date: newDate.trim(),
+      time_commitment: newTimeCommitment.trim(),
+      volunteer_limit: parsedLimit,
+    });
+
+    toast.success('Opportunity updated successfully.');
+  } catch (error: any) {
+    console.error('Update opportunity failed:', error);
+    toast.error(error?.message || 'Failed to update opportunity.');
+  } finally {
+    setEditingOpportunityId(null);
+  }
+};
+
+const handleDeleteOpportunity = async (opp: any) => {
+  if (deletingOpportunityId === opp.id) return;
+
+  const confirmed = window.confirm(
+    `Delete "${opp.title}"? This cannot be undone.`
+  );
+  if (!confirmed) return;
+
+  setDeletingOpportunityId(opp.id);
+
+  try {
+    await deleteOpportunity(opp.id);
+    toast.success('Opportunity deleted successfully.');
+  } catch (error: any) {
+    console.error('Delete opportunity failed:', error);
+    toast.error(error?.message || 'Failed to delete opportunity.');
+  } finally {
+    setDeletingOpportunityId(null);
+  }
+};
+
+const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
+  const key = `${oppId}-${signup.volunteer_email}`;
+
+  if (removingSignupKey === key) return;
+
+  const confirmed = window.confirm(
+    `Remove ${signup.volunteer_name} from this opportunity?`
+  );
+  if (!confirmed) return;
+
+  setRemovingSignupKey(key);
+
+  try {
+    await removeVolunteerFromOpportunity(oppId, signup.volunteer_email);
+    toast.success(`${signup.volunteer_name} was removed from the opportunity.`);
+  } catch (error: any) {
+    console.error('Remove volunteer failed:', error);
+    toast.error(error?.message || 'Failed to remove volunteer.');
+  } finally {
+    setRemovingSignupKey(null);
+  }
+};
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -653,62 +741,23 @@ case 'opportunities':
 
                       <div className="flex gap-1">
                         <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6"
-                          onClick={async () => {
-                            const newTitle = prompt('Enter new title:', opp.title);
-                            if (!newTitle || !newTitle.trim()) return;
-
-                            const newDescription = prompt(
-                              'Enter new description:',
-                              opp.description
-                            );
-                            if (!newDescription || !newDescription.trim()) return;
-
-                            const newDate = prompt(
-                              'Enter new date (YYYY-MM-DD):',
-                              opp.opportunity_date
-                            );
-                            if (!newDate || !newDate.trim()) return;
-
-                            const newTimeCommitment = prompt(
-                              'Enter time commitment:',
-                              opp.time_commitment
-                            );
-                            if (!newTimeCommitment || !newTimeCommitment.trim()) return;
-
-                            const newLimit = prompt(
-                              'Enter volunteer limit:',
-                              String(opp.volunteer_limit)
-                            );
-
-                            await updateOpportunity(opp.id, {
-                              title: newTitle.trim(),
-                              description: newDescription.trim(),
-                              opportunity_date: newDate.trim(),
-                              time_commitment: newTimeCommitment.trim(),
-                              volunteer_limit: Number(newLimit) || opp.volunteer_limit,
-                            });
-                          }}
-                        >
-                          <Edit3 size={14} />
-                        </Button>
-
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-6 w-6 text-red-500 hover:bg-red-50"
-                          onClick={() => {
-                            const confirmed = window.confirm(
-                              `Delete "${opp.title}"? This cannot be undone.`
-                            );
-                            if (!confirmed) return;
-                            deleteOpportunity(opp.id);
-                          }}
-                        >
-                          <X size={14} />
-                        </Button>
+  variant="ghost"
+  size="icon"
+  className="h-6 w-6"
+  onClick={() => handleEditOpportunity(opp)}
+  disabled={editingOpportunityId === opp.id || deletingOpportunityId === opp.id}
+>
+  <Edit3 size={14} />
+</Button>
+<Button
+  variant="ghost"
+  size="icon"
+  className="h-6 w-6 text-red-500 hover:bg-red-50"
+  onClick={() => handleDeleteOpportunity(opp)}
+  disabled={editingOpportunityId === opp.id || deletingOpportunityId === opp.id}
+>
+  <X size={14} />
+</Button>
                       </div>
                     </div>
 
@@ -746,19 +795,16 @@ case 'opportunities':
                               className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
                             >
                               <span>{signup.volunteer_name}</span>
-
-                              <button
-                                type="button"
-                                className="text-red-500 hover:underline ml-2"
-                                onClick={() =>
-                                  removeVolunteerFromOpportunity(
-                                    opp.id,
-                                    signup.volunteer_email
-                                  )
-                                }
-                              >
-                                Remove
-                              </button>
+<button
+  type="button"
+  className="text-red-500 hover:underline ml-2 disabled:text-slate-400 disabled:no-underline"
+  onClick={() => handleRemoveVolunteer(opp.id, signup)}
+  disabled={removingSignupKey === `${opp.id}-${signup.volunteer_email}`}
+>
+  {removingSignupKey === `${opp.id}-${signup.volunteer_email}`
+    ? 'Removing...'
+    : 'Remove'}
+</button>
                             </div>
                           ))}
                         </div>
