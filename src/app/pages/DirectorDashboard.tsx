@@ -41,6 +41,15 @@ const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | 
 const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
 const [volunteerSearch, setVolunteerSearch] = useState('');
 const [isCreateOpportunityOpen, setIsCreateOpportunityOpen] = useState(false);
+const [isEditOpportunityOpen, setIsEditOpportunityOpen] = useState(false);
+const [editingOpportunity, setEditingOpportunity] = useState<any | null>(null);
+const [editOpportunityForm, setEditOpportunityForm] = useState({
+  title: '',
+  description: '',
+  opportunity_date: '',
+  time_commitment: '',
+  volunteer_limit: '1',
+});
 const [editingOpportunityId, setEditingOpportunityId] = useState<string | number | null>(null);
 const [deletingOpportunityId, setDeletingOpportunityId] = useState<string | number | null>(null);
 const [removingSignupKey, setRemovingSignupKey] = useState<string | null>(null);
