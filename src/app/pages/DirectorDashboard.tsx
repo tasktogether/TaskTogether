@@ -939,26 +939,7 @@ case 'opportunities':
                     className="w-full border border-slate-200 rounded-xl px-4 py-3"
                     placeholder="Bingo Night"
                   />
-                </div>
-
-                <div>
-               <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Opportunity Description
-</label>
-                  <textarea
-                    required
-                    value={newOpportunity.description}
-                    onChange={(e) =>
-                      setNewOpportunity({
-                        ...newOpportunity,
-                        description: e.target.value,
-                      })
-                    }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
-                    placeholder="Help run bingo for seniors..."
-                  />
-                </div>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
   <div>
     <label className="block text-sm font-semibold text-slate-700 mb-1">
       Date
@@ -978,29 +959,47 @@ case 'opportunities':
   </div>
 
   <div>
-  <label className="block text-sm font-semibold text-slate-700 mb-1">
-    Time
-  </label>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Time Range
+    </label>
+    <input
+      type="text"
+      required
+      placeholder="12:30-3:30"
+      value={newOpportunity.time_commitment}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          time_commitment: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+    <p className="text-xs text-slate-500 mt-1">
+      Enter the time range for this opportunity.
+    </p>
+  </div>
 
-  <input
-    type="text"
-    required
-    placeholder="12:30-3:30"
-    value={newOpportunity.time_commitment}
-    onChange={(e) =>
-      setNewOpportunity({
-        ...newOpportunity,
-        time_commitment: e.target.value,
-      })
-    }
-    className="w-full border border-slate-200 rounded-xl px-4 py-3"
-  />
-
-  <p className="text-xs text-slate-500 mt-1">
-    Enter the time range for this opportunity.
-  </p>
+  <div className="md:col-span-2">
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Number of Volunteer Spots
+    </label>
+    <input
+      type="number"
+      min="1"
+      max="50"
+      required
+      value={newOpportunity.volunteer_limit}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          volunteer_limit: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 </div>
-                </div>
               </div>
 
               <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
