@@ -89,6 +89,7 @@ removeVolunteerFromOpportunity: (
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const DIRECTOR_SESSION_KEY = 'tasktogether_director_session';
 
 const MOCK_OPPORTUNITIES: Opportunity[] = [
   {
@@ -220,7 +221,18 @@ useEffect(() => {
     }
 
     if (!mounted) return;
+const savedDirectorSession = localStorage.getItem(DIRECTOR_SESSION_KEY);
 
+if (savedDirectorSession) {
+  setUser({
+    id: 'director-1',
+    name: 'Richmond Senior Center Director',
+    email: 'tasktogethercontact@gmail.com',
+    role: 'director',
+  });
+  setAuthLoading(false);
+  return;
+}
     if (session?.user) {
       const email = session.user.email || '';
 
@@ -338,13 +350,14 @@ const login = async (
       message: 'Wrong director email or password.',
     };
   }
+localStorage.setItem(DIRECTOR_SESSION_KEY, 'true');
 
-  setUser({
-    id: 'director-1',
-    name: 'Richmond Senior Center Director',
-    email,
-    role: 'director',
-  });
+setUser({
+  id: 'director-1',
+  name: 'Richmond Senior Center Director',
+  email,
+  role: 'director',
+});
 
   setAuthLoading(false);
 
@@ -444,10 +457,11 @@ const login = async (
     fetchOpportunities();
   };
 const logout = async () => {
+  localStorage.removeItem(DIRECTOR_SESSION_KEY);
   await supabase.auth.signOut();
-  toast.success('You have been logged out.');
   setUser(null);
-  window.location.href = '/login';
+  toast.success('You have been logged out.');
+  window.location.href = '/';
 };
   
   const updateApplicationStatus = async (
