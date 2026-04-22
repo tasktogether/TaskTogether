@@ -921,86 +921,106 @@ case 'opportunities':
 </p>
               </div>
 
-              <div className="p-6 space-y-6">
-                <div>
-                 <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Opportunity Title
-</label>
-                  <input
-  type="text"
-  required
-  value={newOpportunity.title}
-                    onChange={(e) =>
-                      setNewOpportunity({
-                        ...newOpportunity,
-                        title: e.target.value,
-                      })
-                    }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                    placeholder="Bingo Night"
-                  />
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="p-6 space-y-6">
   <div>
     <label className="block text-sm font-semibold text-slate-700 mb-1">
-      Date
-    </label>
-    <input
-      type="date"
-      required
-      value={newOpportunity.opportunity_date}
-      onChange={(e) =>
-        setNewOpportunity({
-          ...newOpportunity,
-          opportunity_date: e.target.value,
-        })
-      }
-      className="w-full border border-slate-200 rounded-xl px-4 py-3"
-    />
-  </div>
-
-  <div>
-    <label className="block text-sm font-semibold text-slate-700 mb-1">
-      Time Range
+      Opportunity Title
     </label>
     <input
       type="text"
       required
-      placeholder="12:30-3:30"
-      value={newOpportunity.time_commitment}
+      value={newOpportunity.title}
       onChange={(e) =>
         setNewOpportunity({
           ...newOpportunity,
-          time_commitment: e.target.value,
+          title: e.target.value,
         })
       }
       className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      placeholder="Bingo Night"
     />
-    <p className="text-xs text-slate-500 mt-1">
-      Enter the time range for this opportunity.
-    </p>
   </div>
 
-  <div className="md:col-span-2">
+  <div>
     <label className="block text-sm font-semibold text-slate-700 mb-1">
-      Number of Volunteer Spots
+      Opportunity Description
     </label>
-    <input
-      type="number"
-      min="1"
-      max="50"
+    <textarea
       required
-      value={newOpportunity.volunteer_limit}
+      value={newOpportunity.description}
       onChange={(e) =>
         setNewOpportunity({
           ...newOpportunity,
-          volunteer_limit: e.target.value,
+          description: e.target.value,
         })
       }
-      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
+      placeholder="Help run bingo for seniors..."
     />
   </div>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-1">
+        Date
+      </label>
+      <input
+        type="date"
+        required
+        value={newOpportunity.opportunity_date}
+        onChange={(e) =>
+          setNewOpportunity({
+            ...newOpportunity,
+            opportunity_date: e.target.value,
+          })
+        }
+        className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      />
+    </div>
+
+    <div>
+      <label className="block text-sm font-semibold text-slate-700 mb-1">
+        Time Range
+      </label>
+      <input
+        type="text"
+        required
+        placeholder="12:30-3:30"
+        value={newOpportunity.time_commitment}
+        onChange={(e) =>
+          setNewOpportunity({
+            ...newOpportunity,
+            time_commitment: e.target.value,
+          })
+        }
+        className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      />
+      <p className="text-xs text-slate-500 mt-1">
+        Enter the time range for this opportunity.
+      </p>
+    </div>
+
+    <div className="md:col-span-2">
+      <label className="block text-sm font-semibold text-slate-700 mb-1">
+        Number of Volunteer Spots
+      </label>
+      <input
+        type="number"
+        min="1"
+        max="50"
+        required
+        value={newOpportunity.volunteer_limit}
+        onChange={(e) =>
+          setNewOpportunity({
+            ...newOpportunity,
+            volunteer_limit: e.target.value,
+          })
+        }
+        className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      />
+    </div>
+  </div>
 </div>
-              </div>
 
               <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
               <Button
