@@ -6,18 +6,14 @@ import {
   Briefcase,
   Check,
   X,
-  Eye,
   LogOut,
   PlayCircle,
   Search,
-  Settings,
   Calendar,
   Edit3,
   LayoutDashboard,
   MapPin,
   Clock3,
-  Filter,
-  Download,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -533,14 +529,6 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
     : 'Reject'}
 </Button>
 
-                        <Button
-  size="sm"
-  variant="ghost"
-  className="text-slate-400 hover:text-slate-600 w-full justify-center"
-  disabled
->
-  <Eye size={16} className="mr-2" /> Review
-</Button>
                       </div>
                     </div>
                   </Card>
