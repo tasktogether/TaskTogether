@@ -33,6 +33,7 @@ export default function AdminDashboard() {
   deleteOpportunity,
   updateOpportunity,
   removeVolunteerFromOpportunity,
+  authLoading,
 } = useAuth();
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
 const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
@@ -91,6 +92,14 @@ const isReadySoon = (dateString: string) => {
 
   return diffDays >= 0 && diffDays <= 3;
 };
+if (authLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <p className="text-slate-500 text-sm">Loading dashboard...</p>
+    </div>
+  );
+}
+
 if (!user || user.role !== 'director') {
   return <Navigate to="/login?role=director" replace />;
 }
