@@ -477,34 +477,30 @@ const createOpportunity = async (newOpp: {
     !newOpp.opportunity_date.trim() ||
     !newOpp.time_commitment.trim()
   ) {
-    toast.error('Please fill in all required fields.');
-    return;
+    throw new Error('Please fill in all required fields.');
   }
 
   if (newOpp.volunteer_limit < 1) {
-    toast.error('Volunteer limit must be at least 1.');
-    return;
+    throw new Error('Volunteer limit must be at least 1.');
   }
 
   const { error } = await supabase.from('opportunities').insert([
     {
-      ...newOpp,
       title: newOpp.title.trim(),
       description: newOpp.description.trim(),
       opportunity_date: newOpp.opportunity_date.trim(),
       time_commitment: newOpp.time_commitment.trim(),
       location: 'Richmond Senior Center',
+      volunteer_limit: newOpp.volunteer_limit,
     },
   ]);
 
   if (error) {
     console.error('Error creating opportunity:', error);
-    toast.error('Failed to create opportunity.');
-    return;
+    throw new Error(error.message || 'Failed to create opportunity.');
   }
 
-  toast.success('Opportunity created!');
-  fetchOpportunities();
+  await fetchOpportunities();
 };
 const deleteOpportunity = async (id: number) => {
   const { error } = await supabase
