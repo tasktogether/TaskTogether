@@ -337,8 +337,8 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
           Quick Summary
         </p>
         <p className="text-sm text-slate-600 mt-1">
-          {approvedApps.length} approved volunteers • {pendingApps.length} pending applications • {upcomingOpportunities.length} upcoming opportunities
-        </p>
+  {approvedApps.length} approved volunteers • {pendingApps.length} pending applications • {upcomingOpportunities.length} upcoming opportunities scheduled
+</p>
       </div>
     </div>
   </div>
@@ -439,7 +439,7 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
             <div className="space-y-6">
               {pendingApps.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
-                  <p className="text-slate-500">No pending applications. Good job! 🎉</p>
+<p className="text-slate-500">There are no pending volunteer applications at this time.</p>
                 </div>
               ) : (
                 pendingApps.map(app => (
@@ -608,7 +608,7 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
 
             {approvedApps.length === 0 ? (
               <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
-                <p className="text-slate-500">No approved volunteers yet.</p>
+                <p className="text-slate-500">There are no approved volunteers yet.</p>
               </div>
             ) : (
               <div className="grid gap-4">
@@ -683,10 +683,10 @@ case 'opportunities':
 
       {opportunities.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-3xl border border-dashed border-slate-300">
-          <p className="text-slate-700 font-medium">No opportunities yet.</p>
-          <p className="text-slate-500 text-sm mt-1">
-            Create your first volunteer opportunity for Richmond Senior Center.
-          </p>
+        <p className="text-slate-700 font-medium">No volunteer opportunities have been created yet.</p>
+<p className="text-slate-500 text-sm mt-1">
+  Create the first opportunity to begin accepting volunteer sign-ups.
+</p>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -792,7 +792,7 @@ case 'opportunities':
                           ))}
                         </div>
                       ) : (
-                        <p className="text-xs text-slate-400">No volunteers yet</p>
+                        <p className="text-xs text-slate-400">No volunteers have signed up yet.</p>
                       )}
                     </div>
                   </div>
@@ -908,19 +908,20 @@ case 'opportunities':
                 <h2 className="text-xl font-bold text-slate-800">
                   Create New Opportunity
                 </h2>
-                <p className="text-sm text-slate-500 mt-1">
-                  Richmond Senior Center
-                </p>
+               <p className="text-sm text-slate-500 mt-1">
+  Create a new volunteer opportunity for Richmond Senior Center.
+</p>
               </div>
 
               <div className="p-6 space-y-6">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Title
-                  </label>
+                 <label className="block text-sm font-semibold text-slate-700 mb-1">
+  Opportunity Title
+</label>
                   <input
-                    type="text"
-                    value={newOpportunity.title}
+  type="text"
+  required
+  value={newOpportunity.title}
                     onChange={(e) =>
                       setNewOpportunity({
                         ...newOpportunity,
@@ -933,10 +934,11 @@ case 'opportunities':
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Description
-                  </label>
+               <label className="block text-sm font-semibold text-slate-700 mb-1">
+  Opportunity Description
+</label>
                   <textarea
+                    required
                     value={newOpportunity.description}
                     onChange={(e) =>
                       setNewOpportunity({
@@ -955,6 +957,7 @@ case 'opportunities':
     </label>
     <input
       type="date"
+      required
       value={newOpportunity.opportunity_date}
       onChange={(e) =>
         setNewOpportunity({
@@ -968,10 +971,11 @@ case 'opportunities':
 
   <div>
     <label className="block text-sm font-semibold text-slate-700 mb-1">
-      Time
-    </label>
+  Start Time
+</label>
     <input
       type="time"
+      required
       value={newOpportunity.opportunity_time}
       onChange={(e) =>
         setNewOpportunity({
@@ -984,27 +988,29 @@ case 'opportunities':
   </div>
 
   <div className="md:col-span-2">
-    <label className="block text-sm font-semibold text-slate-700 mb-1">
-      Volunteer Limit
-    </label>
+   <label className="block text-sm font-semibold text-slate-700 mb-1">
+  Number of Volunteer Spots
+</label>
     <input
-      type="number"
-      min="1"
-      value={newOpportunity.volunteer_limit}
-      onChange={(e) =>
-        setNewOpportunity({
-          ...newOpportunity,
-          volunteer_limit: e.target.value,
-        })
-      }
-      className="w-full border border-slate-200 rounded-xl px-4 py-3"
-    />
+  type="number"
+  min="1"
+  max="50"
+  required
+  value={newOpportunity.volunteer_limit}
+  onChange={(e) =>
+    setNewOpportunity({
+      ...newOpportunity,
+      volunteer_limit: e.target.value,
+    })
+  }
+  className="w-full border border-slate-200 rounded-xl px-4 py-3"
+/>
   </div>
 </div>
 
                 <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Duration
+       <label className="block text-sm font-semibold text-slate-700 mb-1">
+  Estimated Duration
 </label>
                   <input
                     type="text"
