@@ -40,7 +40,8 @@ export default function AdminDashboard() {
 } = useAuth();
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
   const [isSendingEmail, setIsSendingEmail] = useState<string | number | null>(null);
-  const [volunteerSearch, setVolunteerSearch] = useState('');
+const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
+const [volunteerSearch, setVolunteerSearch] = useState('');
 const [isCreateOpportunityOpen, setIsCreateOpportunityOpen] = useState(false);
 const [newOpportunity, setNewOpportunity] = useState({
   title: '',
@@ -155,7 +156,9 @@ if (!user || user.role !== 'director') {
       setIsSendingEmail(null);
     }
   };
-  const handleCreateOpportunity = async () => {
+ const handleCreateOpportunity = async () => {
+  if (isCreatingOpportunity) return;
+
   const title = newOpportunity.title.trim();
   const description = newOpportunity.description.trim();
   const date = newOpportunity.opportunity_date.trim();
@@ -164,7 +167,7 @@ if (!user || user.role !== 'director') {
   const volunteerLimit = Number(newOpportunity.volunteer_limit);
 
   if (!title || !description || !date || !time || !duration) {
-    toast.error('Please fill in all fields.');
+    toast.error('Please complete all opportunity fields.');
     return;
   }
 
@@ -173,26 +176,48 @@ if (!user || user.role !== 'director') {
     return;
   }
 
-  await createOpportunity({
-    title,
-    description,
-    opportunity_date: date,
-    time_commitment: `${time} • ${duration}`,
-    location: 'Richmond Senior Center',
-    volunteer_limit: volunteerLimit,
-  });
+  const selectedDateTime = new Date(`${date}T${time}`);
+  const now = new Date();
 
-  setNewOpportunity({
-    title: '',
-    description: '',
-    opportunity_date: '',
-    opportunity_time: '',
-    time_commitment: '',
-    volunteer_limit: '5',
-  });
+  if (isNaN(selectedDateTime.getTime())) {
+    toast.error('Please enter a valid date and time.');
+    return;
+  }
 
-  setIsCreateOpportunityOpen(false);
-  toast.success('Opportunity created successfully');
+  if (selectedDateTime < now) {
+    toast.error('Opportunity date and time must be in the future.');
+    return;
+  }
+
+  setIsCreatingOpportunity(true);
+
+  try {
+    await createOpportunity({
+      title,
+      description,
+      opportunity_date: date,
+      time_commitment: `${time} • ${duration}`,
+      location: 'Richmond Senior Center',
+      volunteer_limit: volunteerLimit,
+    });
+
+    setNewOpportunity({
+      title: '',
+      description: '',
+      opportunity_date: '',
+      opportunity_time: '',
+      time_commitment: '',
+      volunteer_limit: '5',
+    });
+
+    setIsCreateOpportunityOpen(false);
+    toast.success('Opportunity created successfully.');
+  } catch (error: any) {
+    console.error('Create opportunity failed:', error);
+    toast.error(error?.message || 'Failed to create opportunity. Please try again.');
+  } finally {
+    setIsCreatingOpportunity(false);
+  }
 };
 
   const renderContent = () => {
@@ -565,9 +590,10 @@ case 'opportunities':
           Volunteer Opportunities
         </h1>
         
-        <Button
+     <Button
   className="gap-2 bg-violet-600 hover:bg-violet-700 text-white"
   onClick={() => setIsCreateOpportunityOpen(true)}
+  disabled={isCreatingOpportunity}
 >
   <Briefcase size={16} /> Create New Opportunity
 </Button>
@@ -956,15 +982,20 @@ case 'opportunities':
               </div>
 
               <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
-                <Button
-                  variant="ghost"
-                  onClick={() => setIsCreateOpportunityOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleCreateOpportunity}>
-                  Create Opportunity
-                </Button>
+              <Button
+  variant="ghost"
+  onClick={() => setIsCreateOpportunityOpen(false)}
+  disabled={isCreatingOpportunity}
+>
+  Cancel
+</Button>
+
+<Button
+  onClick={handleCreateOpportunity}
+  disabled={isCreatingOpportunity}
+>
+  {isCreatingOpportunity ? 'Creating...' : 'Create Opportunity'}
+</Button>
               </div>
             </motion.div>
           </motion.div>
