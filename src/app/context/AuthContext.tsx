@@ -386,6 +386,7 @@ const logout = async () => {
   setUser(null);
   toast.success('You have been logged out.');
   window.location.href = '/';
+  }
 };
   
 const updateApplicationStatus = async (
