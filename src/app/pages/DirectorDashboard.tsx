@@ -280,10 +280,12 @@ const handleEditOpportunity = async (opp: any) => {
 
 const handleDeleteOpportunity = async (opp: any) => {
   if (deletingOpportunityId === opp.id) return;
-const confirmed = window.confirm(
-  `Are you sure you want to delete the opportunity "${opp.title}"?`
-);
-if (!confirmed) return;
+
+  const confirmed = window.confirm(
+    `Are you sure you want to delete the opportunity "${opp.title}"?`
+  );
+
+  if (!confirmed) return;
 
   setDeletingOpportunityId(opp.id);
 
@@ -292,7 +294,7 @@ if (!confirmed) return;
     toast.success('Opportunity deleted successfully.');
   } catch (error: any) {
     console.error('Delete opportunity failed:', error);
-    toast.error(error?.message || 'Failed to delete opportunity.');
+    toast.error('Failed to delete opportunity.');
   } finally {
     setDeletingOpportunityId(null);
   }
