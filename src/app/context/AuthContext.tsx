@@ -287,6 +287,8 @@ fetchOpportunities();
   };
 }, []);
 
+const DIRECTOR_EMAIL = 'tasktogethercontact@gmail.com';
+
 const login = async (
   email: string,
   password: string,
@@ -313,6 +315,7 @@ const login = async (
 
     const signedInEmail = authData.user.email || email;
 
+    // DIRECTOR LOGIN
     if (role === 'director') {
       if (signedInEmail !== DIRECTOR_EMAIL) {
         await supabase.auth.signOut();
