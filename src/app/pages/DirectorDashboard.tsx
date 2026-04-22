@@ -92,17 +92,6 @@ const isReadySoon = (dateString: string) => {
 
   return diffDays >= 0 && diffDays <= 3;
 };
-if (authLoading) {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <p className="text-slate-500 text-sm">Loading dashboard...</p>
-    </div>
-  );
-}
-
-if (!user || user.role !== 'director') {
-  return <Navigate to="/login?role=director" replace />;
-}
 
     const pendingApps = applications.filter(app => app.status === 'pending');
   const approvedApps = applications.filter(app => app.status === 'approved');
@@ -131,6 +120,17 @@ if (!user || user.role !== 'director') {
   (total, opp) => total + (opp.current_volunteers || 0),
   0
 );
+  if (authLoading) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <p className="text-slate-500 text-sm">Loading dashboard...</p>
+    </div>
+  );
+}
+
+if (!user || user.role !== 'director') {
+  return <Navigate to="/login?role=director" replace />;
+}
   const handleApprove = async (app: any) => {
   if (processingApplicationId === app.id) return;
 
