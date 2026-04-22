@@ -280,11 +280,10 @@ const handleEditOpportunity = async (opp: any) => {
 
 const handleDeleteOpportunity = async (opp: any) => {
   if (deletingOpportunityId === opp.id) return;
-
-  const confirmed = window.confirm(
-    `Delete "${opp.title}"? This cannot be undone.`
-  );
-  if (!confirmed) return;
+const confirmed = window.confirm(
+  `Are you sure you want to delete the opportunity "${opp.title}"?`
+);
+if (!confirmed) return;
 
   setDeletingOpportunityId(opp.id);
 
