@@ -40,6 +40,8 @@ const [processingApplicationId, setProcessingApplicationId] = useState<string | 
 const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
 const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
 const [volunteerSearch, setVolunteerSearch] = useState('');
+const [selectedVolunteer, setSelectedVolunteer] = useState<any | null>(null);
+const [isVolunteerProfileOpen, setIsVolunteerProfileOpen] = useState(false);
 const [isCreateOpportunityOpen, setIsCreateOpportunityOpen] = useState(false);
 const [isEditOpportunityOpen, setIsEditOpportunityOpen] = useState(false);
 const [editingOpportunity, setEditingOpportunity] = useState<any | null>(null);
@@ -350,6 +352,37 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
     setRemovingSignupKey(null);
   }
 };
+  const handleOpenVolunteerProfile = (volunteer: any) => {
+  setSelectedVolunteer(volunteer);
+  setIsVolunteerProfileOpen(true);
+};
+  const selectedVolunteerOpportunities = selectedVolunteer
+  ? opportunities.filter((opp) =>
+      opp.signups?.some(
+        (signup: any) => signup.volunteer_email === selectedVolunteer.userEmail
+      )
+    )
+  : [];
+
+const selectedVolunteerUpcomingOpportunities = selectedVolunteerOpportunities.filter(
+  (opp) => {
+    const oppDate = new Date(opp.opportunity_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    oppDate.setHours(0, 0, 0, 0);
+    return oppDate >= today;
+  }
+);
+
+const selectedVolunteerPastOpportunities = selectedVolunteerOpportunities.filter(
+  (opp) => {
+    const oppDate = new Date(opp.opportunity_date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    oppDate.setHours(0, 0, 0, 0);
+    return oppDate < today;
+  }
+);
   const renderContent = () => {
     switch (activeTab) {
       case 'overview':
@@ -655,9 +688,10 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
                 ) : (
                   filteredApprovedApps.map((app) => (
                     <div
-                      key={app.id}
-                      className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition-shadow"
-                    >
+  key={app.id}
+  onClick={() => handleOpenVolunteerProfile(app)}
+  className="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer"
+>
                       <div className="flex items-center gap-4">
                         <div className="w-10 h-10 bg-gradient-to-br from-violet-400 to-fuchsia-400 rounded-full flex items-center justify-center text-white font-bold">
                           {app.userName?.charAt(0) || 'V'}
@@ -924,6 +958,151 @@ case 'opportunities':
 
       {/* CREATE OPPORTUNITY MODAL — GLOBAL */}
 <AnimatePresence>
+  {isVolunteerProfileOpen && selectedVolunteer && (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setIsVolunteerProfileOpen(false)}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 10 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+      >
+        <div className="px-6 py-5 border-b border-slate-100 bg-slate-50">
+          <h2 className="text-xl font-bold text-slate-800">
+            Volunteer Profile
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            View volunteer details and opportunity activity.
+          </p>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-violet-400 to-fuchsia-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
+              {selectedVolunteer.userName?.charAt(0) || 'V'}
+            </div>
+
+            <div>
+              <h3 className="text-xl font-bold text-slate-800">
+                {selectedVolunteer.userName}
+              </h3>
+              <p className="text-sm text-slate-500">
+                {selectedVolunteer.userEmail}
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <p className="text-xs uppercase font-bold text-slate-400">
+                Approved Date
+              </p>
+              <p className="text-sm font-medium text-slate-700 mt-1">
+                {selectedVolunteer.processedAt
+                  ? new Date(selectedVolunteer.processedAt).toLocaleDateString()
+                  : 'N/A'}
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <p className="text-xs uppercase font-bold text-slate-400">
+                Signed Up
+              </p>
+              <p className="text-sm font-medium text-slate-700 mt-1">
+                {selectedVolunteerUpcomingOpportunities.length}
+              </p>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+              <p className="text-xs uppercase font-bold text-slate-400">
+                Past Opportunities
+              </p>
+              <p className="text-sm font-medium text-slate-700 mt-1">
+                {selectedVolunteerPastOpportunities.length}
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-slate-700 mb-3">
+              Signed Up Opportunities
+            </h4>
+
+            {selectedVolunteerUpcomingOpportunities.length === 0 ? (
+              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-sm text-slate-500">
+                No upcoming opportunity sign-ups.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {selectedVolunteerUpcomingOpportunities.map((opp) => (
+                  <div
+                    key={opp.id}
+                    className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
+                  >
+                    <p className="font-semibold text-slate-800">{opp.title}</p>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {formatDate(opp.opportunity_date)} • {opp.time_commitment}
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      {opp.location}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div>
+            <h4 className="text-sm font-bold text-slate-700 mb-3">
+              Past Opportunities
+            </h4>
+
+            {selectedVolunteerPastOpportunities.length === 0 ? (
+              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-sm text-slate-500">
+                No past opportunities found.
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {selectedVolunteerPastOpportunities.map((opp) => (
+                  <div
+                    key={opp.id}
+                    className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
+                  >
+                    <p className="font-semibold text-slate-800">{opp.title}</p>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {formatDate(opp.opportunity_date)} • {opp.time_commitment}
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      {opp.location}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="px-6 py-4 border-t border-slate-100 flex justify-end">
+          <Button
+            variant="ghost"
+            onClick={() => setIsVolunteerProfileOpen(false)}
+          >
+            Close
+          </Button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
+      <AnimatePresence>
   {isEditOpportunityOpen && editingOpportunity && (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
