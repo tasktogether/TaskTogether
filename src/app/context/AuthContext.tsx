@@ -179,15 +179,15 @@ if (savedDirectorSession) {
 }
     if (session?.user) {
       const email = session.user.email || '';
-
-      const { data, error: appError } = await supabase
-        .from('volunteer_applications')
-        .select('id, full_name, email, status')
-        .eq('email', email)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
+const { data, error } = await supabase
+  .from('volunteer_applications')
+  .update({
+    status,
+    processed_at: status === 'pending' ? null : now,
+  })
+  .eq('id', appId)
+  .select('id, status, processed_at')
+  .maybeSingle();
       if (appError) {
         console.error('Error loading volunteer after refresh:', appError);
       }
