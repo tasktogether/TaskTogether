@@ -3,16 +3,16 @@ import { useNavigate, Link } from 'react-router';
 import { Shield, Eye, EyeOff, LogIn, AlertCircle, Heart } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 
-export default function AdminLoginPage() {
-  const { loginAdmin, isAdminLoggedIn } = useApp();
+export default function DirectorLoginPage() {
+  const { loginDirector, isDirectorLoggedIn } = useApp();
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  if (isAdminLoggedIn) {
-    navigate('/admin/dashboard');
+  if (isDirectorLoggedIn) {
+    navigate('/director/dashboard');
     return null;
   }
 
@@ -25,12 +25,12 @@ export default function AdminLoginPage() {
     }
     setIsLoading(true);
     await new Promise(r => setTimeout(r, 700));
-    const success = loginAdmin(form.email, form.password);
+    const success = loginDirector(form.email, form.password);
     setIsLoading(false);
     if (success) {
-      navigate('/admin/dashboard');
+      navigate('/director/dashboard');
     } else {
-      setError('Invalid admin credentials. Please try again.');
+      setError('Invalid director credentials. Please try again.');
     }
   };
 
@@ -79,7 +79,7 @@ export default function AdminLoginPage() {
               <Shield size={28} color="#4F46E5" />
             </div>
             <h2 style={{ fontFamily: "'Fredoka', sans-serif", fontSize: '26px', fontWeight: 600, color: '#1e1b4b', marginBottom: '6px' }}>
-              Admin Login
+              Director Login
             </h2>
             <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '14px', color: '#94a3b8' }}>
               Senior center staff access only
@@ -100,12 +100,12 @@ export default function AdminLoginPage() {
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
               <label style={{ fontFamily: "'Poppins', sans-serif", fontSize: '14px', fontWeight: 600, color: '#334155', display: 'block', marginBottom: '8px' }}>
-                Admin Email
+                Director Email
               </label>
               <input
                 className="tt-input"
                 type="email"
-                placeholder="admin@tasktogether.org"
+                placeholder="director@tasktogether.org"
                 value={form.email}
                 onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setError(''); }}
                 autoComplete="email"
@@ -120,7 +120,7 @@ export default function AdminLoginPage() {
                 <input
                   className="tt-input"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Admin password"
+                  placeholder="Director password"
                   value={form.password}
                   onChange={e => { setForm(p => ({ ...p, password: e.target.value })); setError(''); }}
                   autoComplete="current-password"
@@ -169,11 +169,11 @@ export default function AdminLoginPage() {
           {/* Demo hint */}
           <div style={{ marginTop: '20px', background: '#F5F3FF', borderRadius: '12px', padding: '14px 16px', border: '1px solid #E9D5FF' }}>
             <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '12px', color: '#6D28D9', fontWeight: 600, marginBottom: '4px' }}>
-              🔐 Demo Admin Credentials:
+              🔐 Demo Director Credentials:
             </p>
             <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '12px', color: '#64748b' }}>
-              Email: <strong>admin@tasktogether.org</strong><br />
-              Password: <strong>Admin123!</strong>
+              Email: <strong>director@tasktogether.org</strong><br />
+              Password: <strong>Director123!</strong>
             </p>
           </div>
 
