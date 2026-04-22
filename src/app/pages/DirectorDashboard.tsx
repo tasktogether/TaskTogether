@@ -212,7 +212,7 @@ if (!user || user.role !== 'director') {
       title,
       description,
       opportunity_date: date,
-      time_commitment: `${time} • ${duration}`,
+      time_commitment: `${time},
       location: 'Richmond Senior Center',
       volunteer_limit: volunteerLimit,
     });
@@ -977,60 +977,28 @@ case 'opportunities':
   </div>
 
   <div>
-    <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Start Time
-</label>
-    <input
-      type="time"
-      required
-      value={newOpportunity.opportunity_time}
-      onChange={(e) =>
-        setNewOpportunity({
-          ...newOpportunity,
-          opportunity_time: e.target.value,
-        })
-      }
-      className="w-full border border-slate-200 rounded-xl px-4 py-3"
-    />
-  </div>
+  <label className="block text-sm font-semibold text-slate-700 mb-1">
+    Time
+  </label>
 
-  <div className="md:col-span-2">
-   <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Number of Volunteer Spots
-</label>
-    <input
-  type="number"
-  min="1"
-  max="50"
-  required
-  value={newOpportunity.volunteer_limit}
-  onChange={(e) =>
-    setNewOpportunity({
-      ...newOpportunity,
-      volunteer_limit: e.target.value,
-    })
-  }
-  className="w-full border border-slate-200 rounded-xl px-4 py-3"
-/>
-  </div>
+  <input
+    type="text"
+    required
+    placeholder="12:30-3:30"
+    value={newOpportunity.time_commitment}
+    onChange={(e) =>
+      setNewOpportunity({
+        ...newOpportunity,
+        time_commitment: e.target.value,
+      })
+    }
+    className="w-full border border-slate-200 rounded-xl px-4 py-3"
+  />
+
+  <p className="text-xs text-slate-500 mt-1">
+    Enter the time range for this opportunity.
+  </p>
 </div>
-
-                <div>
-       <label className="block text-sm font-semibold text-slate-700 mb-1">
-  Estimated Duration
-</label>
-                  <input
-                    type="text"
-                    value={newOpportunity.time_commitment}
-                    onChange={(e) =>
-                      setNewOpportunity({
-                        ...newOpportunity,
-                        time_commitment: e.target.value,
-                      })
-                    }
-                    className="w-full border border-slate-200 rounded-xl px-4 py-3"
-                    placeholder="2 hours"
-                  />
                 </div>
               </div>
 
