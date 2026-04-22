@@ -386,9 +386,8 @@ const logout = async () => {
   setUser(null);
   toast.success('You have been logged out.');
   window.location.href = '/';
-  }
 };
-  
+
 const updateApplicationStatus = async (
   appId: string,
   status: 'approved' | 'rejected' | 'pending'
@@ -402,7 +401,7 @@ const updateApplicationStatus = async (
         status,
         processed_at: status === 'pending' ? null : now,
       })
-      .eq('id', Number(appId))
+      .eq('id', appId)
       .select('id, status, processed_at')
       .maybeSingle();
 
@@ -421,7 +420,9 @@ const updateApplicationStatus = async (
           ? {
               ...app,
               status: data.status,
-              processedAt: data.processed_at ? new Date(data.processed_at) : undefined,
+              processedAt: data.processed_at
+                ? new Date(data.processed_at)
+                : undefined,
             }
           : app
       )
@@ -431,8 +432,12 @@ const updateApplicationStatus = async (
       prev && prev.role === 'volunteer' && prev.id === String(data.id)
         ? { ...prev, status: data.status }
         : prev
-    )
-  };
+    );
+  } catch (error: any) {
+    console.error('Approve failed:', error);
+    throw error;
+  }
+};
 const createOpportunity = async (newOpp: {
   title: string;
   description: string;
