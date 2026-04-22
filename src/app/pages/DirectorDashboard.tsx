@@ -334,7 +334,7 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
           Richmond Senior Center
         </h1>
         <p className="text-slate-500 mt-1">
-  Manage volunteers, review applications, and oversee opportunities.
+ Manage volunteer applications, approved volunteers, and volunteer opportunities for Richmond Senior Center.
 </p>
 <p className="text-xs text-slate-400 mt-2">
   Last updated: {new Date().toLocaleDateString()}
