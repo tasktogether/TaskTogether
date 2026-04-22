@@ -430,14 +430,9 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-2xl font-bold font-poppins text-slate-800">Volunteer Applications</h1>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Filter size={16} /> Filter
-                </Button>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Download size={16} /> Export
-                </Button>
-              </div>
+              <div className="text-sm text-slate-500">
+  Review and manage volunteer applications.
+</div>
             </div>
 
             <h2 className="text-lg font-bold text-slate-700 mb-4 flex items-center gap-2">
