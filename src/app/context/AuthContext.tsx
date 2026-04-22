@@ -295,25 +295,34 @@ const login = async (
   setAuthLoading(true);
 
   try {
-   if (role === 'director') {
-  const directorEmail = 'tasktogethercontact@gmail.com';
-  const directorPassword = 'TaskTogether123$';
+if (role === 'director') {
+  const { data: authData, error: authError } =
+    await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-  if (email !== directorEmail || password !== directorPassword) {
+  if (authError || !authData.user) {
     setAuthLoading(false);
     return {
       success: false,
       message: 'Wrong director email or password.',
     };
   }
-localStorage.setItem(DIRECTOR_SESSION_KEY, 'true');
 
-setUser({
-  id: 'director-1',
-  name: 'Richmond Senior Center Director',
-  email,
-  role: 'director',
-});
+  setUser({
+    id: authData.user.id,
+    name: 'Richmond Senior Center Director',
+    email: authData.user.email || email,
+    role: 'director',
+  });
+
+  setAuthLoading(false);
+
+  return {
+    success: true,
+  };
+}
 
   setAuthLoading(false);
 
