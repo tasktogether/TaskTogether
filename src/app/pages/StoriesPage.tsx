@@ -37,7 +37,6 @@ function timeAgo(date: Date): string {
 }
 
 function StoryCard({ story, onClick }: { story: Story; onClick: () => void }) {
-  const isExample = story.id.startsWith('example-');
   
   return (
     <motion.article
@@ -62,13 +61,6 @@ function StoryCard({ story, onClick }: { story: Story; onClick: () => void }) {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        {isExample && (
-          <div className="absolute top-3 right-3">
-            <span className="bg-amber-400 text-amber-900 text-xs font-bold px-2 py-1 rounded-full shadow-md">
-              EXAMPLE
-            </span>
-          </div>
-        )}
         <div className="absolute bottom-3 left-4 flex flex-wrap gap-1">
           {story.tags?.slice(0, 2).map(tag => (
             <span
@@ -197,16 +189,21 @@ function StoryModal({ story, onClose }: { story: Story; onClose: () => void }) {
 
 export default function StoriesPage() {
   const { approvedStories } = useStories();
+  const realStories = approvedStories.filter(
+  story => !story.id.startsWith('example-')
+);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
 
   // Gather all unique tags from approved stories
-  const allTags = Array.from(
-    new Set(approvedStories.flatMap(s => s.tags ?? []))
-  );
+const allTags = Array.from(
+  new Set(realStories.flatMap(s => s.tags ?? []))
+);
 
-  const filtered = approvedStories.filter(s => {
+ const filtered = approvedStories
+  .filter(s => !s.id.startsWith('example-'))
+  .filter(s => {
     const matchesSearch =
       !searchQuery ||
       s.taskTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -252,7 +249,7 @@ export default function StoriesPage() {
             className="flex items-center justify-center gap-8 mt-10"
           >
             <div className="text-center">
-              <p className="text-3xl font-bold font-fredoka text-violet-700">{approvedStories.length}</p>
+              <p className="text-3xl font-bold font-fredoka text-violet-700">{realStories.length}</p>
               <p className="text-sm text-slate-500 font-medium">Stories Published</p>
             </div>
             <div className="w-px h-10 bg-slate-200" />
