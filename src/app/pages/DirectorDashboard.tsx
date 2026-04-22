@@ -575,11 +575,9 @@ const handleRemoveVolunteer = async (oppId: string | number, signup: any) => {
             <td className="px-6 py-4 text-slate-500">
               {app.processedAt ? new Date(app.processedAt).toLocaleDateString() : 'N/A'}
             </td>
-            <td className="px-6 py-4 text-right">
-              <button className="text-slate-400 hover:text-violet-600">
-                <Eye size={16} />
-              </button>
-            </td>
+            <td className="px-6 py-4 text-right text-slate-400 text-xs">
+  No actions
+</td>
           </tr>
         ))}
       </tbody>
