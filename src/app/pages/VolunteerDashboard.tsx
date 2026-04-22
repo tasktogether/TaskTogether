@@ -61,13 +61,6 @@ export default function VolunteerDashboard() {
   const [standaloneTaskTitle, setStandaloneTaskTitle] = useState('');
   const [preferredSeniorHomes, setPreferredSeniorHomes] = useState<string[]>(user?.preferredSeniorHomeIds || []);
 
-  // Mock senior homes list (in production, this would come from API)
-  const seniorHomes = [
-    { id: 'sh_richmond', name: 'Richmond Senior Center' },
-    { id: 'sh_fairfax', name: 'Fairfax Community Senior Home' },
-    { id: 'sh_arlington', name: 'Arlington Senior Living' },
-  ];
-
   // Load email preferences when profile modal opens
   useEffect(() => {
     if (isProfileOpen && user?.id) {
