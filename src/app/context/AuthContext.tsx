@@ -290,46 +290,39 @@ fetchOpportunities();
 const login = async (
   email: string,
   password: string,
-  role: UserRole
+  role: 'volunteer' | 'director'
 ) => {
   setAuthLoading(true);
 
   try {
-if (role === 'director') {
-  const { data: authData, error: authError } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    // DIRECTOR LOGIN
+    if (role === 'director') {
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-  if (authError || !authData.user) {
-    setAuthLoading(false);
-    return {
-      success: false,
-      message: 'Wrong director email or password.',
-    };
-  }
+      if (authError || !authData.user) {
+        return {
+          success: false,
+          message: 'Wrong director email or password.',
+        };
+      }
 
-  setUser({
-    id: authData.user.id,
-    name: 'Richmond Senior Center Director',
-    email: authData.user.email || email,
-    role: 'director',
-  });
+      setUser({
+        id: authData.user.id,
+        name: 'Richmond Senior Center Director',
+        email: authData.user.email || email,
+        role: 'director',
+      });
 
-  setAuthLoading(false);
+      return {
+        success: true,
+      };
+    }
 
-  return {
-    success: true,
-  };
-}
-
-  setAuthLoading(false);
-
-  return {
-    success: true,
-  };
-}
+    // VOLUNTEER LOGIN
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -337,65 +330,31 @@ if (role === 'director') {
       });
 
     if (authError || !authData.user) {
-      setAuthLoading(false);
       return {
         success: false,
-        message: 'Wrong email or password.',
-      };
-    }
-
-    const { data, error } = await supabase
-      .from('volunteer_applications')
-      .select('id, full_name, email, status')
-      .eq('email', email)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (error || !data) {
-      await supabase.auth.signOut();
-      setAuthLoading(false);
-
-      return {
-        success: false,
-        message: 'No application found.',
-      };
-    }
-
-    if (data.status !== 'approved') {
-      await supabase.auth.signOut();
-      setAuthLoading(false);
-
-      return {
-        success: false,
-        message: 'Your application is not approved yet.',
+        message: 'Invalid email or password.',
       };
     }
 
     setUser({
-      id: String(data.id),
-      name: data.full_name,
-      email: data.email,
+      id: authData.user.id,
+      name: authData.user.user_metadata?.name || 'Volunteer',
+      email: authData.user.email || email,
       role: 'volunteer',
-      status: data.status,
     });
-
-    toast.success('Welcome! Your application has been approved.');
-
-    setAuthLoading(false);
 
     return {
       success: true,
-      status: data.status,
     };
-  } catch (err) {
-    console.error('Login error:', err);
-    setAuthLoading(false);
+  } catch (error: any) {
+    console.error('Login failed:', error);
 
     return {
       success: false,
-      message: 'Login failed.',
+      message: 'Login failed. Please try again.',
     };
+  } finally {
+    setAuthLoading(false);
   }
 };
   const register = (name: string, email: string) => {
