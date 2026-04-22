@@ -189,6 +189,15 @@ if (!user || user.role !== 'director') {
     toast.error('Volunteer limit must be at least 1.');
     return;
   }
+   const [isEditOpportunityOpen, setIsEditOpportunityOpen] = useState(false);
+const [editingOpportunity, setEditingOpportunity] = useState<any | null>(null);
+const [editOpportunityForm, setEditOpportunityForm] = useState({
+  title: '',
+  description: '',
+  opportunity_date: '',
+  time_commitment: '',
+  volunteer_limit: '1',
+});
 
  const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -235,41 +244,51 @@ await createOpportunity({
     setIsCreatingOpportunity(false);
   }
 };
-const handleEditOpportunity = async (opp: any) => {
-  if (editingOpportunityId === opp.id) return;
+const handleEditOpportunity = (opp: any) => {
+  setEditingOpportunity(opp);
+  setEditOpportunityForm({
+    title: opp.title || '',
+    description: opp.description || '',
+    opportunity_date: opp.opportunity_date || '',
+    time_commitment: opp.time_commitment || '',
+    volunteer_limit: String(opp.volunteer_limit || 1),
+  });
+  setIsEditOpportunityOpen(true);
+};
+  const handleSaveEditedOpportunity = async () => {
+  if (!editingOpportunity) return;
+  if (editingOpportunityId === editingOpportunity.id) return;
 
-  const newTitle = prompt('Enter new title:', opp.title);
-  if (!newTitle || !newTitle.trim()) return;
+  const title = editOpportunityForm.title.trim();
+  const description = editOpportunityForm.description.trim();
+  const date = editOpportunityForm.opportunity_date.trim();
+  const time = editOpportunityForm.time_commitment.trim();
+  const volunteerLimit = Number(editOpportunityForm.volunteer_limit);
 
-  const newDescription = prompt('Enter new description:', opp.description);
-  if (!newDescription || !newDescription.trim()) return;
+  if (!title || !description || !date || !time) {
+    toast.error('Please complete all opportunity fields.');
+    return;
+  }
 
-  const newDate = prompt('Enter new date (YYYY-MM-DD):', opp.opportunity_date);
-  if (!newDate || !newDate.trim()) return;
-
-  const newTimeCommitment = prompt('Enter time:', opp.time_commitment);
-  if (!newTimeCommitment || !newTimeCommitment.trim()) return;
-
-  const newLimit = prompt('Enter volunteer limit:', String(opp.volunteer_limit));
-  const parsedLimit = Number(newLimit);
-
-  if (isNaN(parsedLimit) || parsedLimit < 1) {
+  if (isNaN(volunteerLimit) || volunteerLimit < 1) {
     toast.error('Volunteer limit must be at least 1.');
     return;
   }
 
-  setEditingOpportunityId(opp.id);
+  setEditingOpportunityId(editingOpportunity.id);
 
   try {
-    await updateOpportunity(opp.id, {
-      title: newTitle.trim(),
-      description: newDescription.trim(),
-      opportunity_date: newDate.trim(),
-      time_commitment: newTimeCommitment.trim(),
-      volunteer_limit: parsedLimit,
+    await updateOpportunity(editingOpportunity.id, {
+      title,
+      description,
+      opportunity_date: date,
+      time_commitment: time,
+      volunteer_limit: volunteerLimit,
     });
 
     toast.success('Opportunity updated successfully.');
+    setIsEditOpportunityOpen(false);
+    setEditingOpportunity(null);
   } catch (error: any) {
     console.error('Update opportunity failed:', error);
     toast.error(error?.message || 'Failed to update opportunity.');
@@ -895,7 +914,148 @@ case 'opportunities':
       </main>
 
       {/* CREATE OPPORTUNITY MODAL — GLOBAL */}
-            <AnimatePresence>
+<AnimatePresence>
+  {isEditOpportunityOpen && editingOpportunity && (
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={() => setIsEditOpportunityOpen(false)}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0, y: 10 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 10 }}
+        transition={{ duration: 0.2 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+      >
+        <div className="px-6 py-5 border-b border-slate-100 bg-slate-50">
+          <h2 className="text-xl font-bold text-slate-800">
+            Edit Opportunity
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            Update this volunteer opportunity for Richmond Senior Center.
+          </p>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-1">
+              Opportunity Title
+            </label>
+            <input
+              type="text"
+              required
+              value={editOpportunityForm.title}
+              onChange={(e) =>
+                setEditOpportunityForm({
+                  ...editOpportunityForm,
+                  title: e.target.value,
+                })
+              }
+              className="w-full border border-slate-200 rounded-xl px-4 py-3"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-1">
+              Opportunity Description
+            </label>
+            <textarea
+              required
+              value={editOpportunityForm.description}
+              onChange={(e) =>
+                setEditOpportunityForm({
+                  ...editOpportunityForm,
+                  description: e.target.value,
+                })
+              }
+              className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Date
+              </label>
+              <input
+                type="date"
+                required
+                value={editOpportunityForm.opportunity_date}
+                onChange={(e) =>
+                  setEditOpportunityForm({
+                    ...editOpportunityForm,
+                    opportunity_date: e.target.value,
+                  })
+                }
+                className="w-full border border-slate-200 rounded-xl px-4 py-3"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Time Range
+              </label>
+              <input
+                type="text"
+                required
+                value={editOpportunityForm.time_commitment}
+                onChange={(e) =>
+                  setEditOpportunityForm({
+                    ...editOpportunityForm,
+                    time_commitment: e.target.value,
+                  })
+                }
+                className="w-full border border-slate-200 rounded-xl px-4 py-3"
+              />
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-semibold text-slate-700 mb-1">
+                Number of Volunteer Spots
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="50"
+                required
+                value={editOpportunityForm.volunteer_limit}
+                onChange={(e) =>
+                  setEditOpportunityForm({
+                    ...editOpportunityForm,
+                    volunteer_limit: e.target.value,
+                  })
+                }
+                className="w-full border border-slate-200 rounded-xl px-4 py-3"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
+          <Button
+            variant="ghost"
+            onClick={() => setIsEditOpportunityOpen(false)}
+            disabled={editingOpportunityId === editingOpportunity.id}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            onClick={handleSaveEditedOpportunity}
+            disabled={editingOpportunityId === editingOpportunity.id}
+          >
+            {editingOpportunityId === editingOpportunity.id ? 'Saving...' : 'Save Changes'}
+          </Button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+      <AnimatePresence>
         {isCreateOpportunityOpen && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
