@@ -190,18 +190,21 @@ if (!user || user.role !== 'director') {
     return;
   }
 
-  const selectedDateTime = new Date(`${date}T${time}`);
-  const now = new Date();
+ const today = new Date();
+today.setHours(0, 0, 0, 0);
 
-  if (isNaN(selectedDateTime.getTime())) {
-    toast.error('Please enter a valid date and time.');
-    return;
-  }
+const selectedDate = new Date(date);
+selectedDate.setHours(0, 0, 0, 0);
 
-  if (selectedDateTime < now) {
-    toast.error('Opportunity date and time must be in the future.');
-    return;
-  }
+if (isNaN(selectedDate.getTime())) {
+  toast.error('Please enter a valid date.');
+  return;
+}
+
+if (selectedDate < today) {
+  toast.error('Opportunity date must be today or in the future.');
+  return;
+}
 
   setIsCreatingOpportunity(true);
 
