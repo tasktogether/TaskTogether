@@ -289,42 +289,54 @@ if (savedDirectorSession) {
 fetchOpportunities();
 
   const {
-    data: { subscription },
-  } = supabase.auth.onAuthStateChange(async (_event, session) => {
-    if (session?.user) {
-      const email = session.user.email || '';
+  data: { subscription },
+} = supabase.auth.onAuthStateChange(async (_event, session) => {
+  const savedDirectorSession = localStorage.getItem(DIRECTOR_SESSION_KEY);
 
-      const { data } = await supabase
-        .from('volunteer_applications')
-        .select('id, full_name, email, status')
-        .eq('email', email)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      if (data) {
-        setUser({
-          id: String(data.id),
-          name: data.full_name,
-          email: data.email,
-          role: 'volunteer',
-          status: data.status,
-        });
-      } else {
-        setUser({
-          id: session.user.id,
-          name: session.user.user_metadata?.name || 'Volunteer',
-          email,
-          role: 'volunteer',
-        });
-      }
-    } else {
-      setUser(null);
-    }
-
+  if (savedDirectorSession && !session?.user) {
+    setUser({
+      id: 'director-1',
+      name: 'Richmond Senior Center Director',
+      email: 'tasktogethercontact@gmail.com',
+      role: 'director',
+    });
     setAuthLoading(false);
-  });
+    return;
+  }
 
+  if (session?.user) {
+    const email = session.user.email || '';
+
+    const { data } = await supabase
+      .from('volunteer_applications')
+      .select('id, full_name, email, status')
+      .eq('email', email)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (data) {
+      setUser({
+        id: String(data.id),
+        name: data.full_name,
+        email: data.email,
+        role: 'volunteer',
+        status: data.status,
+      });
+    } else {
+      setUser({
+        id: session.user.id,
+        name: session.user.user_metadata?.name || 'Volunteer',
+        email,
+        role: 'volunteer',
+      });
+    }
+  } else {
+    setUser(null);
+  }
+
+  setAuthLoading(false);
+});
   return () => {
     mounted = false;
     subscription.unsubscribe();
