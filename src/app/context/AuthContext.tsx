@@ -420,7 +420,6 @@ const login = async (
     fetchOpportunities();
   };
 const logout = async () => {
-  localStorage.removeItem(DIRECTOR_SESSION_KEY);
   await supabase.auth.signOut();
   setUser(null);
   toast.success('You have been logged out.');
@@ -428,53 +427,25 @@ const logout = async () => {
 
 const updateApplicationStatus = async (
   appId: string,
-  status: 'approved' | 'rejected' | 'pending'
+  status: ApplicationStatus
 ) => {
-  try {
-    const now = new Date().toISOString();
+  const processedAt =
+    status === 'pending' ? null : new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from('volunteer_applications')
-      .update({
-        status,
-        processed_at: status === 'pending' ? null : now,
-      })
-      .eq('id', appId)
-      .select('id, status, processed_at')
-      .maybeSingle();
+  const { error } = await supabase
+    .from('volunteer_applications')
+    .update({
+      status,
+      processed_at: processedAt,
+    })
+    .eq('id', appId);
 
-    if (error) {
-      console.error('Error updating application status:', error);
-      throw error;
-    }
-
-    if (!data) {
-      throw new Error('No application was updated.');
-    }
-
-    setApplications(prev =>
-      prev.map(app =>
-        app.id === String(data.id)
-          ? {
-              ...app,
-              status: data.status,
-              processedAt: data.processed_at
-                ? new Date(data.processed_at)
-                : undefined,
-            }
-          : app
-      )
-    );
-
-    setUser(prev =>
-      prev && prev.role === 'volunteer' && prev.id === String(data.id)
-        ? { ...prev, status: data.status }
-        : prev
-    );
-  } catch (error: any) {
-    console.error('Approve failed:', error);
+  if (error) {
+    console.error('Error updating application status:', error);
     throw error;
   }
+
+  await fetchApplications();
 };
 const createOpportunity = async (newOpp: {
   title: string;
