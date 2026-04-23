@@ -22,18 +22,39 @@ const handleSubmit = async (e: React.FormEvent) => {
   }
 
   setIsLoading(true);
-  await supabase.auth.signOut();
-const result = await login(form.email, form.password, 'volunteer');
-console.log('LOGIN RESULT:', result);
 
-setIsLoading(false);
+  try {
+    await supabase.auth.signOut();
 
-if (result.success !== true || result.status !== 'approved') {
-  setError(result.message || 'Wrong email or password.');
-  return;
-}
+    const result = await login(
+      form.email,
+      form.password,
+      'volunteer'
+    );
 
-navigate('/volunteer-dashboard');
+    console.log('LOGIN RESULT:', result);
+
+    if (!result.success) {
+      setError(result.message || 'Wrong email or password.');
+      return;
+    }
+
+    if (result.status !== 'approved') {
+      setError(
+        result.message || 'Your application is not approved yet.'
+      );
+      return;
+    }
+
+    navigate('/volunteer-dashboard');
+
+  } catch (error) {
+    console.error('Login error:', error);
+    setError('Login failed. Please try again.');
+
+  } finally {
+    setIsLoading(false);
+  }
 };
   return (
     <div style={{
