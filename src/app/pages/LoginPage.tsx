@@ -191,11 +191,6 @@ const handleSubmit = async (e: React.FormEvent) => {
             padding: '14px 16px', border: '1px solid #E9D5FF'
           }}>
             <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '12px', color: '#6D28D9', fontWeight: 600, marginBottom: '6px' }}>
-              🎯 Demo — Try these approved accounts:
-            </p>
-            <p style={{ fontFamily: "'Poppins', sans-serif", fontSize: '12px', color: '#64748b' }}>
-              Email: <strong>liam@example.com</strong> or <strong>olivia@example.com</strong><br />
-              Password: <strong>Password123</strong>
             </p>
           </div>
 
