@@ -909,13 +909,6 @@ case 'opportunities':
           >
             <FileText size={18} /> Applications
           </Button>
-         
-          <Button
-  variant="ghost"
-  onClick={() => navigate(-1)}
->
-  Back
-</Button>
 
           <Button
             variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
