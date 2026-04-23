@@ -24,14 +24,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   setIsLoading(true);
 
   try {
-    await supabase.auth.signOut();
-
-    const result = await login(
-      form.email,
-      form.password,
-      'volunteer'
-    );
-
+    const result = await login(form.email, form.password, 'volunteer');
     console.log('LOGIN RESULT:', result);
 
     if (!result.success) {
@@ -40,18 +33,14 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
 
     if (result.status !== 'approved') {
-      setError(
-        result.message || 'Your application is not approved yet.'
-      );
+      setError(result.message || 'Your application is not approved yet.');
       return;
     }
 
     navigate('/volunteer-dashboard');
-
   } catch (error) {
     console.error('Login error:', error);
     setError('Login failed. Please try again.');
-
   } finally {
     setIsLoading(false);
   }
