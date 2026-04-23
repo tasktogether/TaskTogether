@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import {
   Users,
   FileText,
@@ -38,6 +38,7 @@ export default function AdminDashboard() {
     const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
 const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
 const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
+const navigate = useNavigate();
 const [isCreatingOpportunity, setIsCreatingOpportunity] = useState(false);
 const [volunteerSearch, setVolunteerSearch] = useState('');
 const [selectedVolunteer, setSelectedVolunteer] = useState<any | null>(null);
@@ -908,6 +909,13 @@ case 'opportunities':
           >
             <FileText size={18} /> Applications
           </Button>
+         
+          <Button
+  variant="ghost"
+  onClick={() => navigate(-1)}
+>
+  Back
+</Button>
 
           <Button
             variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
@@ -929,14 +937,17 @@ case 'opportunities':
         </div>
 
         <div className="p-4 border-t border-slate-100">
-          <Button
-            variant="ghost"
-            fullWidth
-            className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
-            onClick={logout}
-          >
-            <LogOut size={18} /> Sign Out
-          </Button>
+         <Button
+  variant="ghost"
+  fullWidth
+  className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
+  onClick={async () => {
+    await logout();
+    navigate('/');
+  }}
+>
+  <LogOut size={18} /> Sign Out
+</Button>
         </div>
       </aside>
 
