@@ -90,6 +90,7 @@ removeVolunteerFromOpportunity: (
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const DIRECTOR_SESSION_KEY = 'tasktogether_director_session';
+const DIRECTOR_EMAIL = 'tasktogethercontact@gmail.com';
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -178,7 +179,18 @@ if (savedDirectorSession) {
   return;
 }
     if (session?.user) {
-      const email = session.user.email || '';
+  const email = session.user.email || '';
+
+  if (email === DIRECTOR_EMAIL) {
+    setUser({
+      id: session.user.id,
+      name: 'Richmond Senior Center Director',
+      email,
+      role: 'director',
+    });
+    setAuthLoading(false);
+    return;
+  }
 const { data, error } = await supabase
   .from('volunteer_applications')
   .update({
@@ -247,9 +259,19 @@ fetchOpportunities();
     setAuthLoading(false);
     return;
   }
+if (session?.user) {
+  const email = session.user.email || '';
 
-  if (session?.user) {
-    const email = session.user.email || '';
+  if (email === DIRECTOR_EMAIL) {
+    setUser({
+      id: session.user.id,
+      name: 'Richmond Senior Center Director',
+      email,
+      role: 'director',
+    });
+    setAuthLoading(false);
+    return;
+  }
 
     const { data } = await supabase
       .from('volunteer_applications')
