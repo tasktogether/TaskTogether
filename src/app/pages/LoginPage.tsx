@@ -25,7 +25,6 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const result = await login(form.email, form.password, 'volunteer');
-    console.log('LOGIN RESULT:', result);
 
     if (!result.success) {
       setError(result.message || 'Wrong email or password.');
