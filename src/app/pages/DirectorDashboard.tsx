@@ -1074,18 +1074,18 @@ const statusClasses =
       ? 'Opted into 1-on-1 volunteering'
       : 'Not opted into 1-on-1 volunteering'}
   </p>
-
-  {selectedVolunteer.one_on_one_opt_in &&
-    !selectedVolunteer.background_check_completed && (
-      <button
-        type="button"
-        onClick={() => {
-          window.open('https://www.sterlingvolunteers.com/', '_blank');
-        }}
-        className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Open Sterling Background Check
-      </button>
+{selectedVolunteer.one_on_one_opt_in &&
+  !selectedVolunteer.background_check_completed ? (
+    <button
+      type="button"
+      onClick={() => {
+        window.open('https://www.sterlingvolunteers.com/', '_blank');
+      }}
+      className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+    >
+      Open Sterling Background Check
+    </button>
+  ) : null}
     )}
 
   <p
