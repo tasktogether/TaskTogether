@@ -796,13 +796,16 @@ case 'opportunities':
   opp.volunteer_limit,
   opp.adult_volunteers || 0
 );
-
-              const statusClasses =
-                status === 'Past'
-                  ? 'bg-slate-100 text-slate-600'
-                  : status === 'Full'
-                  ? 'bg-blue-100 text-blue-700'
-                  : 'bg-green-100 text-green-700';
+  const statusClasses =
+  status === 'Ready / Active'
+    ? 'bg-green-100 text-green-700'
+    : status === 'Needs Adult Volunteer'
+    ? 'bg-yellow-100 text-yellow-800'
+    : status === 'Full'
+    ? 'bg-red-100 text-red-700'
+    : status === 'Past'
+    ? 'bg-slate-200 text-slate-600'
+    : 'bg-gray-100 text-gray-700'; // Not Ready
 
               return (
                 <Card key={opp.id} className="relative overflow-hidden group">
