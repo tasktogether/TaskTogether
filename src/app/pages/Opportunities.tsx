@@ -313,7 +313,7 @@ const isAlreadySignedUp = (opp: any) => {
                     <Clock size={18} /> {selectedOpp.time_commitment}
                   </div>
                   <div className="bg-pink-50 text-pink-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <MapPin size={18} /> {selectedOpp.location}
+                    <MapPin size={18} /> {getSafeLocation(selectedOpp)}
                   </div>
                   <div className="bg-orange-50 text-orange-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                     <Calendar size={18} /> {formatDate(selectedOpp.opportunity_date)}
