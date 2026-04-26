@@ -796,10 +796,12 @@ const status = getOpportunityStatus(
     : 'bg-gray-100 text-gray-700'; // Not Ready
 
               return (
-                <Card
+<Card
   key={opp.id}
   className={`relative overflow-hidden group ${
-    (opp.current_volunteers || 0) === 1
+    opp.status === 'Needs Adult Volunteer'
+      ? 'border-2 border-red-300'
+      : (opp.current_volunteers || 0) === 1
       ? 'border-2 border-yellow-300'
       : ''
   }`}
