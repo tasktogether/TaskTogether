@@ -601,6 +601,27 @@ const signUpForOpportunity = async (
   ) {
     toast.error('This opportunity is already full.');
     return;
+    // SAFETY: prevent overfilling
+if ((opportunity.current_volunteers || 0) >= opportunity.volunteer_limit) {
+  toast.error("This opportunity is already full.");
+  return;
+}
+    // SAFETY: minors cannot volunteer alone
+if (!volunteer.is_adult && (opportunity.current_volunteers || 0) === 0) {
+  toast.error("Volunteers under 18 must be accompanied by an adult volunteer.");
+  return;
+}
+    // SAFETY: 1-on-1 requires approval + adult opt-in
+if (
+  opportunity.allow_one_on_one &&
+  volunteer.is_adult &&
+  !volunteer.one_on_one_opt_in
+) {
+  toast.error(
+    "You must opt into 1-on-1 volunteering before signing up for this opportunity."
+  );
+  return;
+}
   }
 
   const { data: existingSignup, error: existingSignupError } =
