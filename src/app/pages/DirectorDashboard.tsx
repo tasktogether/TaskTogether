@@ -1080,6 +1080,30 @@ const status = getOpportunityStatus(
     ? 'Mark Background Check Pending'
     : 'Mark Background Check Complete'}
 </button>
+                <span
+  style={{
+    marginLeft: '8px',
+    padding: '4px 8px',
+    borderRadius: '8px',
+    fontSize: '12px',
+    fontWeight: 600,
+    background:
+      selectedVolunteer.one_on_one_opt_in &&
+      selectedVolunteer.background_check_completed
+        ? '#DCFCE7'
+        : '#F1F5F9',
+    color:
+      selectedVolunteer.one_on_one_opt_in &&
+      selectedVolunteer.background_check_completed
+        ? '#166534'
+        : '#475569',
+  }}
+>
+  {selectedVolunteer.one_on_one_opt_in &&
+  selectedVolunteer.background_check_completed
+    ? '1-on-1 Approved'
+    : '1-on-1 Not Approved'}
+</span>
               </p>
             </div>
           </div>
