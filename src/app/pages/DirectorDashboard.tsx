@@ -904,28 +904,28 @@ const statusClasses =
 {opp.signups && opp.signups.length > 0 ? (
   <div className="space-y-1">
     {opp.signups.map((signup: any, index: number) => (
-      <div
-        key={index}
-        className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
-      >
-        <span>
-          {signup.volunteer_name}
-          <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
-            {signup.is_adult ? 'Adult' : 'Minor'}
-          </span>
-        </span>
-
-        <button>
-  type="button"
-  className="text-red-500 hover:underline ml-2 disabled:text-slate-400 disabled:no-underline"
-  onClick={() => handleRemoveVolunteer(opp.id, signup)}
-  disabled={removingSignupKey === `${opp.id}-${signup.volunteer_email}`}
+<div
+  key={index}
+  className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
 >
-  {removingSignupKey === `${opp.id}-${signup.volunteer_email}`
-    ? 'Removing...'
-    : 'Remove'}
-</button>
-                            </div>
+  <span>
+    {signup.volunteer_name}
+    <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+      {signup.is_adult ? 'Adult' : 'Minor'}
+    </span>
+  </span>
+
+  <button
+    type="button"
+    className="text-red-500 hover:underline ml-2 disabled:text-slate-400 disabled:no-underline"
+    onClick={() => handleRemoveVolunteer(opp.id, signup)}
+    disabled={removingSignupKey === `${opp.id}-${signup.volunteer_email}`}
+  >
+    {removingSignupKey === `${opp.id}-${signup.volunteer_email}`
+      ? 'Removing...'
+      : 'Remove'}
+  </button>
+</div>
                           ))}
                         </div>
                       ) : (
