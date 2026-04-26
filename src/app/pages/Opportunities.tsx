@@ -64,7 +64,11 @@ const isAlreadySignedUp = (opp: any) => {
     return opp.full_address || opp.location || 'Address will be provided soon';
   }
 
-  return opp.zip_code ? `ZIP Code: ${opp.zip_code}` : 'ZIP Code coming soon';
+  if (opp.zip_code) {
+    return `ZIP Code: ${opp.zip_code} — Full address will be available after you sign up`;
+  }
+
+  return 'Full address will be available after you sign up';
 };
 
   const formatDate = (dateString: string) => {
