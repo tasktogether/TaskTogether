@@ -1050,7 +1050,7 @@ const statusClasses =
               {selectedVolunteer.userName?.charAt(0) || 'V'}
             </div>
 
- <div>
+<div>
   <h3 className="text-xl font-bold text-slate-800">
     {selectedVolunteer.userName}
   </h3>
@@ -1094,7 +1094,6 @@ const statusClasses =
     </p>
   </div>
 </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
               <p className="text-xs uppercase font-bold text-slate-400">
