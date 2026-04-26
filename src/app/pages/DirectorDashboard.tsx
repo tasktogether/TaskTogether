@@ -92,7 +92,7 @@ const getOpportunityStatus = (
 
   return 'Not Ready';
 };
-const isRecentlyCreated = (dateString: string) => {f
+const isRecentlyCreated = (dateString: string) => {
   const createdDate = new Date(dateString);
   const today = new Date();
 
@@ -211,15 +211,6 @@ if (!user || user.role !== 'director') {
     toast.error('Volunteer limit must be at least 1.');
     return;
   }
-   const [isEditOpportunityOpen, setIsEditOpportunityOpen] = useState(false);
-const [editingOpportunity, setEditingOpportunity] = useState<any | null>(null);
-const [editOpportunityForm, setEditOpportunityForm] = useState({
-  title: '',
-  description: '',
-  opportunity_date: '',
-  time_commitment: '',
-  volunteer_limit: '1',
-});
 
  const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -1059,50 +1050,50 @@ const statusClasses =
               {selectedVolunteer.userName?.charAt(0) || 'V'}
             </div>
 
-            <div>
-              <h3 className="text-xl font-bold text-slate-800">
-                {selectedVolunteer.userName}
-              </h3>
-              <p className="text-sm text-slate-500">
-                {selectedVolunteer.userEmail}
-                <h3 className="text-xl font-bold text-slate-800">
-  {selectedVolunteer.userName}
-</h3>
-<div className="mt-1 space-y-2">
-  <p className="text-xs font-semibold">
-    {selectedVolunteer.one_on_one_opt_in
-      ? 'Opted into 1-on-1 volunteering'
-      : 'Not opted into 1-on-1 volunteering'}
-  </p>
-{selectedVolunteer.one_on_one_opt_in &&
-  !selectedVolunteer.background_check_completed ? (
-    <button
-      type="button"
-      onClick={() => {
-        window.open('https://www.sterlingvolunteers.com/', '_blank');
-      }}
-      className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
-    >
-      Open Sterling Background Check
-    </button>
-  ) : null}
-    )}
+ <div>
+  <h3 className="text-xl font-bold text-slate-800">
+    {selectedVolunteer.userName}
+  </h3>
 
-  <p
-    className={`text-xs font-semibold ${
-      selectedVolunteer.one_on_one_opt_in &&
-      selectedVolunteer.background_check_completed
-        ? 'text-green-700'
-        : 'text-slate-500'
-    }`}
-  >
-    {selectedVolunteer.one_on_one_opt_in &&
-    selectedVolunteer.background_check_completed
-      ? '1-on-1 Approved'
-      : '1-on-1 Not Approved'}
+  <p className="text-sm text-slate-500">
+    {selectedVolunteer.userEmail}
   </p>
+
+  <div className="mt-1 space-y-2">
+    <p className="text-xs font-semibold">
+      {selectedVolunteer.one_on_one_opt_in
+        ? 'Opted into 1-on-1 volunteering'
+        : 'Not opted into 1-on-1 volunteering'}
+    </p>
+
+    {selectedVolunteer.one_on_one_opt_in &&
+    !selectedVolunteer.background_check_completed ? (
+      <button
+        type="button"
+        onClick={() => {
+          window.open('https://www.sterlingvolunteers.com/', '_blank');
+        }}
+        className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Open Sterling Background Check
+      </button>
+    ) : null}
+
+    <p
+      className={`text-xs font-semibold ${
+        selectedVolunteer.one_on_one_opt_in &&
+        selectedVolunteer.background_check_completed
+          ? 'text-green-700'
+          : 'text-slate-500'
+      }`}
+    >
+      {selectedVolunteer.one_on_one_opt_in &&
+      selectedVolunteer.background_check_completed
+        ? '1-on-1 Approved'
+        : '1-on-1 Not Approved'}
+    </p>
+  </div>
 </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
