@@ -1041,21 +1041,34 @@ const status = getOpportunityStatus(
     ? 'Background Check Complete'
     : 'Background Check Pending'}
 </span>
-            <button
+<button
   onClick={async () => {
+    const newValue =
+      !selectedVolunteer.background_check_completed;
+
     await supabase
       .from('volunteer_applications')
-      .update({ background_check_completed: true })
+      .update({
+        background_check_completed: newValue,
+      })
       .eq('id', selectedVolunteer.userId);
 
-    alert('Background check marked complete.');
+    alert(
+      newValue
+        ? 'Background check marked complete.'
+        : 'Background check marked pending.'
+    );
+
     window.location.reload();
   }}
   style={{
     marginTop: '10px',
     padding: '8px 12px',
     borderRadius: '10px',
-    background: '#2563EB',
+    background:
+      selectedVolunteer.background_check_completed
+        ? '#F59E0B'
+        : '#2563EB',
     color: 'white',
     border: 'none',
     fontSize: '13px',
@@ -1063,7 +1076,9 @@ const status = getOpportunityStatus(
     cursor: 'pointer',
   }}
 >
-  Mark Background Check Complete
+  {selectedVolunteer.background_check_completed
+    ? 'Mark Background Check Pending'
+    : 'Mark Background Check Complete'}
 </button>
               </p>
             </div>
