@@ -1140,9 +1140,8 @@ const statusClasses =
     </motion.div>
   )}
 </AnimatePresence>
-
 <AnimatePresence>
-  (isEditOpportunityOpen && editingOpportunity && (
+  {isEditOpportunityOpen && editingOpportunity && (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
       initial={{ opacity: 0 }}
@@ -1280,10 +1279,10 @@ const statusClasses =
         </div>
       </motion.div>
     </motion.div>
-  ))
-<AnimatePresence>
+  )}
+</AnimatePresence>
 
-      <AnimatePresence>
+<AnimatePresence>
         {isCreateOpportunityOpen && (
           <motion.div
             className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4"
