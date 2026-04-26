@@ -1068,143 +1068,40 @@ const statusClasses =
                 <h3 className="text-xl font-bold text-slate-800">
   {selectedVolunteer.userName}
 </h3>
+<div className="mt-1 space-y-2">
+  <p className="text-xs font-semibold">
+    {selectedVolunteer.one_on_one_opt_in
+      ? 'Opted into 1-on-1 volunteering'
+      : 'Not opted into 1-on-1 volunteering'}
+  </p>
 
-<p className="text-xs mt-1 font-semibold">
-  {selectedVolunteer.one_on_one_opt_in
-    ? 'Opted into 1-on-1 volunteering'
-    : 'Not opted into 1-on-1 volunteering'}
-  {selectedVolunteer.one_on_one_opt_in && !selectedVolunteer.background_check_completed && (
-  <button
-    onClick={() => {
-      window.open('https://www.sterlingvolunteers.com/', '_blank');
-    }}
-    className="mt-2 text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+  {selectedVolunteer.one_on_one_opt_in &&
+    !selectedVolunteer.background_check_completed && (
+      <button
+        type="button"
+        onClick={() => {
+          window.open('https://www.sterlingvolunteers.com/', '_blank');
+        }}
+        className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Open Sterling Background Check
+      </button>
+    )}
+
+  <p
+    className={`text-xs font-semibold ${
+      selectedVolunteer.one_on_one_opt_in &&
+      selectedVolunteer.background_check_completed
+        ? 'text-green-700'
+        : 'text-slate-500'
+    }`}
   >
-    Open Sterling Background Check
- </button>
-
-<p
-  className={`text-xs mt-2 font-semibold ${
-    selectedVolunteer.one_on_one_opt_in &&
+    {selectedVolunteer.one_on_one_opt_in &&
     selectedVolunteer.background_check_completed
-      ? 'text-green-700'
-      : 'text-slate-500'
-  }`}
->
-  {selectedVolunteer.one_on_one_opt_in &&
-  selectedVolunteer.background_check_completed
-    ? '1-on-1 Approved'
-    : '1-on-1 Not Approved'}
-</p>
-)}
-</p>
-
-<span
-  style={{
-    marginTop: '6px',
-    display: 'inline-block',
-    padding: '4px 8px',
-    borderRadius: '8px',
-    fontSize: '12px',
-    fontWeight: 600,
-    background: selectedVolunteer.background_check_completed
-      ? '#DCFCE7'
-      : '#FEF3C7',
-    color: selectedVolunteer.background_check_completed
-      ? '#166534'
-      : '#92400E',
-  }}
->
-  {selectedVolunteer.background_check_completed
-    ? 'Background Check Complete'
-    : 'Background Check Pending'}
-</span>
-<button
-  onClick={async () => {
-    const newValue =
-      !selectedVolunteer.background_check_completed;
-
-    await supabase
-      .from('volunteer_applications')
-      .update({
-        background_check_completed: newValue,
-      })
-      .eq('id', selectedVolunteer.userId);
-
-    alert(
-      newValue
-        ? 'Background check marked complete.'
-        : 'Background check marked pending.'
-    );
-
-    window.location.reload();
-  }}
-  style={{
-    marginTop: '10px',
-    padding: '8px 12px',
-    borderRadius: '10px',
-    background:
-      selectedVolunteer.background_check_completed
-        ? '#F59E0B'
-        : '#2563EB',
-    color: 'white',
-    border: 'none',
-    fontSize: '13px',
-    fontWeight: 600,
-    cursor: 'pointer',
-  }}
->
-  {selectedVolunteer.background_check_completed
-    ? 'Mark Background Check Pending'
-    : 'Mark Background Check Complete'}
-  <button
-  onClick={() => {
-    window.open(
-      'https://sterlingvolunteers.com/',
-      '_blank'
-    );
-  }}
-  style={{
-    marginTop: '8px',
-    padding: '8px 12px',
-    borderRadius: '10px',
-    background: '#2563EB',
-    color: 'white',
-    border: 'none',
-    fontSize: '13px',
-    fontWeight: 600,
-    cursor: 'pointer',
-  }}
->
-  Send Background Check Link
-</button>
-</button>
-                <span
-  style={{
-    marginLeft: '8px',
-    padding: '4px 8px',
-    borderRadius: '8px',
-    fontSize: '12px',
-    fontWeight: 600,
-    background:
-      selectedVolunteer.one_on_one_opt_in &&
-      selectedVolunteer.background_check_completed
-        ? '#DCFCE7'
-        : '#F1F5F9',
-    color:
-      selectedVolunteer.one_on_one_opt_in &&
-      selectedVolunteer.background_check_completed
-        ? '#166534'
-        : '#475569',
-  }}
->
-  {selectedVolunteer.one_on_one_opt_in &&
-  selectedVolunteer.background_check_completed
-    ? '1-on-1 Approved'
-    : '1-on-1 Not Approved'}
-</span>
-              </p>
-            </div>
+      ? '1-on-1 Approved'
+      : '1-on-1 Not Approved'}
+  </p>
+</div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
