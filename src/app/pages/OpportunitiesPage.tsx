@@ -28,14 +28,30 @@ export default function OpportunitiesPage() {
     return matchSearch && matchCat;
   });
 
-  const handleApply = (opportunityId: string) => {
-    if (!currentVolunteer) {
-      navigate('/login');
-      return;
-    }
-    applyForOpportunity(currentVolunteer.id, opportunityId);
-    setAppliedIds(prev => new Set([...prev, opportunityId]));
-  };
+const handleApply = (opportunityId: string) => {
+  if (!currentVolunteer) {
+    navigate('/login');
+    return;
+  }
+
+  const opportunity = opportunities.find(o => o.id === opportunityId);
+
+  if (!opportunity) return;
+
+  const isMinor = !currentVolunteer.is_adult;
+
+  // SAFETY: minor cannot be first volunteer
+  if (isMinor && opportunity.currentVolunteers === 0) {
+    alert(
+      "Volunteers under 18 must be accompanied by an adult volunteer."
+    );
+    return;
+  }
+
+  applyForOpportunity(currentVolunteer.id, opportunityId);
+
+  setAppliedIds(prev => new Set([...prev, opportunityId]));
+};
 
   const isApplied = (opportunityId: string) =>
     appliedIds.has(opportunityId) ||
