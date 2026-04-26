@@ -827,6 +827,17 @@ const statusClasses =
                       >
                         {status}
                       </span>
+                      {status === 'Not Ready' && (
+  <p className="text-xs text-slate-500 mt-1">
+    Needs at least 2 volunteers.
+  </p>
+)}
+
+{status === 'Needs Adult Volunteer' && (
+  <p className="text-xs text-red-600 mt-1 font-semibold">
+    Adult volunteer required for safety.
+  </p>
+)}
 
                       <div className="flex gap-1">
                         <Button
