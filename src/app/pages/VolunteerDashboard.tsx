@@ -279,7 +279,15 @@ setMyTasks(myTasks.map(t =>
               Hi, {user?.name}! 👋
             </h1>
             <p className="text-violet-100 text-lg md:text-xl font-medium">Ready to make someone's day awesome?</p>
+<div className="mt-4 bg-white/90 text-slate-700 rounded-2xl p-4 text-sm border border-white shadow-sm">
+  <p className="font-semibold mb-1">Volunteer Safety Rules</p>
 
+  <p>• Opportunities require at least <strong>2 volunteers</strong> to run.</p>
+
+  <p>• Volunteers under <strong>18</strong> must be accompanied by an adult volunteer.</p>
+
+  <p>• Some opportunities may allow approved <strong>1-on-1 volunteering</strong>.</p>
+</div>
             <div className="flex gap-3 mt-6">
               <Button
                 onClick={() => window.location.href = '/opportunities'}
