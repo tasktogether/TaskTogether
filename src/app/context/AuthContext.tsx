@@ -155,11 +155,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       const signupsWithSafety = await Promise.all(
         signups.map(async (signup: any) => {
-          const { data: volunteer } = await supabase
-            .from('volunteer_applications')
-            .select('is_adult, one_on_one_opt_in, background_check_completed')
-            .eq('email', signup.volunteer_email)
-            .maybeSingle();
 
           return {
             ...signup,
