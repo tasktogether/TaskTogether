@@ -1069,8 +1069,10 @@ const statusClasses =
   {selectedVolunteer.userName}
 </h3>
 
-<p className="text-sm text-slate-500">
-  {selectedVolunteer.userEmail}
+<p className="text-xs mt-1 font-semibold">
+  {selectedVolunteer.one_on_one_opt_in
+    ? 'Opted into 1-on-1 volunteering'
+    : 'Not opted into 1-on-1 volunteering'}
 </p>
 
 <span
