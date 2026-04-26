@@ -625,11 +625,6 @@ const signUpForOpportunity = async (
     return;
   }
 
-  if ((selectedOpportunity.current_volunteers || 0) >= selectedOpportunity.volunteer_limit) {
-    toast.error('This opportunity is already full.');
-    return;
-  }
-
   const { data: volunteer, error: volunteerError } = await supabase
     .from('volunteer_applications')
     .select('is_adult, one_on_one_opt_in, background_check_completed')
@@ -638,20 +633,6 @@ const signUpForOpportunity = async (
 
   if (volunteerError || !volunteer) {
     toast.error('Could not verify volunteer safety status.');
-    return;
-  }
-
-  if (!volunteer.is_adult && (selectedOpportunity.current_volunteers || 0) === 0) {
-    toast.error('Volunteers under 18 must be accompanied by an adult volunteer.');
-    return;
-  }
-
-  if (
-    volunteer.is_adult &&
-    (selectedOpportunity.current_volunteers || 0) === 0 &&
-    (!volunteer.one_on_one_opt_in || !volunteer.background_check_completed)
-  ) {
-    toast.error('You must opt into 1-on-1 volunteering and complete a background check before volunteering alone.');
     return;
   }
 
