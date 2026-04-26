@@ -849,6 +849,17 @@ const status = getOpportunityStatus(
                     <div className="flex items-center gap-2 text-sm text-slate-600">
                       <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
                     </div>
+                    {status === 'Not Ready' && (
+  <p className="mt-2 text-xs text-slate-500">
+    Needs at least 2 volunteers before this opportunity is ready.
+  </p>
+)}
+
+{status === 'Needs Adult Volunteer' && (
+  <p className="mt-2 text-xs text-yellow-700 bg-yellow-50 border border-yellow-100 rounded-lg p-2">
+    Needs at least one adult volunteer before this opportunity is ready.
+  </p>
+)}
 
                     <div className="mt-3">
                       <p className="text-xs font-semibold text-slate-500 mb-1">
