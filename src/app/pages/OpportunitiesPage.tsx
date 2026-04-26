@@ -181,6 +181,12 @@ if (
               const colors = CATEGORY_COLORS[opp.category] || { bg: '#F3E8FF', text: '#6D28D9', border: '#E9D5FF' };
               const full = isFull(opp);
             const isPast = new Date(opp.date) < new Date();
+            const needsAdult =
+  opp.currentVolunteers > 0 &&
+  opp.adultVolunteers === 0;
+
+const isOneOnOneOpportunity =
+  opp.allowOneOnOne === true;
               const applied = isApplied(opp.id);
               const spotsLeft = opp.volunteerLimit - opp.currentVolunteers;
 
@@ -242,7 +248,41 @@ if (
                       </span>
                     </div>
                   </div>
+{needsAdult && (
+  <div
+    style={{
+      background: '#FEF3C7',
+      border: '1px solid #FDE68A',
+      borderRadius: '10px',
+      padding: '8px 12px',
+      fontSize: '13px',
+      color: '#92400E',
+      marginBottom: '14px',
+      fontFamily: "'Poppins', sans-serif",
+      fontWeight: 500,
+    }}
+  >
+    An adult volunteer is needed for this opportunity.
+  </div>
+)}
 
+{isOneOnOneOpportunity && (
+  <div
+    style={{
+      background: '#E0F2FE',
+      border: '1px solid #BAE6FD',
+      borderRadius: '10px',
+      padding: '8px 12px',
+      fontSize: '13px',
+      color: '#075985',
+      marginBottom: '14px',
+      fontFamily: "'Poppins', sans-serif",
+      fontWeight: 500,
+    }}
+  >
+    This opportunity may allow approved 1-on-1 volunteering.
+  </div>
+)}
                   {/* Progress bar */}
                   <div style={{ background: '#F1F5F9', borderRadius: '6px', height: '6px', marginBottom: '20px' }}>
                     <div style={{
