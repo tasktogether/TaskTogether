@@ -59,6 +59,13 @@ const isAlreadySignedUp = (opp: any) => {
     (signup: any) => signup.volunteer_email === user.email
   );
 };
+  const getSafeLocation = (opp: any) => {
+  if (isAlreadySignedUp(opp)) {
+    return opp.full_address || opp.location || 'Address will be provided soon';
+  }
+
+  return opp.zip_code ? `ZIP Code: ${opp.zip_code}` : 'ZIP Code coming soon';
+};
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -234,7 +241,7 @@ const isAlreadySignedUp = (opp: any) => {
                       </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <MapPin size={14} className="text-pink-400" />
-                        {opp.location}
+{getSafeLocation(opp)}
                       </div>
                     </div>
 
