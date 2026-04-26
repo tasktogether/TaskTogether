@@ -784,16 +784,16 @@ const status = getOpportunityStatus(
   opp.volunteer_limit,
   opp.status
 );
-  const statusClasses =
-  status === 'Ready / Active'
-    ? 'bg-green-100 text-green-700'
-    : status === 'Needs Adult Volunteer'
-    ? 'bg-yellow-100 text-yellow-800'
-    : status === 'Full'
+const statusClasses =
+  status === 'Needs Adult Volunteer'
     ? 'bg-red-100 text-red-700'
+    : status === 'Ready / Active'
+    ? 'bg-green-100 text-green-700'
+    : status === 'Full'
+    ? 'bg-blue-100 text-blue-700'
     : status === 'Past'
-    ? 'bg-slate-200 text-slate-600'
-    : 'bg-gray-100 text-gray-700'; // Not Ready
+    ? 'bg-slate-100 text-slate-600'
+    : 'bg-yellow-100 text-yellow-700'; // Not Ready
 
               return (
 <Card
