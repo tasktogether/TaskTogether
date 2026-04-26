@@ -1197,7 +1197,7 @@ const statusClasses =
     </motion.div>
   )}
 </AnimatePresence>
-<>
+
 <AnimatePresence>
   {isEditOpportunityOpen && editingOpportunity && (
     <motion.div
