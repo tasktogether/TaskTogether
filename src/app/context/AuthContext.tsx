@@ -642,7 +642,38 @@ const signUpForOpportunity = async (
     .eq('opportunity_id', opportunityId)
     .eq('volunteer_email', volunteerEmail)
     .maybeSingle();
+// SAFETY: prevent overfilling
+if (
+  (selectedOpportunity.current_volunteers || 0) >=
+  selectedOpportunity.volunteer_limit
+) {
+  toast.error('This opportunity is already full.');
+  return;
+}
 
+// SAFETY: minors cannot volunteer alone
+if (
+  !volunteer.is_adult &&
+  (selectedOpportunity.current_volunteers || 0) === 0
+) {
+  toast.error(
+    'Volunteers under 18 must be accompanied by an adult volunteer.'
+  );
+  return;
+}
+
+// SAFETY: 1-on-1 requires adult opt-in + background check
+if (
+  volunteer.is_adult &&
+  (selectedOpportunity.current_volunteers || 0) === 0 &&
+  (!volunteer.one_on_one_opt_in ||
+    !volunteer.background_check_completed)
+) {
+  toast.error(
+    'You must opt into 1-on-1 volunteering and complete a background check before volunteering alone.'
+  );
+  return;
+}
   if (existingSignup) {
     toast.error('You already signed up for this opportunity.');
     return;
