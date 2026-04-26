@@ -151,6 +151,7 @@ export default function OpportunitiesPage() {
             {filtered.map(opp => {
               const colors = CATEGORY_COLORS[opp.category] || { bg: '#F3E8FF', text: '#6D28D9', border: '#E9D5FF' };
               const full = isFull(opp);
+            const isPast = new Date(opp.date) < new Date();
               const applied = isApplied(opp.id);
               const spotsLeft = opp.volunteerLimit - opp.currentVolunteers;
 
@@ -235,24 +236,38 @@ export default function OpportunitiesPage() {
                       </span>
                     </div>
                   ) : (
-                    <button
-                      onClick={() => handleApply(opp.id)}
-                      disabled={full}
-                      className={full ? '' : 'tt-btn-primary'}
-                      style={{
-                        width: '100%', justifyContent: 'center', fontSize: '14px',
-                        padding: '12px',
-                        ...(full ? {
-                          background: '#F1F5F9', color: '#94a3b8', borderRadius: '12px',
-                          border: 'none', cursor: 'not-allowed', fontFamily: "'Poppins', sans-serif",
-                          fontWeight: 600,
-                        } : {}),
-                      }}
-                    >
-                      {full ? 'No Spots Available' : (
-                        <>Express Interest <ArrowRight size={15} /></>
-                      )}
-                    </button>
+                <button
+  onClick={() => handleApply(opp.id)}
+  disabled={full || isPast}
+  className={full || isPast ? '' : 'tt-btn-primary'}
+  style={{
+    width: '100%',
+    justifyContent: 'center',
+    fontSize: '14px',
+    padding: '12px',
+    ...(full || isPast
+      ? {
+          background: '#F1F5F9',
+          color: '#94a3b8',
+          borderRadius: '12px',
+          border: 'none',
+          cursor: 'not-allowed',
+          fontFamily: "'Poppins', sans-serif",
+          fontWeight: 600,
+        }
+      : {}),
+  }}
+>
+  {full
+    ? 'No Spots Available'
+    : isPast
+    ? 'Opportunity Passed'
+    : (
+        <>
+          Express Interest <ArrowRight size={15} />
+        </>
+      )}
+</button>
                   )}
                 </div>
               );
