@@ -1493,6 +1493,7 @@ const statusClasses =
               </div>
             </motion.div>
           </motion.div>
+      </AnimatePresence>
         )}
       </AnimatePresence>
     </div>
