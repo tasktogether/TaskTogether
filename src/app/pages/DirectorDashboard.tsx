@@ -907,10 +907,13 @@ const statusClasses =
                           {opp.signups.map((signup: any, index: number) => (
                             <div
                               key={index}
-                              className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
+                             className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
                             ><span>
   {signup.volunteer_name}
   <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+    {signup.is_adult ? 'Adult' : 'Minor'}
+  </span>
+</span> className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
     {signup.is_adult ? 'Adult' : 'Minor'}
   </span>
 </span>
