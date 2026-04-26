@@ -1013,6 +1013,34 @@ const status = getOpportunityStatus(
               </h3>
               <p className="text-sm text-slate-500">
                 {selectedVolunteer.userEmail}
+                <h3 className="text-xl font-bold text-slate-800">
+  {selectedVolunteer.userName}
+</h3>
+
+<p className="text-sm text-slate-500">
+  {selectedVolunteer.userEmail}
+</p>
+
+<span
+  style={{
+    marginTop: '6px',
+    display: 'inline-block',
+    padding: '4px 8px',
+    borderRadius: '8px',
+    fontSize: '12px',
+    fontWeight: 600,
+    background: selectedVolunteer.background_check_completed
+      ? '#DCFCE7'
+      : '#FEF3C7',
+    color: selectedVolunteer.background_check_completed
+      ? '#166534'
+      : '#92400E',
+  }}
+>
+  {selectedVolunteer.background_check_completed
+    ? 'Background Check Complete'
+    : 'Background Check Pending'}
+</span>
               </p>
             </div>
           </div>
