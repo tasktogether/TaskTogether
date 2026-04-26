@@ -848,6 +848,10 @@ const status = getOpportunityStatus(
 
                     <div className="flex items-center gap-2 text-sm text-slate-600">
                       <Users size={14} /> {opp.current_volunteers || 0} / {opp.volunteer_limit} spots filled
+
+<span className="ml-2 text-xs text-slate-500">
+  ({opp.adult_volunteers || 0} adult{(opp.adult_volunteers || 0) === 1 ? '' : 's'})
+</span>
                     </div>
                     {status === 'Not Ready' && (
   <p className="mt-2 text-xs text-slate-500">
