@@ -1050,50 +1050,52 @@ const statusClasses =
               {selectedVolunteer.userName?.charAt(0) || 'V'}
             </div>
 
-<div>
-  <h3 className="text-xl font-bold text-slate-800">
-    {selectedVolunteer.userName}
-  </h3>
+            <div>
+              <h3 className="text-xl font-bold text-slate-800">
+                {selectedVolunteer.userName}
+              </h3>
 
-  <p className="text-sm text-slate-500">
-    {selectedVolunteer.userEmail}
-  </p>
+              <p className="text-sm text-slate-500">
+                {selectedVolunteer.userEmail}
+              </p>
 
-  <div className="mt-1 space-y-2">
-    <p className="text-xs font-semibold">
-      {selectedVolunteer.one_on_one_opt_in
-        ? 'Opted into 1-on-1 volunteering'
-        : 'Not opted into 1-on-1 volunteering'}
-    </p>
+              <div className="mt-2 space-y-2">
+                <p className="text-xs font-semibold">
+                  {selectedVolunteer.one_on_one_opt_in
+                    ? 'Opted into 1-on-1 volunteering'
+                    : 'Not opted into 1-on-1 volunteering'}
+                </p>
 
-    {selectedVolunteer.one_on_one_opt_in &&
-    !selectedVolunteer.background_check_completed ? (
-      <button
-        type="button"
-        onClick={() => {
-          window.open('https://www.sterlingvolunteers.com/', '_blank');
-        }}
-        className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
-      >
-        Open Sterling Background Check
-      </button>
-    ) : null}
+                {selectedVolunteer.one_on_one_opt_in &&
+                !selectedVolunteer.background_check_completed ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.open('https://www.sterlingvolunteers.com/', '_blank');
+                    }}
+                    className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
+                  >
+                    Open Sterling Background Check
+                  </button>
+                ) : null}
 
-    <p
-      className={`text-xs font-semibold ${
-        selectedVolunteer.one_on_one_opt_in &&
-        selectedVolunteer.background_check_completed
-          ? 'text-green-700'
-          : 'text-slate-500'
-      }`}
-    >
-      {selectedVolunteer.one_on_one_opt_in &&
-      selectedVolunteer.background_check_completed
-        ? '1-on-1 Approved'
-        : '1-on-1 Not Approved'}
-    </p>
-  </div>
-</div>
+                <p
+                  className={`text-xs font-semibold ${
+                    selectedVolunteer.one_on_one_opt_in &&
+                    selectedVolunteer.background_check_completed
+                      ? 'text-green-700'
+                      : 'text-slate-500'
+                  }`}
+                >
+                  {selectedVolunteer.one_on_one_opt_in &&
+                  selectedVolunteer.background_check_completed
+                    ? '1-on-1 Approved'
+                    : '1-on-1 Not Approved'}
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
               <p className="text-xs uppercase font-bold text-slate-400">
@@ -1123,64 +1125,6 @@ const statusClasses =
                 {selectedVolunteerPastOpportunities.length}
               </p>
             </div>
-          </div>
-
-          <div>
-            <h4 className="text-sm font-bold text-slate-700 mb-3">
-              Signed Up Opportunities
-            </h4>
-
-            {selectedVolunteerUpcomingOpportunities.length === 0 ? (
-              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-sm text-slate-500">
-                No upcoming opportunity sign-ups.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {selectedVolunteerUpcomingOpportunities.map((opp) => (
-                  <div
-                    key={opp.id}
-                    className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
-                  >
-                    <p className="font-semibold text-slate-800">{opp.title}</p>
-                    <p className="text-sm text-slate-500 mt-1">
-                      {formatDate(opp.opportunity_date)} • {opp.time_commitment}
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      {opp.location}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div>
-            <h4 className="text-sm font-bold text-slate-700 mb-3">
-              Past Opportunities
-            </h4>
-
-            {selectedVolunteerPastOpportunities.length === 0 ? (
-              <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-4 text-sm text-slate-500">
-                No past opportunities found.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {selectedVolunteerPastOpportunities.map((opp) => (
-                  <div
-                    key={opp.id}
-                    className="bg-slate-50 rounded-2xl p-4 border border-slate-200"
-                  >
-                    <p className="font-semibold text-slate-800">{opp.title}</p>
-                    <p className="text-sm text-slate-500 mt-1">
-                      {formatDate(opp.opportunity_date)} • {opp.time_commitment}
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      {opp.location}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
         </div>
 
