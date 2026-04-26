@@ -50,13 +50,19 @@ const handleApply = (opportunityId: string) => {
   // SAFETY: adult must opt into 1-on-1 volunteering to be alone
 const isAdult = currentVolunteer.is_adult;
 
+// SAFETY: adult must be approved for 1-on-1 volunteering
+const isAdult = currentVolunteer.is_adult;
+
 if (
   isAdult &&
   opportunity.currentVolunteers === 0 &&
-  !currentVolunteer.one_on_one_opt_in
+  (
+    !currentVolunteer.one_on_one_opt_in ||
+    !currentVolunteer.background_check_completed
+  )
 ) {
   alert(
-    "You must opt into 1-on-1 volunteering before volunteering alone."
+    "You must opt into 1-on-1 volunteering and complete a background check before volunteering alone."
   );
   return;
 }
