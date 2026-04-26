@@ -1082,6 +1082,19 @@ const statusClasses =
   >
     Open Sterling Background Check
   </button>
+  <p
+  className={`text-xs mt-2 font-semibold ${
+    selectedVolunteer.one_on_one_opt_in &&
+    selectedVolunteer.background_check_completed
+      ? 'text-green-700'
+      : 'text-slate-500'
+  }`}
+>
+  {selectedVolunteer.one_on_one_opt_in &&
+  selectedVolunteer.background_check_completed
+    ? '1-on-1 Approved'
+    : '1-on-1 Not Approved'}
+</p>
 )}
 </p>
 
