@@ -75,7 +75,7 @@ const getOpportunityStatus = (
   dateString: string,
   currentVolunteers = 0,
   volunteerLimit = 0,
-  adultVolunteers = 0
+  dbStatus?: string
 ) => {
   const today = new Date();
   const oppDate = new Date(dateString);
@@ -83,25 +83,13 @@ const getOpportunityStatus = (
   today.setHours(0, 0, 0, 0);
   oppDate.setHours(0, 0, 0, 0);
 
-  // Past
   if (oppDate < today) return 'Past';
 
-  // Full
-  if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) {
-    return 'Full';
-  }
+  // Use database status if available
+  if (dbStatus) return dbStatus;
 
-  // Needs adult if minors present but no adult
-  if (currentVolunteers >= 2 && adultVolunteers === 0) {
-    return 'Needs Adult Volunteer';
-  }
+  if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
 
-  // Ready when 2+ volunteers and at least 1 adult
-  if (currentVolunteers >= 2 && adultVolunteers >= 1) {
-    return 'Ready / Active';
-  }
-
-  // Default
   return 'Not Ready';
 };
 const isRecentlyCreated = (dateString: string) => {f
@@ -790,11 +778,11 @@ case 'opportunities':
                 new Date(b.opportunity_date).getTime()
             )
             .map((opp) => {
-              const status = getOpportunityStatus(
+const status = getOpportunityStatus(
   opp.opportunity_date,
-  opp.current_volunteers || 0,
+  opp.current_volunteers,
   opp.volunteer_limit,
-  opp.adult_volunteers || 0
+  opp.status
 );
   const statusClasses =
   status === 'Ready / Active'
