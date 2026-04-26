@@ -861,8 +861,12 @@ const status = getOpportunityStatus(
                             <div
                               key={index}
                               className="flex items-center justify-between text-xs text-slate-600 bg-slate-50 px-2 py-1 rounded"
-                            >
-                              <span>{signup.volunteer_name}</span>
+                            ><span>
+  {signup.volunteer_name}
+  <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-600">
+    {signup.is_adult ? 'Adult' : 'Minor'}
+  </span>
+</span>
 <button
   type="button"
   className="text-red-500 hover:underline ml-2 disabled:text-slate-400 disabled:no-underline"
