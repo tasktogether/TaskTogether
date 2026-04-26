@@ -1339,7 +1339,7 @@ const statusClasses =
     </motion.div>
   ))
 </AnimatePresence>
-</>
+
       <AnimatePresence>
         {isCreateOpportunityOpen && (
           <motion.div
