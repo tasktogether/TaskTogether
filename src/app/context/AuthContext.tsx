@@ -24,7 +24,15 @@ export interface Opportunity {
   location: string;
   volunteer_limit: number;
   current_volunteers?: number;
-  signups?: { volunteer_name: string; volunteer_email: string }[];
+  signups?: {
+  volunteer_name: string;
+  volunteer_email: string;
+  is_adult?: boolean;
+  one_on_one_opt_in?: boolean;
+  background_check_completed?: boolean;
+}[];
+status?: string;
+adult_volunteers?: number;
 }
 
 export interface Application {
@@ -125,30 +133,54 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const fetchOpportunities = async () => {
-    const { data, error } = await supabase
-      .from('opportunities')
-      .select(`
-  *,
-  opportunity_signups(
-    volunteer_name,
-    volunteer_email
-  )
-`)
-      .order('created_at', { ascending: false });
+  const { data, error } = await supabase
+    .from('opportunities')
+    .select(`
+      *,
+      opportunity_signups(
+        volunteer_name,
+        volunteer_email
+      )
+    `)
+    .order('created_at', { ascending: false });
 
-    if (error) {
-      console.error('Error loading opportunities:', error);
-      return;
-    }
+  if (error) {
+    console.error('Error loading opportunities:', error);
+    return;
+  }
 
-    const mappedOpportunities = (data || []).map((opp: any) => ({
-  ...opp,
-  current_volunteers: opp.opportunity_signups?.length || 0,
-  signups: opp.opportunity_signups || [],
-}));
+  const mappedOpportunities = await Promise.all(
+    (data || []).map(async (opp: any) => {
+      const signups = opp.opportunity_signups || [];
 
-    setOpportunities(mappedOpportunities);
-  };
+      const signupsWithSafety = await Promise.all(
+        signups.map(async (signup: any) => {
+          const { data: volunteer } = await supabase
+            .from('volunteer_applications')
+            .select('is_adult, one_on_one_opt_in, background_check_completed')
+            .eq('email', signup.volunteer_email)
+            .maybeSingle();
+
+          return {
+            ...signup,
+            is_adult: volunteer?.is_adult || false,
+            one_on_one_opt_in: volunteer?.one_on_one_opt_in || false,
+            background_check_completed: volunteer?.background_check_completed || false,
+          };
+        })
+      );
+
+      return {
+        ...opp,
+        current_volunteers: signupsWithSafety.length,
+        adult_volunteers: signupsWithSafety.filter(s => s.is_adult).length,
+        signups: signupsWithSafety,
+      };
+    })
+  );
+
+  setOpportunities(mappedOpportunities);
+};
 
 useEffect(() => {
   let mounted = true;
@@ -586,72 +618,62 @@ const signUpForOpportunity = async (
     return;
   }
 
-  const selectedOpportunity = opportunities.find(
-    o => o.id === opportunityId
-  );
+  const selectedOpportunity = opportunities.find(o => o.id === opportunityId);
 
   if (!selectedOpportunity) {
     toast.error('Opportunity not found.');
     return;
   }
 
-  if (
-    (selectedOpportunity.current_volunteers || 0) >=
-    selectedOpportunity.volunteer_limit
-  ) {
+  if ((selectedOpportunity.current_volunteers || 0) >= selectedOpportunity.volunteer_limit) {
     toast.error('This opportunity is already full.');
     return;
-    // SAFETY: prevent overfilling
-if ((opportunity.current_volunteers || 0) >= opportunity.volunteer_limit) {
-  toast.error("This opportunity is already full.");
-  return;
-}
-    // SAFETY: minors cannot volunteer alone
-if (!volunteer.is_adult && (opportunity.current_volunteers || 0) === 0) {
-  toast.error("Volunteers under 18 must be accompanied by an adult volunteer.");
-  return;
-}
-    // SAFETY: 1-on-1 requires approval + adult opt-in
-if (
-  opportunity.allow_one_on_one &&
-  volunteer.is_adult &&
-  !volunteer.one_on_one_opt_in
-) {
-  toast.error(
-    "You must opt into 1-on-1 volunteering before signing up for this opportunity."
-  );
-  return;
-}
   }
 
-  const { data: existingSignup, error: existingSignupError } =
-    await supabase
-      .from('opportunity_signups')
-      .select('id')
-      .eq('opportunity_id', opportunityId)
-      .eq('volunteer_email', volunteerEmail)
-      .maybeSingle();
+  const { data: volunteer, error: volunteerError } = await supabase
+    .from('volunteer_applications')
+    .select('is_adult, one_on_one_opt_in, background_check_completed')
+    .eq('email', volunteerEmail)
+    .maybeSingle();
 
-  if (existingSignupError) {
-    console.error('Error checking signup:', existingSignupError);
-    toast.error('Could not check existing signup.');
+  if (volunteerError || !volunteer) {
+    toast.error('Could not verify volunteer safety status.');
     return;
   }
+
+  if (!volunteer.is_adult && (selectedOpportunity.current_volunteers || 0) === 0) {
+    toast.error('Volunteers under 18 must be accompanied by an adult volunteer.');
+    return;
+  }
+
+  if (
+    volunteer.is_adult &&
+    (selectedOpportunity.current_volunteers || 0) === 0 &&
+    (!volunteer.one_on_one_opt_in || !volunteer.background_check_completed)
+  ) {
+    toast.error('You must opt into 1-on-1 volunteering and complete a background check before volunteering alone.');
+    return;
+  }
+
+  const { data: existingSignup } = await supabase
+    .from('opportunity_signups')
+    .select('id')
+    .eq('opportunity_id', opportunityId)
+    .eq('volunteer_email', volunteerEmail)
+    .maybeSingle();
 
   if (existingSignup) {
     toast.error('You already signed up for this opportunity.');
     return;
   }
 
-  const { error } = await supabase
-    .from('opportunity_signups')
-    .insert([
-      {
-        opportunity_id: opportunityId,
-        volunteer_name: volunteerName.trim(),
-        volunteer_email: volunteerEmail.trim(),
-      },
-    ]);
+  const { error } = await supabase.from('opportunity_signups').insert([
+    {
+      opportunity_id: opportunityId,
+      volunteer_name: volunteerName.trim(),
+      volunteer_email: volunteerEmail.trim(),
+    },
+  ]);
 
   if (error) {
     console.error('Signup failed:', error);
