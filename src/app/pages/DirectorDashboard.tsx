@@ -1081,8 +1081,9 @@ const statusClasses =
     className="mt-2 text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
   >
     Open Sterling Background Check
-  </button>
-  <p
+ </button>
+
+<p
   className={`text-xs mt-2 font-semibold ${
     selectedVolunteer.one_on_one_opt_in &&
     selectedVolunteer.background_check_completed
