@@ -796,7 +796,14 @@ const status = getOpportunityStatus(
     : 'bg-gray-100 text-gray-700'; // Not Ready
 
               return (
-                <Card key={opp.id} className="relative overflow-hidden group">
+                <Card
+  key={opp.id}
+  className={`relative overflow-hidden group ${
+    (opp.current_volunteers || 0) === 1
+      ? 'border-2 border-yellow-300'
+      : ''
+  }`}
+>
                   <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
 
                   <div className="pl-4">
