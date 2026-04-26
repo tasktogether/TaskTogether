@@ -1131,6 +1131,27 @@ const statusClasses =
   {selectedVolunteer.background_check_completed
     ? 'Mark Background Check Pending'
     : 'Mark Background Check Complete'}
+  <button
+  onClick={() => {
+    window.open(
+      'https://sterlingvolunteers.com/',
+      '_blank'
+    );
+  }}
+  style={{
+    marginTop: '8px',
+    padding: '8px 12px',
+    borderRadius: '10px',
+    background: '#2563EB',
+    color: 'white',
+    border: 'none',
+    fontSize: '13px',
+    fontWeight: 600,
+    cursor: 'pointer',
+  }}
+>
+  Send Background Check Link
+</button>
 </button>
                 <span
   style={{
