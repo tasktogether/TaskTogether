@@ -806,7 +806,19 @@ const status = getOpportunityStatus(
       : ''
   }`}
 >
-                  <div className="absolute top-0 left-0 w-1 h-full bg-green-400" />
+                  <div
+  className={`absolute top-0 left-0 w-1 h-full ${
+    opp.status === 'Needs Adult Volunteer'
+      ? 'bg-red-400'
+      : status === 'Ready / Active'
+      ? 'bg-green-400'
+      : status === 'Not Ready'
+      ? 'bg-yellow-400'
+      : status === 'Full'
+      ? 'bg-blue-400'
+      : 'bg-slate-300'
+  }`}
+/>
 
                   <div className="pl-4">
                     <div className="flex justify-between items-start mb-2">
