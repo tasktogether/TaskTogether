@@ -47,6 +47,19 @@ const handleApply = (opportunityId: string) => {
     );
     return;
   }
+  // SAFETY: adult must opt into 1-on-1 volunteering to be alone
+const isAdult = currentVolunteer.is_adult;
+
+if (
+  isAdult &&
+  opportunity.currentVolunteers === 0 &&
+  !currentVolunteer.one_on_one_opt_in
+) {
+  alert(
+    "You must opt into 1-on-1 volunteering before volunteering alone."
+  );
+  return;
+}
 
   applyForOpportunity(currentVolunteer.id, opportunityId);
 
