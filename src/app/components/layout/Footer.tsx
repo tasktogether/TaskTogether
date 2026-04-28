@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export const Footer = () => {
   return (
-    <footer className="bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 border-t border-violet-100 pt-16 pb-8 relative overflow-hidden">
+    <footer className="bg-[#8CC63F] border-t border-[#5E8F25] pt-16 pb-8 relative overflow-hidden text-white">
       {/* Decorative background elements - static */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-br from-blue-200/20 to-violet-200/20 rounded-full blur-3xl" />
