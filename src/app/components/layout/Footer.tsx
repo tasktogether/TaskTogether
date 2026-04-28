@@ -32,13 +32,13 @@ export const Footer = () => {
               Explore
             </h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link to="/" className="hover:text-violet-600 transition-colors">Home</Link></li>
-              <li><Link to="/opportunities" className="hover:text-violet-600 transition-colors">Opportunities</Link></li>
-              <li><Link to="/stories" className="hover:text-violet-600 transition-colors">Stories of Kindness</Link></li>
-              <li><Link to="/learn-more" className="hover:text-violet-600 transition-colors">Learn More</Link></li>
-              <li><Link to="/apply" className="hover:text-violet-600 transition-colors">Apply Now</Link></li>
-              <li><Link to="/login" className="hover:text-violet-600 transition-colors">Volunteer Login</Link></li>
-              <li><Link to="/login?role=admin" className="hover:text-violet-600 transition-colors">Admin Access</Link></li>
+              <li><Link to="/" className="hover:text-[#FFC72C] transition-colors">Home</Link></li>
+              <li><Link to="/opportunities" className="hover:text-[#FFC72C] transition-colors">Opportunities</Link></li>
+              <li><Link to="/stories" className="hover:text-[#FFC72C] transition-colors">Stories of Kindness</Link></li>
+              <li><Link to="/learn-more" className="hover:text-[#FFC72C] transition-colors">Learn More</Link></li>
+              <li><Link to="/apply" className="hover:text-[#FFC72C] transition-colors">Apply Now</Link></li>
+              <li><Link to="/login" className="hover:text-[#FFC72C] transition-colors">Volunteer Login</Link></li>
+              <li><Link to="/login?role=admin" className="hover:text-[#FFC72C] transition-colors">Admin Access</Link></li>
             </ul>
           </div>
 
