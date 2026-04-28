@@ -151,6 +151,32 @@
     outline-offset: 2px;
     box-shadow: 0 0 0 3px rgba(140, 198, 63, 0.35);
   }
+  .badge {
+  background-color: #EAF7DC;
+  color: #5E8F25;
+  border: 1px solid rgba(94, 143, 37, 0.25);
+  font-weight: 500;
+}
+
+.badge-primary {
+  background-color: #8CC63F;
+  color: #FFFFFF;
+}
+
+.badge-accent {
+  background-color: #08A8D8;
+  color: #FFFFFF;
+}
+
+.badge-warning {
+  background-color: #FFC72C;
+  color: #4B4B55;
+}
+
+.badge-danger {
+  background-color: #EF3E7B;
+  color: #FFFFFF;
+}
 
   body {
     @apply bg-background text-foreground;
