@@ -232,4 +232,25 @@
     font-weight: var(--font-weight-normal);
     line-height: 1.5;
   }
+  nav {
+  background-color: #FFFFFF;
+  color: #4B4B55;
+  border-bottom: 1px solid rgba(94, 143, 37, 0.18);
+}
+
+nav a,
+nav button {
+  color: #4B4B55;
+}
+
+nav a:hover,
+nav button:hover {
+  color: #5E8F25;
+  background-color: #EAF7DC;
+}
+
+nav a:focus-visible,
+nav button:focus-visible {
+  outline: 2px solid #8CC63F;
+  outline-offset: 2px;
 }
