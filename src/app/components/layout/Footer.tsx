@@ -28,10 +28,10 @@ export const Footer = () => {
 
           {/* Links */}
           <div>
-            <h4 className="font-poppins font-semibold text-slate-800 mb-4">
+            <h4 className="font-poppins font-semibold text-white mb-4">
               Explore
             </h4>
-            <ul className="space-y-2 text-sm text-slate-600">
+            <ul className="space-y-2 text-sm text-white">
               <li><Link to="/" className="hover:text-[#FFC72C] transition-colors">Home</Link></li>
               <li><Link to="/opportunities" className="hover:text-[#FFC72C] transition-colors">Opportunities</Link></li>
               <li><Link to="/stories" className="hover:text-[#FFC72C] transition-colors">Stories of Kindness</Link></li>
@@ -44,10 +44,10 @@ export const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-poppins font-semibold text-slate-800 mb-4">
+            <h4 className="font-poppins font-semibold text-white mb-4">
               Safety & Legal
             </h4>
-            <ul className="space-y-2 text-sm text-slate-600">
+            <ul className="space-y-2 text-sm text-white">
               <li><Link to="/parental-consent" className="hover:text-[#FFC72C] transition-colors">Parental Consent</Link></li>
               <li><Link to="/safety-guidelines" className="hover:text-[#FFC72C] transition-colors">Safety Guidelines</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-[#FFC72C] transition-colors">Privacy Policy</Link></li>
@@ -57,31 +57,31 @@ export const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h4 className="font-poppins font-semibold text-slate-800 mb-4">
+            <h4 className="font-poppins font-semibold text-white mb-4">
               Contact Us
             </h4>
             <ul className="space-y-3 text-sm text-slate-600">
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-violet-500 shrink-0 mt-0.5" />
+                <MapPin className="w-5 h-5 text-white shrink-0 mt-0.5" />
                 <span>Richmond Senior Center<br/>123 Community Lane<br/>Richmond, CA 94804</span>
               </li>
               <li className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-violet-500 shrink-0" />
+                <Mail className="w-5 h-5 text-white shrink-0" />
                 <a href="mailto:tasktogethercontact@gmail.com" className="hover:text-[#FFC72C] transition-colors">tasktogethercontact@gmail.com</a>
               </li>
               <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-violet-500 shrink-0" />
+                <Phone className="w-5 h-5 text-white shrink-0" />
                 <a href="tel:+15105550123" className="hover:text-[#FFC72C] transition-colors">(510) 555-0123</a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-violet-200 pt-8 text-center">
-          <p className="text-slate-500 text-sm mb-2">
+        <div className="border-t border-white/30 pt-8 text-center">
+          <p className="text-white text-sm mb-2">
             &copy; {new Date().getFullYear()} Richmond Senior Center Volunteers. Made with care by <span className="font-semibold text-violet-600">i2 scholar Kaitlyn Cleaveland</span>
           </p>
-          <p className="text-slate-400 text-xs">
+          <p className="text-white/80 text-xs">
             Building bridges between generations, one task at a time.
           </p>
         </div>
