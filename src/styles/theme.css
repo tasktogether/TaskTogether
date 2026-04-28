@@ -177,6 +177,7 @@
   background-color: #EF3E7B;
   color: #FFFFFF;
 }
+}
 
   body {
     @apply bg-background text-foreground;
