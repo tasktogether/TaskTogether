@@ -101,7 +101,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-16 px-6 bg-gradient-to-r from-green-500 via-green-500 to-fuchsia-500 text-white text-center relative overflow-hidden">
+      <section className="py-16 px-6 bg-gradient-to-r from-green-500 via-green-500 to-cyan-500 text-white text-center relative overflow-hidden">
         <div className="absolute top-5 left-10 w-16 h-16 border-4 border-white/30 rounded-full opacity-50" />
         <div className="absolute bottom-5 right-20 w-20 h-20 bg-white/10 rounded-lg opacity-50" />
 
