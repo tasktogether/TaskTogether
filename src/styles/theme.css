@@ -138,6 +138,19 @@
   * {
     @apply border-border outline-ring/50;
   }
+    button {
+    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #5E8F25;
+  }
+
+  button:focus-visible {
+    outline: 2px solid #8CC63F;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgba(140, 198, 63, 0.35);
+  }
 
   body {
     @apply bg-background text-foreground;
