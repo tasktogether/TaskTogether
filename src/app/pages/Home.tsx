@@ -6,6 +6,7 @@ import { Card } from '../components/ui/Card';
 import { BubbleBackground } from '../components/background/BubbleBackground';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
+import logo from '../../assets/ggss-rsc-logo@2x.png';
 
 export default function Home() {
   return (
@@ -55,7 +56,13 @@ export default function Home() {
             <div className="flex items-center gap-4 text-sm text-slate-500 font-medium h-12" />
           </div>
 
-          <div className="relative" />
+          <div className="relative flex items-center justify-center">
+  <img
+    src={logo}
+    alt="Richmond Senior Center Logo"
+    className="w-72 md:w-96 lg:w-[420px] object-contain"
+  />
+</div>
         </div>
       </section>
 
