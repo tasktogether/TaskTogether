@@ -290,3 +290,83 @@ button:disabled {
   color: #9CA3AF;
   cursor: not-allowed;
 }
+/* Richmond Senior Center full color override */
+
+.text-purple-600,
+.text-purple-700,
+.text-violet-600,
+.text-violet-700,
+.text-indigo-600,
+.text-indigo-700 {
+  color: #5E8F25 !important;
+}
+
+.bg-purple-50,
+.bg-violet-50,
+.bg-indigo-50 {
+  background-color: #F7FAF3 !important;
+}
+
+.bg-purple-100,
+.bg-violet-100,
+.bg-indigo-100 {
+  background-color: #EAF7DC !important;
+}
+
+.bg-purple-600,
+.bg-purple-700,
+.bg-violet-600,
+.bg-violet-700,
+.bg-indigo-600,
+.bg-indigo-700 {
+  background-color: #8CC63F !important;
+  color: #FFFFFF !important;
+}
+
+.hover\:bg-purple-700:hover,
+.hover\:bg-violet-700:hover,
+.hover\:bg-indigo-700:hover {
+  background-color: #5E8F25 !important;
+}
+
+.border-purple-200,
+.border-purple-300,
+.border-violet-200,
+.border-violet-300,
+.border-indigo-200,
+.border-indigo-300 {
+  border-color: rgba(94, 143, 37, 0.25) !important;
+}
+
+.from-purple-50,
+.from-violet-50,
+.from-indigo-50 {
+  --tw-gradient-from: #F7FAF3 !important;
+}
+
+.from-purple-600,
+.from-violet-600,
+.from-indigo-600 {
+  --tw-gradient-from: #8CC63F !important;
+}
+
+.to-purple-50,
+.to-violet-50,
+.to-indigo-50 {
+  --tw-gradient-to: #EAF7DC !important;
+}
+
+.to-purple-600,
+.to-violet-600,
+.to-indigo-600 {
+  --tw-gradient-to: #08A8D8 !important;
+}
+
+.ring-purple-500,
+.ring-violet-500,
+.ring-indigo-500,
+.focus\:ring-purple-500:focus,
+.focus\:ring-violet-500:focus,
+.focus\:ring-indigo-500:focus {
+  --tw-ring-color: #8CC63F !important;
+}
