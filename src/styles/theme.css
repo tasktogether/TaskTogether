@@ -254,3 +254,38 @@ nav button:focus-visible {
   outline: 2px solid #8CC63F;
   outline-offset: 2px;
 }
+  /* Cards */
+
+.card {
+  background-color: #FFFFFF;
+  color: #4B4B55;
+  border: 1px solid rgba(94, 143, 37, 0.18);
+  border-radius: 0.75rem;
+}
+
+/* Inputs */
+
+input,
+select,
+textarea {
+  background-color: #FFFFFF;
+  color: #4B4B55;
+  border: 1px solid rgba(94, 143, 37, 0.22);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #8CC63F;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(140, 198, 63, 0.25);
+}
+
+/* Disabled states */
+
+input:disabled,
+button:disabled {
+  background-color: #EEF4E8;
+  color: #9CA3AF;
+  cursor: not-allowed;
+}
