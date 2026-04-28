@@ -6,7 +6,7 @@ import { Card } from '../components/ui/Card';
 import { BubbleBackground } from '../components/background/BubbleBackground';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import logo from '../../assets/ggss-rsc-logo@2x.png';
+import logo from '../../assets/rsc-logo.png';
 
 export default function Home() {
   return (
