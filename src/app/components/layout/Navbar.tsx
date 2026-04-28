@@ -10,15 +10,15 @@ export const Navbar = () => {
   const { user, logout } = useAuth();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-violet-100/50 dark:border-slate-800 shadow-sm transition-colors">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-green-100/50 dark:border-slate-800 shadow-sm transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between">
         <div className="flex items-center gap-4 md:gap-6">
           <Link to="/" className="flex items-center gap-3 md:gap-4 group">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                 <Heart size={20} className="text-white fill-white md:w-6 md:h-6" />
               </div>
-              <span className="font-fredoka text-xl md:text-2xl font-bold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <span className="font-fredoka text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-cyan-600 bg-clip-text text-transparent">
                 Richmond Senior Center
               </span>
             </div>
@@ -26,28 +26,28 @@ export const Navbar = () => {
         </div>
 
         <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-          <Link to="/" className="text-slate-600 dark:text-slate-300 hover:text-violet-600 dark:hover:text-violet-400 font-medium font-poppins transition-colors relative group">
+          <Link to="/" className="text-slate-600 dark:text-slate-300 hover:text-green-600 dark:hover:text-green-400 font-medium font-poppins transition-colors relative group">
             Home
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 group-hover:w-full transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-600 to-cyan-600 group-hover:w-full transition-all duration-300"></span>
           </Link>
 
-          <Link to="/opportunities" className="text-slate-600 dark:text-slate-300 hover:text-violet-600 dark:hover:text-violet-400 font-medium font-poppins transition-colors relative group">
+          <Link to="/opportunities" className="text-slate-600 dark:text-slate-300 hover:text-green-600 dark:hover:text-green-400 font-medium font-poppins transition-colors relative group">
             Opportunities
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 group-hover:w-full transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-600 to-cyan-600 group-hover:w-full transition-all duration-300"></span>
           </Link>
 
-          <Link to="/stories" className="text-slate-600 dark:text-slate-300 hover:text-violet-600 dark:hover:text-violet-400 font-medium font-poppins transition-colors flex items-center gap-1 relative group">
+          <Link to="/stories" className="text-slate-600 dark:text-slate-300 hover:text-green-600 dark:hover:text-green-400 font-medium font-poppins transition-colors flex items-center gap-1 relative group">
             <span className="text-pink-400">♥</span> Stories
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-violet-600 to-fuchsia-600 group-hover:w-full transition-all duration-300"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-green-600 to-cyan-600 group-hover:w-full transition-all duration-300"></span>
           </Link>
 
-          <div className="w-px h-6 bg-gradient-to-b from-transparent via-violet-200 to-transparent dark:via-slate-700" />
+          <div className="w-px h-6 bg-gradient-to-b from-transparent via-green-200 to-transparent dark:via-slate-700" />
 
           {user ? (
             <div className="flex items-center gap-4">
               <Link to={user.role === 'admin' ? '/admin/dashboard' : '/dashboard'}>
                 <Button variant="ghost" size="sm" className="gap-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-100 to-purple-100 dark:bg-violet-900 flex items-center justify-center text-violet-700 dark:text-violet-300">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-100 to-green-100 dark:bg-green-900 flex items-center justify-center text-green-700 dark:text-green-300">
                     <User size={16} />
                   </div>
                   <span className="font-medium text-slate-700 dark:text-slate-200">
@@ -62,7 +62,7 @@ export const Navbar = () => {
                 <Button variant="ghost" size="sm">Log In</Button>
               </Link>
               <Link to="/apply">
-                <Button size="sm" className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white border-none shadow-md hover:shadow-lg transition-all duration-300">
+                <Button size="sm" className="bg-gradient-to-r from-green-600 to-green-600 hover:from-green-700 hover:to-green-700 text-white border-none shadow-md hover:shadow-lg transition-all duration-300">
                   Apply Now
                 </Button>
               </Link>
@@ -140,7 +140,7 @@ export const Navbar = () => {
                 </Link>
 
                 <Link to="/apply" onClick={() => setIsOpen(false)}>
-                  <Button fullWidth className="bg-violet-600 hover:bg-violet-700 text-white">
+                  <Button fullWidth className="bg-green-600 hover:bg-green-700 text-white">
                     Apply Now
                   </Button>
                 </Link>
