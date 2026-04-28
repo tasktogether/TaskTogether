@@ -48,10 +48,10 @@ export const Footer = () => {
               Safety & Legal
             </h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link to="/parental-consent" className="hover:text-violet-600 transition-colors">Parental Consent</Link></li>
-              <li><Link to="/safety-guidelines" className="hover:text-violet-600 transition-colors">Safety Guidelines</Link></li>
-              <li><Link to="/privacy-policy" className="hover:text-violet-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms-of-service" className="hover:text-violet-600 transition-colors">Terms of Service</Link></li>
+              <li><Link to="/parental-consent" className="hover:text-[#FFC72C] transition-colors">Parental Consent</Link></li>
+              <li><Link to="/safety-guidelines" className="hover:text-[#FFC72C] transition-colors">Safety Guidelines</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-[#FFC72C] transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-[#FFC72C] transition-colors">Terms of Service</Link></li>
             </ul>
           </div>
 
@@ -67,11 +67,11 @@ export const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-violet-500 shrink-0" />
-                <a href="mailto:tasktogethercontact@gmail.com" className="hover:text-violet-600 transition-colors">tasktogethercontact@gmail.com</a>
+                <a href="mailto:tasktogethercontact@gmail.com" className="hover:text-[#FFC72C] transition-colors">tasktogethercontact@gmail.com</a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-violet-500 shrink-0" />
-                <a href="tel:+15105550123" className="hover:text-violet-600 transition-colors">(510) 555-0123</a>
+                <a href="tel:+15105550123" className="hover:text-[#FFC72C] transition-colors">(510) 555-0123</a>
               </li>
             </ul>
           </div>
