@@ -3,8 +3,10 @@
 :root {
   --font-size: 16px;
 
-  --background: #F7FAF3;
-  --foreground: #4B4B55;
+  /* Main colors from logo */
+
+  --background: #F7FAF3;        /* light sunny background */
+  --foreground: #4B4B55;        /* readable text */
 
   --card: #FFFFFF;
   --card-foreground: #4B4B55;
@@ -12,30 +14,40 @@
   --popover: #FFFFFF;
   --popover-foreground: #4B4B55;
 
+  /* Primary green */
+
   --primary: #8CC63F;
   --primary-foreground: #FFFFFF;
+
+  /* Soft green secondary */
 
   --secondary: #EAF7DC;
   --secondary-foreground: #5E8F25;
 
+  /* Muted neutrals */
+
   --muted: #EEF4E8;
   --muted-foreground: #6B7280;
 
-  --accent: #08A8D8;
+  /* Accent colors from logo but softened */
+
+  --accent: #08A8D8;             /* blue */
   --accent-foreground: #FFFFFF;
 
-  --destructive: #EF3E7B;
+  --destructive: #EF3E7B;        /* pink */
   --destructive-foreground: #FFFFFF;
 
-  --border: rgba(94, 143, 37, 0.22);
+  /* Borders */
+
+  --border: #E5E7EB;
   --input: transparent;
   --input-background: #FFFFFF;
+
   --switch-background: #D8E8C8;
 
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-
   --ring: #8CC63F;
+
+  /* Charts / badges */
 
   --chart-1: #8CC63F;
   --chart-2: #08A8D8;
@@ -45,13 +57,15 @@
 
   --radius: 0.75rem;
 
+  /* Sidebar */
+
   --sidebar: #F7FAF3;
   --sidebar-foreground: #4B4B55;
   --sidebar-primary: #8CC63F;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #EAF7DC;
   --sidebar-accent-foreground: #5E8F25;
-  --sidebar-border: rgba(94, 143, 37, 0.22);
+  --sidebar-border: #E5E7EB;
   --sidebar-ring: #8CC63F;
 }
 
@@ -369,4 +383,25 @@ button:disabled {
 .focus\:ring-violet-500:focus,
 .focus\:ring-indigo-500:focus {
   --tw-ring-color: #8CC63F !important;
+}
+/* Remove loud gradients — make colors clean and professional */
+
+.bg-gradient-to-r,
+.bg-gradient-to-br,
+.bg-gradient-to-l,
+.bg-gradient-to-t {
+  background-image: none !important;
+}
+/* Soften pink and blue so they don't pop too much */
+
+.bg-pink-50,
+.bg-blue-50,
+.bg-pink-100,
+.bg-blue-100 {
+  background-color: #F7FAF3 !important;
+}
+
+.text-pink-600,
+.text-blue-600 {
+  color: #5E8F25 !important;
 }
