@@ -405,3 +405,41 @@ button:disabled {
 .text-blue-600 {
   color: #5E8F25 !important;
 }
+/* Fix button readability */
+
+button {
+  background-color: #8CC63F;
+  color: #FFFFFF;
+  border: none;
+}
+
+button:hover {
+  background-color: #5E8F25;
+  color: #FFFFFF;
+}
+
+/* Outline / secondary buttons */
+
+button[variant="outline"],
+.btn-outline,
+.border {
+  background-color: #FFFFFF;
+  color: #4B4B55;
+  border: 1px solid #8CC63F;
+}
+
+button[variant="outline"]:hover,
+.btn-outline:hover {
+  background-color: #EAF7DC;
+  color: #4B4B55;
+}
+
+/* White buttons (like Apply Now in green section) */
+
+.bg-white {
+  color: #4B4B55 !important;
+}
+
+.bg-white:hover {
+  background-color: #F7FAF3 !important;
+}
