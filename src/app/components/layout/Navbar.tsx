@@ -15,10 +15,10 @@ export const Navbar = () => {
         <div className="flex items-center gap-4 md:gap-6">
           <Link to="/" className="flex items-center gap-3 md:gap-4 group">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-cyan-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-[#8CC63F] rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
                 <Heart size={20} className="text-white fill-white md:w-6 md:h-6" />
               </div>
-              <span className="font-fredoka text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="font-fredoka text-xl md:text-2xl font-bold text-[#4B4B55]">
                 Richmond Senior Center
               </span>
             </div>
