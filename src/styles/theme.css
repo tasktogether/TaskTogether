@@ -443,3 +443,56 @@ button[variant="outline"]:hover,
 .bg-white:hover {
   background-color: #F7FAF3 !important;
 }
+/* Fix white text on white backgrounds */
+
+.bg-white {
+  color: #4B4B55 !important;
+}
+
+.text-white.bg-white {
+  color: #4B4B55 !important;
+}
+
+/* Make buttons readable but not overly bold */
+
+button,
+.btn {
+  font-weight: 500;
+}
+
+/* Calm down overly bold green text */
+
+.text-\[\#8CC63F\],
+.text-green-600,
+.text-green-700 {
+  font-weight: 500 !important;
+}
+
+/* Ensure headings stay readable */
+
+h1,
+h2,
+h3,
+h4 {
+  color: #4B4B55;
+}
+
+/* Inputs and cards always readable */
+
+.card,
+input,
+select,
+textarea {
+  color: #4B4B55;
+  background-color: #FFFFFF;
+}
+
+/* Links should not look too aggressive */
+
+a {
+  font-weight: 500;
+}
+
+a:hover {
+  color: #5E8F25;
+}
