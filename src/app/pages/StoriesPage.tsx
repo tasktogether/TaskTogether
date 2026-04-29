@@ -357,7 +357,7 @@ const allTags = Array.from(
         >
           <div className="text-4xl mb-4">✨</div>
           <h2 className="text-3xl font-fredoka font-bold mb-3">Have a Story to Share?</h2>
-          <p className="text-violet-100 max-w-xl mx-auto mb-6">
+          <p className="text-green-100 max-w-xl mx-auto mb-6">
             After completing a task, you can opt in to share your reflection with the community.
             Your story might inspire another Richmond Senior Center volunteer.
           </p>
