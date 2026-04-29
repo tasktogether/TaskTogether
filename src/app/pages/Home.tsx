@@ -113,7 +113,7 @@ export default function Home() {
         <div className="absolute bottom-5 right-20 w-20 h-20 bg-white/10 rounded-lg opacity-50" />
 
         <h2 className="text-3xl font-fredoka font-bold mb-3 relative z-10">Ready to get started?</h2>
-        <p className="text-pink-100 mb-6 max-w-xl mx-auto relative z-10">
+        <p className="text-lg text-slate-60 mb-6 max-w-xl mx-auto relative z-10">
           Apply to volunteer with Richmond Senior Center in just a few minutes.
         </p>
 
