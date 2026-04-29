@@ -328,7 +328,7 @@ const isAlreadySignedUp = (opp: any) => {
                   <h3 className="text-xl font-bold text-slate-800 mb-3">About this Opportunity</h3>
                   <p className="text-slate-600 leading-relaxed text-lg">{selectedOpp.description}</p>
                   <p className="text-slate-600 leading-relaxed mt-4">
-                    This opportunity is part of the Richmond Senior Center volunteer program. Training and support will be provided.
+                    This opportunity is part of the Richmond Senior Center volunteer program.
                   </p>
                 </div>
 
