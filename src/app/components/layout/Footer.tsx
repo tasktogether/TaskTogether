@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import dasLogo from '../../assets/das-logo.png';
 
 export const Footer = () => {
   return (
@@ -76,7 +77,13 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
-
+<div className="flex justify-center mb-6">
+  <img
+    src={dasLogo}
+    alt="Department of Disability and Aging Services Funding"
+    className="h-16 md:h-20 object-contain"
+  />
+</div>
         <div className="border-t border-white/30 pt-8 text-center">
           <p className="text-white text-sm mb-2">
             &copy; {new Date().getFullYear()} Richmond Senior Center Volunteers. Made with care by <span className="font-semibold text-violet-600">i2 scholar Kaitlyn Cleaveland</span>
