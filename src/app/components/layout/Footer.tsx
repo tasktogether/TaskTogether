@@ -1,7 +1,7 @@
 import React from 'react';
 import { Heart, Mail, Phone, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import dasLogo from 'src/assets/das-logo.png';
+import dasLogo from '../../../assets/das-logo.png';
 
 export const Footer = () => {
   return (
