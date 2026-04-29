@@ -70,10 +70,6 @@ export const Footer = () => {
                 <Mail className="w-5 h-5 text-white shrink-0" />
                 <a href="mailto:tasktogethercontact@gmail.com" className="hover:text-[#FFC72C] transition-colors">tasktogethercontact@gmail.com</a>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-white shrink-0" />
-                <a href="tel:+15105550123" className="hover:text-[#FFC72C] transition-colors">(510) 555-0123</a>
-              </li>
             </ul>
           </div>
         </div>
