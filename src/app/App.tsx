@@ -20,6 +20,7 @@ import { AppProvider } from './context/AppContext';
 import SetPassword from './pages/SetPassword';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import ApplicationReceived from './pages/ApplicationReceived';
+import DirectorSettings from './app/pages/DirectorSettings';
 
 // Helper for scroll to top on route change
 function ScrollToTopHelper() {
@@ -57,6 +58,7 @@ export default function App() {
                 <Route path="/terms-of-service" element={<TermsOfService />} />
                 <Route path="/set-password" element={<SetPassword />} />
                 <Route path="/application-received" element={<ApplicationReceived />} />
+                <Route path="/director/settings" element={<DirectorSettings />} />
               </Routes>
               <Toaster position="top-center" richColors />
             </StoriesProvider>
