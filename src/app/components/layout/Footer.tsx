@@ -71,9 +71,7 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
-        <p className="text-white text-sm text-center mb-2">
-  These programs serving the community are funded in part by the City of San Francisco’s Department of Disability and Aging Services.
-</p>
+
 <div className="flex justify-center mt-6 mb-4">
   <img
     src={dasLogo}
