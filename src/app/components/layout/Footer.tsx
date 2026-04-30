@@ -7,18 +7,16 @@ export const Footer = () => {
   return (
     <footer className="bg-[#8CC63F] border-t border-[#5E8F25] pt-16 pb-8 relative overflow-hidden text-white">
       {/* Decorative background elements - static */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-purple-200/20 to-pink-200/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-br from-blue-200/20 to-violet-200/20 rounded-full blur-3xl" />
       
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div className="col-span-1">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-[#8CC63F]-to-br from-violet-500 to-fuchsia-500 rounded-xl flex items-center justify-center shadow-lg">
                 <Heart className="w-5 h-5 text-white fill-white" />
               </div>
-              <span className="font-fredoka text-xl font-semibold bg-gradient-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
+              <span className="font-fredoka text-xl font-semibold bg-[#8CC63F]-to-r from-violet-600 to-fuchsia-600 bg-clip-text text-transparent">
                 Richmond Senior Center Volunteers
               </span>
             </div>
@@ -64,7 +62,7 @@ export const Footer = () => {
             <ul className="space-y-3 text-sm text-slate-600">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-white shrink-0 mt-0.5" />
-                <span>Richmond Senior Center<br/>123 Community Lane<br/>Richmond, CA 94804</span>
+                <span>Richmond Senior Center<br/>6221 Geary Blvd, Floor 3<br/>San Francisco, CA 94121</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-white shrink-0" />
