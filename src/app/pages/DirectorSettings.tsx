@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase.ts';
 
 export default function DirectorSettings() {
   const [loading, setLoading] = useState(true);
