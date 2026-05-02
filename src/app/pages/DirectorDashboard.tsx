@@ -1002,7 +1002,8 @@ const statusClasses =
 
             <Briefcase size={18} /> Opportunities
           </Button>
-    <Button
+      </div>
+      <Button
   onClick={() => setActiveTab('announcements')}
   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
     activeTab === 'announcements'
