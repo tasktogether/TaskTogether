@@ -996,23 +996,47 @@ const statusClasses =
             fullWidth
             className="justify-start gap-3"
             onClick={() => setActiveTab('opportunities')}
->
-  Opportunities
-</button>
+<div className="p-4 space-y-2">
+  <Button
+    variant={activeTab === 'overview' ? 'default' : 'ghost'}
+    onClick={() => setActiveTab('overview')}
+    className="w-full justify-start gap-3"
+  >
+    <LayoutDashboard size={18} /> Overview
+  </Button>
 
-            <Briefcase size={18} /> Opportunities
-          </Button>
-      </div>
-      <Button
-  onClick={() => setActiveTab('announcements')}
-  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-    activeTab === 'announcements'
-      ? 'bg-[#EAF7DC] text-[#5E8F25]'
-      : 'text-slate-600 hover:bg-slate-100'
-  }`}
->
- Announcements
-</Button>
+  <Button
+    variant={activeTab === 'applications' ? 'default' : 'ghost'}
+    onClick={() => setActiveTab('applications')}
+    className="w-full justify-start gap-3"
+  >
+    <FileText size={18} /> Applications
+  </Button>
+
+  <Button
+    variant={activeTab === 'volunteers' ? 'default' : 'ghost'}
+    onClick={() => setActiveTab('volunteers')}
+    className="w-full justify-start gap-3"
+  >
+    <Users size={18} /> Volunteers
+  </Button>
+
+  <Button
+    variant={activeTab === 'opportunities' ? 'default' : 'ghost'}
+    onClick={() => setActiveTab('opportunities')}
+    className="w-full justify-start gap-3"
+  >
+    <Briefcase size={18} /> Opportunities
+  </Button>
+
+  <Button
+    variant={activeTab === 'announcements' ? 'default' : 'ghost'}
+    onClick={() => setActiveTab('announcements')}
+    className="w-full justify-start gap-3"
+  >
+    📢 Announcements
+  </Button>
+</div>
       </div>
 
         <div className="p-4 border-t border-slate-100">
