@@ -157,10 +157,11 @@ const { error } = await supabase
         </div>
 
         <button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[#8CC63F] hover:bg-[#5E8F25] text-white px-6 py-2 rounded-xl font-medium"
-        >
+  type="button"
+  onClick={handleSave}
+  disabled={saving}
+  className="bg-[#8CC63F] hover:bg-[#5E8F25] text-white px-6 py-2 rounded-xl font-medium"
+>
           {saving ? 'Saving...' : 'Save Settings'}
         </button>
       </div>
