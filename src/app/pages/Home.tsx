@@ -7,8 +7,30 @@ import { BubbleBackground } from '../components/background/BubbleBackground';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import logo from '../../assets/rsc-logo.png';
+import { supabase } from '../../lib/supabaseClient';
 
 export default function Home() {
+  const [announcement, setAnnouncement] = React.useState('');
+
+React.useEffect(() => {
+  const fetchAnnouncement = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('site_settings')
+        .select('announcement')
+        .eq('id', 1)
+        .single();
+
+      if (!error && data?.announcement) {
+        setAnnouncement(data.announcement);
+      }
+    } catch (err) {
+      console.error('Error loading announcement:', err);
+    }
+  };
+
+  fetchAnnouncement();
+}, []);
   return (
     <div className="min-h-screen font-sans text-slate-800 overflow-x-hidden relative">
       <Navbar />
