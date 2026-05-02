@@ -751,12 +751,12 @@ case 'opportunities':
 >
   <Briefcase size={16} /> Create New Opportunity
 </Button>
-        <button
-  onClick={() => navigate('/director/settings')}
-  className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white px-4 py-2 rounded-xl"
+        <Button
+  className="gap-2 bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
+  onClick={() => navigate('/director/announcements')}
 >
-  Center Settings
-</button>
+  Announcements
+</Button>
       </div>
 
       {opportunities.length === 0 ? (
