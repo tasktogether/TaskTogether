@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../../lib/supabase';
+import { supabase } from '../../lib/supabase.ts';
 import { useNavigate } from 'react-router-dom';
 
 export default function AnnouncementsPage() {
