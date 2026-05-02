@@ -7,7 +7,7 @@ import { BubbleBackground } from '../components/background/BubbleBackground';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
 import logo from '../../assets/rsc-logo.png';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 
 export default function Home() {
   const [announcement, setAnnouncement] = React.useState('');
