@@ -21,10 +21,10 @@ export default function DirectorSettings() {
     setLoading(true);
 
     const { data, error } = await supabase
-      .from('site_settings')
-      .select('*')
-      .limit(1)
-      .single();
+  .from('site_settings')
+  .select('*')
+  .eq('id', 1)
+  .single();
 
     if (error) {
       console.error('Error loading settings:', error);
@@ -51,16 +51,21 @@ export default function DirectorSettings() {
   const handleSave = async () => {
     setSaving(true);
 
-    const { error } = await supabase
-      .from('site_settings')
-      .upsert({
-        id: 1,
-        announcement: settings.announcement,
-        phone: settings.phone,
-        email: settings.email,
-        address: settings.address,
-        hours: settings.hours
-      });
+const { error } = await supabase
+  .from('site_settings')
+  .upsert(
+    {
+      id: 1,
+      announcement: settings.announcement,
+      phone: settings.phone,
+      email: settings.email,
+      address: settings.address,
+      hours: settings.hours
+    },
+    {
+      onConflict: 'id'
+    }
+  );
 
     if (error) {
       alert('Error saving settings');
@@ -87,7 +92,7 @@ export default function DirectorSettings() {
       <div className="bg-white shadow rounded-2xl p-6 space-y-4">
         <div>
           <label className="block text-sm font-medium text-[#4B4B55] mb-1">
-            Announcement
+            Center Announcement or Volunteer Notice
           </label>
           <textarea
             name="announcement"
