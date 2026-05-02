@@ -13,7 +13,15 @@ export default function Home() {
     <div className="min-h-screen font-sans text-slate-800 overflow-x-hidden relative">
       <Navbar />
       <BubbleBackground />
-
+     {announcement && (
+  <div className="max-w-4xl mx-auto mt-6 px-6">
+    <div className="bg-[#FFF8E1] border border-[#FFC72C] rounded-xl p-4 text-center">
+      <p className="text-[#4B4B55] font-medium">
+        {announcement}
+      </p>
+    </div>
+  </div>
+)} 
       <section className="pt-32 pb-20 px-6 relative">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 relative z-10">
