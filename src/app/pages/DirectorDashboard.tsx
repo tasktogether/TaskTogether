@@ -995,6 +995,9 @@ const statusClasses =
             variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
             fullWidth
             className="justify-start gap-3"
+  >
+  <Briefcase size={18} /> Opportunities
+</Button>
             onClick={() => setActiveTab('opportunities')}
 <div className="p-4 space-y-2">
   <Button
