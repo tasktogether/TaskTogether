@@ -35,7 +35,7 @@ export default function AdminDashboard() {
   removeVolunteerFromOpportunity,
   authLoading,
 } = useAuth();
-    const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'applications' | 'volunteers' | 'opportunities' | 'announcements'>('overview');
 const [processingApplicationId, setProcessingApplicationId] = useState<string | number | null>(null);
 const [processingAction, setProcessingAction] = useState<'approve' | 'reject' | null>(null);
 const navigate = useNavigate();
@@ -751,12 +751,6 @@ case 'opportunities':
 >
   <Briefcase size={16} /> Create New Opportunity
 </Button>
-        <Button
-  className="gap-2 bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
-  onClick={() => navigate('/director/announcements')}
->
-  Announcements
-</Button>
       </div>
 
       {opportunities.length === 0 ? (
@@ -781,6 +775,21 @@ const status = getOpportunityStatus(
   opp.volunteer_limit,
   opp.status
 );
+    case 'announcements':
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-slate-800">
+        Announcements
+      </h1>
+
+      <Button
+        className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
+        onClick={() => navigate('/director/announcements')}
+      >
+        Open Announcements Page
+      </Button>
+    </div>
+  );
 const statusClasses =
   status === 'Needs Adult Volunteer'
     ? 'bg-red-100 text-red-700'
@@ -987,7 +996,20 @@ const statusClasses =
             fullWidth
             className="justify-start gap-3"
             onClick={() => setActiveTab('opportunities')}
-          >
+>
+  Opportunities
+</button>
+
+<button
+  onClick={() => setActiveTab('announcements')}
+  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+    activeTab === 'announcements'
+      ? 'bg-[#EAF7DC] text-[#5E8F25]'
+      : 'text-slate-600 hover:bg-slate-100'
+  }`}
+>
+  📢 Announcements
+</button>
             <Briefcase size={18} /> Opportunities
           </Button>
         </div>
