@@ -1000,7 +1000,9 @@ const statusClasses =
   Opportunities
 </button>
 
-<button
+            <Briefcase size={18} /> Opportunities
+          </Button>
+    <Button
   onClick={() => setActiveTab('announcements')}
   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
     activeTab === 'announcements'
@@ -1008,11 +1010,9 @@ const statusClasses =
       : 'text-slate-600 hover:bg-slate-100'
   }`}
 >
-  📢 Announcements
-</button>
-            <Briefcase size={18} /> Opportunities
-          </Button>
-        </div>
+ Announcements
+</Button>
+      </div>
 
         <div className="p-4 border-t border-slate-100">
          <Button
