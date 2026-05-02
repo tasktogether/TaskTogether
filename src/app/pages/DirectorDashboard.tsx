@@ -775,21 +775,6 @@ const status = getOpportunityStatus(
   opp.volunteer_limit,
   opp.status
 );
-    case 'announcements':
-  return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-800">
-        Announcements
-      </h1>
-
-      <Button
-        className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
-        onClick={() => navigate('/director/announcements')}
-      >
-        Open Announcements Page
-      </Button>
-    </div>
-  );
 const statusClasses =
   status === 'Needs Adult Volunteer'
     ? 'bg-red-100 text-red-700'
@@ -944,6 +929,21 @@ const statusClasses =
             })}
         </div>
       )}
+    </div>
+  );
+     case 'announcements':
+  return (
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-slate-800">
+        Announcements
+      </h1>
+
+      <Button
+        className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
+        onClick={() => navigate('/director/announcements')}
+      >
+        Open Announcements Page
+      </Button>
     </div>
   );
     default:
