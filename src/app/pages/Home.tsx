@@ -13,11 +13,10 @@ export default function Home() {
   const [announcement, setAnnouncement] = React.useState('');
   React.useEffect(() => {
   const fetchAnnouncement = async () => {
-    const { data } = await supabase
-      .from('site_settings')
-      .select('announcement')
-      .eq('id', 1)
-      .single();
+ const { data } = await supabase
+  .from('announcements')
+  .select('*')
+  .gte('expires_at', new Date().toISOString().split('T')[0]);
 
     if (data?.announcement) {
       setAnnouncement(data.announcement);
@@ -31,11 +30,11 @@ export default function Home() {
     <div className="min-h-screen font-sans text-slate-800 overflow-x-hidden relative">
       <Navbar />
       <BubbleBackground />
-{announcement && (
-  <div className="max-w-4xl mx-auto mt-6 px-6">
-    <div className="bg-[#FFF8E1] border border-[#FFC72C] rounded-xl p-4 text-center shadow-sm">
-      <p className="text-[#4B4B55] font-medium">
-        {announcement}
+{announcements.map((a) => (
+  <div key={a.id} className="mb-3 bg-[#FFF8E1] border border-[#FFC72C] p-4 rounded-xl">
+    {a.message}
+  </div>
+))}
       </p>
     </div>
   </div>
