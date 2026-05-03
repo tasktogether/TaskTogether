@@ -1007,65 +1007,6 @@ case 'announcements':
             variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
             fullWidth
             className="justify-start gap-3"
-  >
-  <Briefcase size={18} /> Opportunities
-</Button>
-            onClick={() => setActiveTab('opportunities')}
-<div className="p-4 space-y-2">
-  <Button
-    variant={activeTab === 'overview' ? 'default' : 'ghost'}
-    onClick={() => setActiveTab('overview')}
-    className="w-full justify-start gap-3"
-  >
-    <LayoutDashboard size={18} /> Overview
-  </Button>
-
-  <Button
-    variant={activeTab === 'applications' ? 'default' : 'ghost'}
-    onClick={() => setActiveTab('applications')}
-    className="w-full justify-start gap-3"
-  >
-    <FileText size={18} /> Applications
-  </Button>
-
-  <Button
-    variant={activeTab === 'volunteers' ? 'default' : 'ghost'}
-    onClick={() => setActiveTab('volunteers')}
-    className="w-full justify-start gap-3"
-  >
-    <Users size={18} /> Volunteers
-  </Button>
-
-  <Button
-    variant={activeTab === 'opportunities' ? 'default' : 'ghost'}
-    onClick={() => setActiveTab('opportunities')}
-    className="w-full justify-start gap-3"
-  >
-    <Briefcase size={18} /> Opportunities
-  </Button>
-
-  <Button
-    variant={activeTab === 'announcements' ? 'default' : 'ghost'}
-    onClick={() => setActiveTab('announcements')}
-    className="w-full justify-start gap-3"
-  >
-    📢 Announcements
-  </Button>
-</div>
-      </div>
-
-        <div className="p-4 border-t border-slate-100">
-         <Button
-  variant="ghost"
-  fullWidth
-  className="justify-start text-red-500 hover:bg-red-50 hover:text-red-600 gap-3"
-  onClick={async () => {
-    await logout();
-    navigate('/');
-  }}
->
-  <LogOut size={18} /> Sign Out
-</Button>
         </div>
       </aside>
 
