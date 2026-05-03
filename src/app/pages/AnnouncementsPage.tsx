@@ -26,17 +26,10 @@ export default function AnnouncementsPage() {
   const handleSave = async () => {
     setSaving(true);
 
-    const { error } = await supabase
-      .from('site_settings')
-      .upsert(
-        {
-          id: 1,
-          announcement: announcement
-        },
-        {
-          onConflict: 'id'
-        }
-      );
+await supabase.from('announcements').insert({
+  message: announcement,
+  expires_at: selectedDate, // you'll add a date input
+});
 
     if (error) {
       alert('Error saving announcement');
@@ -73,7 +66,12 @@ export default function AnnouncementsPage() {
           className="w-full border border-slate-300 rounded-lg p-3"
           placeholder="Example: Volunteers are needed this Friday for the lunch program. Please sign up if available."
         />
-
+<input
+  type="date"
+  value={selectedDate}
+  onChange={(e) => setSelectedDate(e.target.value)}
+  className="border p-2 rounded-lg"
+/>
         <button
           type="button"
           onClick={handleSave}
