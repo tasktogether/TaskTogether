@@ -35,11 +35,7 @@ export default function Home() {
     {a.message}
   </div>
 ))}
-      </p>
-    </div>
-  </div>
-)}
-      <section className="pt-32 pb-20 px-6 relative">
+   <section className="pt-32 pb-20 px-6 relative">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 relative z-10">
             <div>
