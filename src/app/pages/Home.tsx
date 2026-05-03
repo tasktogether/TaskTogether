@@ -10,16 +10,16 @@ import logo from '../../assets/rsc-logo.png';
 import { supabase } from '../../lib/supabase.ts';
 
 export default function Home() {
-  const [announcement, setAnnouncement] = React.useState('');
+const [announcements, setAnnouncements] = React.useState<any[]>([]);
   React.useEffect(() => {
-  const fetchAnnouncement = async () => {
+const fetchAnnouncement = async () => {
  const { data } = await supabase
   .from('announcements')
   .select('*')
   .gte('expires_at', new Date().toISOString().split('T')[0]);
 
     if (data?.announcement) {
-      setAnnouncement(data.announcement);
+      setAnnouncements(data || []);
     }
   };
 
