@@ -995,14 +995,6 @@ case 'announcements':
     Announcements
   </Button>
 </div>
-
-       <Button
-  fullWidth
-  onClick={() => setActiveTab('announcements')}
-  className="justify-start gap-3"
->
-  Announcements
-</Button>
       </aside>
 
       <main className="flex-1 md:ml-64 p-6 pt-20 md:pt-6">
