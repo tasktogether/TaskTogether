@@ -11,39 +11,35 @@ import { supabase } from '../../lib/supabase.ts';
 
 export default function Home() {
   const [announcement, setAnnouncement] = React.useState('');
-
-React.useEffect(() => {
+  React.useEffect(() => {
   const fetchAnnouncement = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('announcement')
-        .eq('id', 1)
-        .single();
+    const { data } = await supabase
+      .from('site_settings')
+      .select('announcement')
+      .eq('id', 1)
+      .single();
 
-      if (!error && data?.announcement) {
-        setAnnouncement(data.announcement);
-      }
-    } catch (err) {
-      console.error('Error loading announcement:', err);
+    if (data?.announcement) {
+      setAnnouncement(data.announcement);
     }
   };
 
   fetchAnnouncement();
 }, []);
+
   return (
     <div className="min-h-screen font-sans text-slate-800 overflow-x-hidden relative">
       <Navbar />
       <BubbleBackground />
-     {announcement && (
+{announcement && (
   <div className="max-w-4xl mx-auto mt-6 px-6">
-    <div className="bg-[#FFF8E1] border border-[#FFC72C] rounded-xl p-4 text-center">
+    <div className="bg-[#FFF8E1] border border-[#FFC72C] rounded-xl p-4 text-center shadow-sm">
       <p className="text-[#4B4B55] font-medium">
         {announcement}
       </p>
     </div>
   </div>
-)} 
+)}
       <section className="pt-32 pb-20 px-6 relative">
         <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 relative z-10">
