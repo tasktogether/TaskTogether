@@ -44,24 +44,16 @@ const handleSave = async () => {
 
   setSaving(false);
 };
-
   return (
     <div className="p-6 max-w-3xl mx-auto">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-4 text-sm text-[#4B4B55] underline"
-      >
-        ← Back to Opportunities
-      </button>
-
       <h1 className="text-3xl font-bold text-[#4B4B55] mb-6">
         Announcements
       </h1>
 
       <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4 shadow-sm">
-        <label className="block text-sm font-medium text-[#4B4B55]">
-          Volunteer Announcement or Newsletter Message
-        </label>
+        <p className="text-sm text-[#4B4B55] font-medium">
+          This message will be shown to all volunteers on the homepage.
+        </p>
 
         <textarea
           value={announcement}
@@ -70,12 +62,18 @@ const handleSave = async () => {
           className="w-full border border-slate-300 rounded-lg p-3"
           placeholder="Example: Volunteers are needed this Friday for the lunch program. Please sign up if available."
         />
-<label className="text-sm text-slate-600">
-  Expiration Date (announcement will disappear after this date)
-</label>
-        <p className="text-xs text-slate-400 mt-1">
-  Example: Set this to the day after the event so volunteers stop seeing it automatically.
-</p>
+
+        <label className="text-sm text-slate-600">
+          Expiration Date (announcement will disappear after this date)
+        </label>
+
+        <input
+          type="date"
+          value={selectedDate}
+          onChange={(e) => setSelectedDate(e.target.value)}
+          className="border p-2 rounded-lg"
+        />
+
         <button
           type="button"
           onClick={handleSave}
