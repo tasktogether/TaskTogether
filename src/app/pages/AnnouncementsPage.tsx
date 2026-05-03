@@ -1,49 +1,33 @@
-import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase.ts';
+import React, { useState } from 'react';
+import { supabase } from '../../../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 export default function AnnouncementsPage() {
   const navigate = useNavigate();
+
   const [announcement, setAnnouncement] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetchAnnouncement();
-  }, []);
+  const handleSave = async () => {
+    setSaving(true);
 
-  const fetchAnnouncement = async () => {
     const { error } = await supabase.from('announcements').insert({
-  message: announcement,
-  expires_at: selectedDate,
-});
+      message: announcement,
+      expires_at: selectedDate,
+    });
 
-if (error) {
-  alert('Error saving announcement');
-  console.error(error);
-} else {
-  alert('Announcement saved');
-}
-const handleSave = async () => {
-  setSaving(true);
+    if (error) {
+      alert('Error saving announcement');
+      console.error(error);
+    } else {
+      alert('Announcement saved');
+      navigate('/director/dashboard');
+    }
 
-  const { error } = await supabase.from('announcements').insert({
-    message: announcement,
-    expires_at: selectedDate,
-  });
+    setSaving(false);
+  };
 
-  if (error) {
-    alert('Error saving announcement');
-    console.error(error);
-  } else {
-    alert('Announcement saved');
-    
-    // 👇 THIS IS THE IMPORTANT PART
-    navigate('/director/dashboard');
-  }
-
-  setSaving(false);
-};
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold text-[#4B4B55] mb-6">
