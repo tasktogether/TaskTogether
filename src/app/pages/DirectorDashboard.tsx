@@ -991,9 +991,13 @@ case 'announcements':
     <Briefcase size={18} /> Opportunities
   </Button>
 
-  <Button onClick={() => setActiveTab('announcements')} className="w-full justify-start gap-3">
-    Announcements
-  </Button>
+<Button
+  fullWidth
+  onClick={() => setActiveTab('announcements')}
+  className="justify-start gap-3"
+>
+  Announcements
+</Button>
 </div>
       </aside>
 
