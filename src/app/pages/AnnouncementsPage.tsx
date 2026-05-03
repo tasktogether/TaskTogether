@@ -13,17 +13,17 @@ export default function AnnouncementsPage() {
   }, []);
 
   const fetchAnnouncement = async () => {
-    const { data, error } = await supabase
-      .from('site_settings')
-      .select('announcement')
-      .eq('id', 1)
-      .single();
+    const { error } = await supabase.from('announcements').insert({
+  message: announcement,
+  expires_at: selectedDate,
+});
 
-    if (!error && data?.announcement) {
-      setAnnouncement(data.announcement);
-    }
-  };
-
+if (error) {
+  alert('Error saving announcement');
+  console.error(error);
+} else {
+  alert('Announcement saved');
+}
   const handleSave = async () => {
     setSaving(true);
 
@@ -67,12 +67,12 @@ await supabase.from('announcements').insert({
           className="w-full border border-slate-300 rounded-lg p-3"
           placeholder="Example: Volunteers are needed this Friday for the lunch program. Please sign up if available."
         />
-<input
-  type="date"
-  value={selectedDate}
-  onChange={(e) => setSelectedDate(e.target.value)}
-  className="border p-2 rounded-lg"
-/>
+<label className="text-sm text-slate-600">
+  Expiration Date (announcement will disappear after this date)
+</label>
+        <p className="text-xs text-slate-400 mt-1">
+  Example: Set this to the day after the event so volunteers stop seeing it automatically.
+</p>
         <button
           type="button"
           onClick={handleSave}
