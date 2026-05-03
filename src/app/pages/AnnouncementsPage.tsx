@@ -24,23 +24,26 @@ if (error) {
 } else {
   alert('Announcement saved');
 }
-  const handleSave = async () => {
-    setSaving(true);
+const handleSave = async () => {
+  setSaving(true);
 
-await supabase.from('announcements').insert({
-  message: announcement,
-  expires_at: selectedDate, // you'll add a date input
-});
+  const { error } = await supabase.from('announcements').insert({
+    message: announcement,
+    expires_at: selectedDate,
+  });
 
-    if (error) {
-      alert('Error saving announcement');
-      console.error(error);
-    } else {
-      alert('Announcement saved successfully');
-    }
+  if (error) {
+    alert('Error saving announcement');
+    console.error(error);
+  } else {
+    alert('Announcement saved');
+    
+    // 👇 THIS IS THE IMPORTANT PART
+    navigate('/director/dashboard');
+  }
 
-    setSaving(false);
-  };
+  setSaving(false);
+};
 
   return (
     <div className="p-6 max-w-3xl mx-auto">
