@@ -974,34 +974,27 @@ case 'announcements':
             Director Portal
           </span>
         </div>
+<div className="p-4 space-y-2">
+  <Button onClick={() => setActiveTab('overview')} className="w-full justify-start gap-3">
+    <LayoutDashboard size={18} /> Overview
+  </Button>
 
-        <div className="p-4 space-y-2 flex-1">
-          <Button
-            variant={activeTab === 'overview' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('overview')}
-          >
-            <LayoutDashboard size={18} /> Overview
-          </Button>
+  <Button onClick={() => setActiveTab('applications')} className="w-full justify-start gap-3">
+    <FileText size={18} /> Applications
+  </Button>
 
-          <Button
-            variant={activeTab === 'applications' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('applications')}
-          >
-            <FileText size={18} /> Applications
-          </Button>
+  <Button onClick={() => setActiveTab('volunteers')} className="w-full justify-start gap-3">
+    <Users size={18} /> Volunteers
+  </Button>
 
-          <Button
-            variant={activeTab === 'volunteers' ? 'primary' : 'ghost'}
-            fullWidth
-            className="justify-start gap-3"
-            onClick={() => setActiveTab('volunteers')}
-          >
-            <Users size={18} /> Volunteers
-          </Button>
+  <Button onClick={() => setActiveTab('opportunities')} className="w-full justify-start gap-3">
+    <Briefcase size={18} /> Opportunities
+  </Button>
+
+  <Button onClick={() => setActiveTab('announcements')} className="w-full justify-start gap-3">
+    Announcements
+  </Button>
+</div>
 
           <Button
             variant={activeTab === 'opportunities' ? 'primary' : 'ghost'}
