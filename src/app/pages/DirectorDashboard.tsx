@@ -931,19 +931,31 @@ const statusClasses =
       )}
     </div>
   );
-     case 'announcements':
+case 'announcements':
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-slate-800">
-        Announcements
-      </h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-2xl font-bold font-poppins text-slate-800">
+          Announcements
+        </h1>
 
-      <Button
-        className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
-        onClick={() => navigate('/director/announcements')}
-      >
-        Open Announcements Page
-      </Button>
+        <Button
+          className="bg-[#08A8D8] hover:bg-[#5E8F25] text-white"
+          onClick={() => navigate('/director/announcements')}
+        >
+          Create Announcement
+        </Button>
+      </div>
+
+      <div className="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm text-center">
+        <p className="text-slate-700 font-medium">
+          Send important updates to volunteers.
+        </p>
+
+        <p className="text-slate-500 text-sm mt-2">
+          Use announcements for schedule changes, urgent volunteer needs, or general notices.
+        </p>
+      </div>
     </div>
   );
     default:
