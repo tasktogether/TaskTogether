@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AnnouncementsPage() {
   const navigate = useNavigate();
   const [announcement, setAnnouncement] = useState('');
+  const [selectedDate, setSelectedDate] = useState('');
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
