@@ -52,6 +52,10 @@ const [editOpportunityForm, setEditOpportunityForm] = useState({
   opportunity_date: '',
   time_commitment: '',
   volunteer_limit: '1',
+  schedule_type: 'specific' as 'specific' | 'flexible',
+  senior_name: '',
+  senior_email: '',
+  senior_phone: '',
 });
 const [editingOpportunityId, setEditingOpportunityId] = useState<string | number | null>(null);
 const [deletingOpportunityId, setDeletingOpportunityId] = useState<string | number | null>(null);
@@ -62,6 +66,10 @@ const [newOpportunity, setNewOpportunity] = useState({
   opportunity_date: '',
   time_commitment: '',
   volunteer_limit: '5',
+  schedule_type: 'specific' as 'specific' | 'flexible',
+  senior_name: '',
+  senior_email: '',
+  senior_phone: '',
 });
   const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('en-US', {
