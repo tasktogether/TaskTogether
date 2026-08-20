@@ -23,16 +23,22 @@ export interface Opportunity {
   time_commitment: string;
   location: string;
   volunteer_limit: number;
+
+  schedule_type?: 'specific' | 'flexible';
+  senior_name?: string;
+  senior_email?: string;
+  senior_phone?: string;
+
   current_volunteers?: number;
   signups?: {
-  volunteer_name: string;
-  volunteer_email: string;
-  is_adult?: boolean;
-  one_on_one_opt_in?: boolean;
-  background_check_completed?: boolean;
-}[];
-status?: string;
-adult_volunteers?: number;
+    volunteer_name: string;
+    volunteer_email: string;
+    is_adult?: boolean;
+    one_on_one_opt_in?: boolean;
+    background_check_completed?: boolean;
+  }[];
+  status?: string;
+  adult_volunteers?: number;
 }
 
 export interface Application {
@@ -65,6 +71,10 @@ interface AuthContextType {
   time_commitment: string;
   location: string;
   volunteer_limit: number;
+  schedule_type: 'specific' | 'flexible';
+  senior_name?: string;
+  senior_email?: string;
+  senior_phone?: string;
 }) => Promise<void>;
   logout: () => Promise<void>;
   register: (name: string, email: string) => void;
@@ -88,6 +98,10 @@ interface AuthContextType {
     time_commitment?: string;
     location?: string;
     volunteer_limit?: number;
+    schedule_type?: 'specific' | 'flexible';
+    senior_name?: string;
+    senior_email?: string;
+    senior_phone?: string;
   }
 ) => Promise<void>;
 removeVolunteerFromOpportunity: (
@@ -503,14 +517,23 @@ const createOpportunity = async (newOpp: {
   time_commitment: string;
   location: string;
   volunteer_limit: number;
+  schedule_type: 'specific' | 'flexible';
+  senior_name?: string;
+  senior_email?: string;
+  senior_phone?: string;
 }) => {
   if (
     !newOpp.title.trim() ||
-    !newOpp.description.trim() ||
-    !newOpp.opportunity_date.trim() ||
-    !newOpp.time_commitment.trim()
+    !newOpp.description.trim()
   ) {
     throw new Error('Please fill in all required fields.');
+  }
+
+  if (
+    newOpp.schedule_type === 'specific' &&
+    (!newOpp.opportunity_date.trim() || !newOpp.time_commitment.trim())
+  ) {
+    throw new Error('Please provide a date and time for a specific opportunity.');
   }
 
   if (newOpp.volunteer_limit < 1) {
@@ -521,10 +544,18 @@ const createOpportunity = async (newOpp: {
     {
       title: newOpp.title.trim(),
       description: newOpp.description.trim(),
-      opportunity_date: newOpp.opportunity_date.trim(),
-      time_commitment: newOpp.time_commitment.trim(),
+      opportunity_date:
+        newOpp.opportunity_date.trim() ||
+        new Date().toISOString().split('T')[0],
+      time_commitment:
+        newOpp.time_commitment.trim() ||
+        'Flexible — based on volunteer availability',
       location: 'Richmond Senior Center',
       volunteer_limit: newOpp.volunteer_limit,
+      schedule_type: newOpp.schedule_type,
+      senior_name: newOpp.senior_name?.trim() || null,
+      senior_email: newOpp.senior_email?.trim() || null,
+      senior_phone: newOpp.senior_phone?.trim() || null,
     },
   ]);
 
@@ -534,8 +565,7 @@ const createOpportunity = async (newOpp: {
   }
 
   await fetchOpportunities();
-};
-const deleteOpportunity = async (id: number) => {
+}; deleteOpportunity = async (id: number) => {
   const { error } = await supabase
     .from('opportunities')
     .delete()
@@ -559,6 +589,10 @@ const updateOpportunity = async (
     time_commitment?: string;
     location?: string;
     volunteer_limit?: number;
+    schedule_type?: 'specific' | 'flexible';
+    senior_name?: string;
+    senior_email?: string;
+    senior_phone?: string;
   }
 ) => {
   const cleanedUpdates = {
@@ -568,15 +602,25 @@ const updateOpportunity = async (
     opportunity_date: updates.opportunity_date?.trim(),
     time_commitment: updates.time_commitment?.trim(),
     location: 'Richmond Senior Center',
+    senior_name: updates.senior_name?.trim() || null,
+    senior_email: updates.senior_email?.trim() || null,
+    senior_phone: updates.senior_phone?.trim() || null,
   };
 
   if (
     !cleanedUpdates.title ||
-    !cleanedUpdates.description ||
-    !cleanedUpdates.opportunity_date ||
-    !cleanedUpdates.time_commitment
+    !cleanedUpdates.description
   ) {
-    toast.error('All opportunity fields are required.');
+    toast.error('Title and description are required.');
+    return;
+  }
+
+  if (
+    cleanedUpdates.schedule_type === 'specific' &&
+    (!cleanedUpdates.opportunity_date ||
+      !cleanedUpdates.time_commitment)
+  ) {
+    toast.error('A specific opportunity requires a date and time.');
     return;
   }
 
