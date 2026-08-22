@@ -287,13 +287,19 @@ if (!user || user.role !== 'director') {
 };
 const handleEditOpportunity = (opp: any) => {
   setEditingOpportunity(opp);
+
   setEditOpportunityForm({
     title: opp.title || '',
     description: opp.description || '',
     opportunity_date: opp.opportunity_date || '',
     time_commitment: opp.time_commitment || '',
     volunteer_limit: String(opp.volunteer_limit || 1),
+    schedule_type: opp.schedule_type || 'specific',
+    senior_name: opp.senior_name || '',
+    senior_email: opp.senior_email || '',
+    senior_phone: opp.senior_phone || '',
   });
+
   setIsEditOpportunityOpen(true);
 };
   const handleSaveEditedOpportunity = async () => {
