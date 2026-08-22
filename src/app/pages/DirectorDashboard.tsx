@@ -312,8 +312,8 @@ const handleEditOpportunity = (opp: any) => {
   const time = editOpportunityForm.time_commitment.trim();
   const volunteerLimit = Number(editOpportunityForm.volunteer_limit);
 
-  if (!title || !description || !date || !time) {
-    toast.error('Please complete all opportunity fields.');
+  if (!title || !description) {
+    toast.error('Please complete all required opportunity fields.');
     return;
   }
 
@@ -322,15 +322,30 @@ const handleEditOpportunity = (opp: any) => {
     return;
   }
 
+  if (editOpportunityForm.schedule_type === 'specific') {
+    if (!date || !time) {
+      toast.error('Please provide a date and time for a specific opportunity.');
+      return;
+    }
+  }
+
   setEditingOpportunityId(editingOpportunity.id);
 
   try {
     await updateOpportunity(editingOpportunity.id, {
       title,
       description,
-      opportunity_date: date,
-      time_commitment: time,
+      opportunity_date:
+        editOpportunityForm.schedule_type === 'flexible' ? '' : date,
+      time_commitment:
+        editOpportunityForm.schedule_type === 'flexible'
+          ? 'Flexible — based on volunteer availability'
+          : time,
       volunteer_limit: volunteerLimit,
+      schedule_type: editOpportunityForm.schedule_type,
+      senior_name: editOpportunityForm.senior_name.trim(),
+      senior_email: editOpportunityForm.senior_email.trim(),
+      senior_phone: editOpportunityForm.senior_phone.trim(),
     });
 
     toast.success('Opportunity updated successfully.');
@@ -343,7 +358,6 @@ const handleEditOpportunity = (opp: any) => {
     setEditingOpportunityId(null);
   }
 };
-
 const handleDeleteOpportunity = async (opp: any) => {
   if (deletingOpportunityId === opp.id) return;
 
