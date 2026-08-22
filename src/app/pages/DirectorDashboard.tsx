@@ -210,8 +210,8 @@ if (!user || user.role !== 'director') {
   const time = newOpportunity.time_commitment.trim();
   const volunteerLimit = Number(newOpportunity.volunteer_limit);
 
-   if (!title || !description || !date || !time) {
-    toast.error('Please complete all opportunity fields.');
+  if (!title || !description) {
+    toast.error('Please complete all required opportunity fields.');
     return;
   }
 
@@ -220,33 +220,47 @@ if (!user || user.role !== 'director') {
     return;
   }
 
- const today = new Date();
-today.setHours(0, 0, 0, 0);
+  if (newOpportunity.schedule_type === 'specific') {
+    if (!date || !time) {
+      toast.error('Please provide a date and time for a specific opportunity.');
+      return;
+    }
 
-const selectedDate = new Date(date);
-selectedDate.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-if (isNaN(selectedDate.getTime())) {
-  toast.error('Please enter a valid date.');
-  return;
-}
+    const selectedDate = new Date(date);
+    selectedDate.setHours(0, 0, 0, 0);
 
-if (selectedDate < today) {
-  toast.error('Opportunity date must be today or in the future.');
-  return;
-}
+    if (isNaN(selectedDate.getTime())) {
+      toast.error('Please enter a valid date.');
+      return;
+    }
+
+    if (selectedDate < today) {
+      toast.error('Opportunity date must be today or in the future.');
+      return;
+    }
+  }
 
   setIsCreatingOpportunity(true);
 
   try {
-await createOpportunity({
-  title,
-  description,
-  opportunity_date: date,
-  time_commitment: time,
-  location: 'Richmond Senior Center',
-  volunteer_limit: volunteerLimit,
-});
+    await createOpportunity({
+      title,
+      description,
+      opportunity_date: newOpportunity.schedule_type === 'flexible' ? '' : date,
+      time_commitment:
+        newOpportunity.schedule_type === 'flexible'
+          ? 'Flexible — based on volunteer availability'
+          : time,
+      location: 'Richmond Senior Center',
+      volunteer_limit: volunteerLimit,
+      schedule_type: newOpportunity.schedule_type,
+      senior_name: newOpportunity.senior_name.trim(),
+      senior_email: newOpportunity.senior_email.trim(),
+      senior_phone: newOpportunity.senior_phone.trim(),
+    });
 
     setNewOpportunity({
       title: '',
@@ -254,13 +268,19 @@ await createOpportunity({
       opportunity_date: '',
       time_commitment: '',
       volunteer_limit: '5',
+      schedule_type: 'specific',
+      senior_name: '',
+      senior_email: '',
+      senior_phone: '',
     });
 
     setIsCreateOpportunityOpen(false);
     toast.success('Opportunity created successfully.');
   } catch (error: any) {
     console.error('Create opportunity failed:', error);
-    toast.error(error?.message || 'Failed to create opportunity. Please try again.');
+    toast.error(
+      error?.message || 'Failed to create opportunity. Please try again.'
+    );
   } finally {
     setIsCreatingOpportunity(false);
   }
