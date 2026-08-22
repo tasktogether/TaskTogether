@@ -1092,90 +1092,234 @@ case 'announcements':
           </p>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-gradient-to-br from-violet-400 to-fuchsia-400 rounded-full flex items-center justify-center text-white font-bold text-xl">
-              {selectedVolunteer.userName?.charAt(0) || 'V'}
-            </div>
+       <div className="p-6 space-y-6">
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Opportunity Title
+    </label>
+    <input
+      type="text"
+      required
+      value={newOpportunity.title}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          title: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+      placeholder="Bingo Night"
+    />
+  </div>
 
-            <div>
-              <h3 className="text-xl font-bold text-slate-800">
-                {selectedVolunteer.userName}
-              </h3>
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Opportunity Description
+    </label>
+    <textarea
+      required
+      value={newOpportunity.description}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          description: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
+      placeholder="Help run bingo for seniors..."
+    />
+  </div>
 
-              <p className="text-sm text-slate-500">
-                {selectedVolunteer.userEmail}
-              </p>
+  {/* Schedule */}
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-2">
+      Schedule
+    </label>
 
-              <div className="mt-2 space-y-2">
-                <p className="text-xs font-semibold">
-                  {selectedVolunteer.one_on_one_opt_in
-                    ? 'Opted into 1-on-1 volunteering'
-                    : 'Not opted into 1-on-1 volunteering'}
-                </p>
+    <div className="space-y-2">
+      <label className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 cursor-pointer">
+        <input
+          type="radio"
+          name="create-schedule-type"
+          value="specific"
+          checked={newOpportunity.schedule_type === 'specific'}
+          onChange={() =>
+            setNewOpportunity({
+              ...newOpportunity,
+              schedule_type: 'specific',
+            })
+          }
+        />
+        <span className="text-sm text-slate-700">
+          Specific Date &amp; Time
+        </span>
+      </label>
 
-                {selectedVolunteer.one_on_one_opt_in &&
-                !selectedVolunteer.background_check_completed ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.open('https://www.sterlingvolunteers.com/', '_blank');
-                    }}
-                    className="text-xs font-semibold bg-blue-600 text-white px-3 py-2 rounded-lg hover:bg-blue-700"
-                  >
-                    Open Sterling Background Check
-                  </button>
-                ) : null}
+      <label className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 cursor-pointer">
+        <input
+          type="radio"
+          name="create-schedule-type"
+          value="flexible"
+          checked={newOpportunity.schedule_type === 'flexible'}
+          onChange={() =>
+            setNewOpportunity({
+              ...newOpportunity,
+              schedule_type: 'flexible',
+              opportunity_date: '',
+              time_commitment: '',
+            })
+          }
+        />
+        <span className="text-sm text-slate-700">
+          Flexible / Based on Volunteer Availability
+        </span>
+      </label>
+    </div>
+  </div>
 
-                <p
-                  className={`text-xs font-semibold ${
-                    selectedVolunteer.one_on_one_opt_in &&
-                    selectedVolunteer.background_check_completed
-                      ? 'text-green-700'
-                      : 'text-slate-500'
-                  }`}
-                >
-                  {selectedVolunteer.one_on_one_opt_in &&
-                  selectedVolunteer.background_check_completed
-                    ? '1-on-1 Approved'
-                    : '1-on-1 Not Approved'}
-                </p>
-              </div>
-            </div>
-          </div>
+  {newOpportunity.schedule_type === 'specific' && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Date
+        </label>
+        <input
+          type="date"
+          required
+          value={newOpportunity.opportunity_date}
+          onChange={(e) =>
+            setNewOpportunity({
+              ...newOpportunity,
+              opportunity_date: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-              <p className="text-xs uppercase font-bold text-slate-400">
-                Approved Date
-              </p>
-              <p className="text-sm font-medium text-slate-700 mt-1">
-                {selectedVolunteer.processedAt
-                  ? new Date(selectedVolunteer.processedAt).toLocaleDateString()
-                  : 'N/A'}
-              </p>
-            </div>
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Time Range
+        </label>
+        <input
+          type="text"
+          required
+          placeholder="12:30-3:30"
+          value={newOpportunity.time_commitment}
+          onChange={(e) =>
+            setNewOpportunity({
+              ...newOpportunity,
+              time_commitment: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+        <p className="text-xs text-slate-500 mt-1">
+          Enter the time range for this opportunity.
+        </p>
+      </div>
+    </div>
+  )}
 
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-              <p className="text-xs uppercase font-bold text-slate-400">
-                Signed Up
-              </p>
-              <p className="text-sm font-medium text-slate-700 mt-1">
-                {selectedVolunteerUpcomingOpportunities.length}
-              </p>
-            </div>
+  {newOpportunity.schedule_type === 'flexible' && (
+    <div className="bg-violet-50 border border-violet-100 rounded-xl p-4">
+      <p className="text-sm font-semibold text-violet-800">
+        Flexible Schedule
+      </p>
+      <p className="text-sm text-violet-700 mt-1">
+        This opportunity will be scheduled based on volunteer availability.
+        Volunteers will not be expected to attend at one specific date or time.
+      </p>
+    </div>
+  )}
 
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200">
-              <p className="text-xs uppercase font-bold text-slate-400">
-                Past Opportunities
-              </p>
-              <p className="text-sm font-medium text-slate-700 mt-1">
-                {selectedVolunteerPastOpportunities.length}
-              </p>
-            </div>
-          </div>
-        </div>
+  {/* Volunteer Spots */}
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Number of Volunteer Spots
+    </label>
+    <input
+      type="number"
+      min="1"
+      max="50"
+      required
+      value={newOpportunity.volunteer_limit}
+      onChange={(e) =>
+        setNewOpportunity({
+          ...newOpportunity,
+          volunteer_limit: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 
+  {/* Senior / Task Contact */}
+  <div className="border-t border-slate-100 pt-6">
+    <h3 className="text-sm font-bold text-slate-800 mb-1">
+      Senior / Task Contact
+    </h3>
+    <p className="text-xs text-slate-500 mb-4">
+      This information is for director organization and is not shown to volunteers.
+    </p>
+
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Name
+        </label>
+        <input
+          type="text"
+          value={newOpportunity.senior_name}
+          onChange={(e) =>
+            setNewOpportunity({
+              ...newOpportunity,
+              senior_name: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+          placeholder="Name"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Email
+        </label>
+        <input
+          type="email"
+          value={newOpportunity.senior_email}
+          onChange={(e) =>
+            setNewOpportunity({
+              ...newOpportunity,
+              senior_email: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+          placeholder="email@example.com"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Phone Number
+        </label>
+        <input
+          type="tel"
+          value={newOpportunity.senior_phone}
+          onChange={(e) =>
+            setNewOpportunity({
+              ...newOpportunity,
+              senior_phone: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+          placeholder="Phone number"
+        />
+      </div>
+    </div>
+  </div>
+</div>
         <div className="px-6 py-4 border-t border-slate-100 flex justify-end">
           <Button
             variant="ghost"
