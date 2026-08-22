@@ -1358,100 +1358,224 @@ case 'announcements':
           </p>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Opportunity Title
-            </label>
-            <input
-              type="text"
-              required
-              value={editOpportunityForm.title}
-              onChange={(e) =>
-                setEditOpportunityForm({
-                  ...editOpportunityForm,
-                  title: e.target.value,
-                })
-              }
-              className="w-full border border-slate-200 rounded-xl px-4 py-3"
-            />
-          </div>
+       <div className="p-6 space-y-6">
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Opportunity Title
+    </label>
+    <input
+      type="text"
+      required
+      value={editOpportunityForm.title}
+      onChange={(e) =>
+        setEditOpportunityForm({
+          ...editOpportunityForm,
+          title: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">
-              Opportunity Description
-            </label>
-            <textarea
-              required
-              value={editOpportunityForm.description}
-              onChange={(e) =>
-                setEditOpportunityForm({
-                  ...editOpportunityForm,
-                  description: e.target.value,
-                })
-              }
-              className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
-            />
-          </div>
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Opportunity Description
+    </label>
+    <textarea
+      required
+      value={editOpportunityForm.description}
+      onChange={(e) =>
+        setEditOpportunityForm({
+          ...editOpportunityForm,
+          description: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-[100px]"
+    />
+  </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
-                Date
-              </label>
-              <input
-                type="date"
-                required
-                value={editOpportunityForm.opportunity_date}
-                onChange={(e) =>
-                  setEditOpportunityForm({
-                    ...editOpportunityForm,
-                    opportunity_date: e.target.value,
-                  })
-                }
-                className="w-full border border-slate-200 rounded-xl px-4 py-3"
-              />
-            </div>
+  {/* Schedule */}
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-2">
+      Schedule
+    </label>
 
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
-                Time Range
-              </label>
-              <input
-                type="text"
-                required
-                value={editOpportunityForm.time_commitment}
-                onChange={(e) =>
-                  setEditOpportunityForm({
-                    ...editOpportunityForm,
-                    time_commitment: e.target.value,
-                  })
-                }
-                className="w-full border border-slate-200 rounded-xl px-4 py-3"
-              />
-            </div>
+    <div className="space-y-2">
+      <label className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 cursor-pointer">
+        <input
+          type="radio"
+          name="edit-schedule-type"
+          value="specific"
+          checked={editOpportunityForm.schedule_type === 'specific'}
+          onChange={() =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              schedule_type: 'specific',
+            })
+          }
+        />
+        <span className="text-sm text-slate-700">
+          Specific Date &amp; Time
+        </span>
+      </label>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-slate-700 mb-1">
-                Number of Volunteer Spots
-              </label>
-              <input
-                type="number"
-                min="1"
-                max="50"
-                required
-                value={editOpportunityForm.volunteer_limit}
-                onChange={(e) =>
-                  setEditOpportunityForm({
-                    ...editOpportunityForm,
-                    volunteer_limit: e.target.value,
-                  })
-                }
-                className="w-full border border-slate-200 rounded-xl px-4 py-3"
-              />
-            </div>
-          </div>
-        </div>
+      <label className="flex items-center gap-3 border border-slate-200 rounded-xl px-4 py-3 cursor-pointer">
+        <input
+          type="radio"
+          name="edit-schedule-type"
+          value="flexible"
+          checked={editOpportunityForm.schedule_type === 'flexible'}
+          onChange={() =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              schedule_type: 'flexible',
+              opportunity_date: '',
+              time_commitment: '',
+            })
+          }
+        />
+        <span className="text-sm text-slate-700">
+          Flexible / Based on Volunteer Availability
+        </span>
+      </label>
+    </div>
+  </div>
+
+  {editOpportunityForm.schedule_type === 'specific' && (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Date
+        </label>
+        <input
+          type="date"
+          required
+          value={editOpportunityForm.opportunity_date}
+          onChange={(e) =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              opportunity_date: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Time Range
+        </label>
+        <input
+          type="text"
+          required
+          value={editOpportunityForm.time_commitment}
+          onChange={(e) =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              time_commitment: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
+    </div>
+  )}
+
+  {editOpportunityForm.schedule_type === 'flexible' && (
+    <div className="bg-violet-50 border border-violet-100 rounded-xl p-4">
+      <p className="text-sm font-semibold text-violet-800">
+        Flexible Schedule
+      </p>
+      <p className="text-sm text-violet-700 mt-1">
+        This opportunity will be scheduled based on volunteer availability.
+        Volunteers will not be expected to attend at one specific date or time.
+      </p>
+    </div>
+  )}
+
+  <div>
+    <label className="block text-sm font-semibold text-slate-700 mb-1">
+      Number of Volunteer Spots
+    </label>
+    <input
+      type="number"
+      min="1"
+      max="50"
+      required
+      value={editOpportunityForm.volunteer_limit}
+      onChange={(e) =>
+        setEditOpportunityForm({
+          ...editOpportunityForm,
+          volunteer_limit: e.target.value,
+        })
+      }
+      className="w-full border border-slate-200 rounded-xl px-4 py-3"
+    />
+  </div>
+
+  {/* Senior / Task Contact */}
+  <div className="border-t border-slate-100 pt-6">
+    <h3 className="text-sm font-bold text-slate-800 mb-1">
+      Senior / Task Contact
+    </h3>
+    <p className="text-xs text-slate-500 mb-4">
+      This information is for director organization and is not shown to volunteers.
+    </p>
+
+    <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Name
+        </label>
+        <input
+          type="text"
+          value={editOpportunityForm.senior_name}
+          onChange={(e) =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              senior_name: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Email
+        </label>
+        <input
+          type="email"
+          value={editOpportunityForm.senior_email}
+          onChange={(e) =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              senior_email: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-1">
+          Senior / Task Phone Number
+        </label>
+        <input
+          type="tel"
+          value={editOpportunityForm.senior_phone}
+          onChange={(e) =>
+            setEditOpportunityForm({
+              ...editOpportunityForm,
+              senior_phone: e.target.value,
+            })
+          }
+          className="w-full border border-slate-200 rounded-xl px-4 py-3"
+        />
+      </div>
+    </div>
+  </div>
+</div>
 
         <div className="px-6 py-4 border-t border-slate-100 flex justify-end gap-3">
           <Button
