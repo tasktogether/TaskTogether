@@ -97,17 +97,29 @@ const isAlreadySignedUp = (opp: any) => {
         opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
       const isUpcoming =
-        new Date(opp.opportunity_date).getTime() >=
-        new Date(new Date().setHours(0, 0, 0, 0)).getTime();
-
+  opp.schedule_type === 'flexible' ||
+  new Date(opp.opportunity_date).getTime() >=
+    new Date(new Date().setHours(0, 0, 0, 0)).getTime();
       return matchesSearch && isUpcoming;
     })
-    .sort(
-      (a, b) =>
-        new Date(a.opportunity_date).getTime() -
-        new Date(b.opportunity_date).getTime()
-    );
+    .sort((a, b) => {
+  if (a.schedule_type === 'flexible' && b.schedule_type !== 'flexible') {
+    return 1;
+  }
 
+  if (a.schedule_type !== 'flexible' && b.schedule_type === 'flexible') {
+    return -1;
+  }
+
+  if (a.schedule_type === 'flexible' && b.schedule_type === 'flexible') {
+    return 0;
+  }
+
+  return (
+    new Date(a.opportunity_date).getTime() -
+    new Date(b.opportunity_date).getTime()
+  );
+});
   const filters: FilterSlot[] = ['All'];
 
   return (
@@ -240,9 +252,11 @@ const isAlreadySignedUp = (opp: any) => {
   {Math.max(opp.volunteer_limit - (opp.current_volunteers || 0), 0)} spots remaining
 </div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
-                        <Clock size={14} className="text-violet-400" />
-                        {opp.time_commitment}
-                      </div>
+  <Clock size={14} className="text-violet-400" />
+  {opp.schedule_type === 'flexible'
+    ? 'Flexible — based on volunteer availability'
+    : opp.time_commitment}
+</div>
                       <div className="flex items-center gap-2 text-sm text-slate-500">
                         <MapPin size={14} className="text-pink-400" />
 {getSafeLocation(opp)}
@@ -313,15 +327,20 @@ const isAlreadySignedUp = (opp: any) => {
 )}
               <div className="p-8 space-y-8">
                 <div className="flex flex-wrap gap-4">
-                  <div className="bg-violet-50 text-violet-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <Clock size={18} /> {selectedOpp.time_commitment}
-                  </div>
+                <div className="bg-violet-50 text-violet-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+  <Clock size={18} />
+  {selectedOpp.schedule_type === 'flexible'
+    ? 'Flexible — based on volunteer availability'
+    : selectedOpp.time_commitment}
+</div>
                   <div className="bg-pink-50 text-pink-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
                     <MapPin size={18} /> {getSafeLocation(selectedOpp)}
                   </div>
-                  <div className="bg-orange-50 text-orange-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
-                    <Calendar size={18} /> {formatDate(selectedOpp.opportunity_date)}
-                  </div>
+                  {selectedOpp.schedule_type !== 'flexible' && (
+  <div className="bg-orange-50 text-orange-700 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2">
+    <Calendar size={18} /> {formatDate(selectedOpp.opportunity_date)}
+  </div>
+)}
                 </div>
 
                 <div>
