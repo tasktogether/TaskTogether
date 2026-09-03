@@ -522,10 +522,7 @@ const createOpportunity = async (newOpp: {
   senior_email?: string;
   senior_phone?: string;
 }) => {
-  if (
-    !newOpp.title.trim() ||
-    !newOpp.description.trim()
-  ) {
+  if (!newOpp.title.trim() || !newOpp.description.trim()) {
     throw new Error('Please fill in all required fields.');
   }
 
@@ -540,45 +537,53 @@ const createOpportunity = async (newOpp: {
     throw new Error('Volunteer limit must be at least 1.');
   }
 
-  const { error } = await supabase.from('opportunities').insert([
-    {
-      title: newOpp.title.trim(),
-      description: newOpp.description.trim(),
-      opportunity_date:
-        newOpp.opportunity_date.trim() ||
-        new Date().toISOString().split('T')[0],
-      time_commitment:
-        newOpp.time_commitment.trim() ||
-        'Flexible — based on volunteer availability',
-      location: 'Richmond Senior Center',
-      volunteer_limit: newOpp.volunteer_limit,
-      schedule_type: newOpp.schedule_type,
-      senior_name: newOpp.senior_name?.trim() || null,
-      senior_email: newOpp.senior_email?.trim() || null,
-      senior_phone: newOpp.senior_phone?.trim() || null,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from('opportunities')
+    .insert([
+      {
+        title: newOpp.title.trim(),
+        description: newOpp.description.trim(),
+        opportunity_date:
+          newOpp.opportunity_date.trim() ||
+          new Date().toISOString().split('T')[0],
+        time_commitment:
+          newOpp.time_commitment.trim() ||
+          'Flexible — based on volunteer availability',
+        location: 'Richmond Senior Center',
+        volunteer_limit: newOpp.volunteer_limit,
+        schedule_type: newOpp.schedule_type,
+      },
+    ])
+    .select('id')
+    .single();
 
-  if (error) {
+  if (error || !data) {
     console.error('Error creating opportunity:', error);
-    throw new Error(error.message || 'Failed to create opportunity.');
+    throw new Error(error?.message || 'Failed to create opportunity.');
+  }
+
+  const hasContactInfo =
+    newOpp.senior_name?.trim() ||
+    newOpp.senior_email?.trim() ||
+    newOpp.senior_phone?.trim();
+
+  if (hasContactInfo) {
+    const { error: contactError } = await supabase
+      .from('opportunity_contacts')
+      .insert({
+        opportunity_id: data.id,
+        senior_name: newOpp.senior_name?.trim() || null,
+        senior_email: newOpp.senior_email?.trim() || null,
+        senior_phone: newOpp.senior_phone?.trim() || null,
+      });
+
+    if (contactError) {
+      console.error('Error saving private contact info:', contactError);
+      throw new Error('Opportunity created, but contact information could not be saved.');
+    }
   }
 
   await fetchOpportunities();
-}; deleteOpportunity = async (id: number) => {
-  const { error } = await supabase
-    .from('opportunities')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting opportunity:', error);
-    toast.error('Failed to delete opportunity.');
-    return;
-  }
-
-  toast.success('Opportunity deleted.');
-  fetchOpportunities();
 };
 const updateOpportunity = async (
   id: number,
