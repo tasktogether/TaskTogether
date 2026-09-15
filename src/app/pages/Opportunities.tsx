@@ -79,15 +79,22 @@ const isAlreadySignedUp = (opp: any) => {
     });
   };
 
-  const getOpportunityStatus = (dateString: string) => {
-    const today = new Date();
-    const oppDate = new Date(dateString);
+ const getOpportunityStatus = (
+  dateString: string,
+  scheduleType?: 'specific' | 'flexible'
+) => {
+  if (scheduleType === 'flexible') {
+    return 'Upcoming';
+  }
 
-    today.setHours(0, 0, 0, 0);
-    oppDate.setHours(0, 0, 0, 0);
+  const today = new Date();
+  const oppDate = new Date(dateString);
 
-    return oppDate < today ? 'Past' : 'Upcoming';
-  };
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  return oppDate < today ? 'Past' : 'Upcoming';
+};
 
   const filteredOpps = opportunities
     .filter(opp => {
@@ -96,7 +103,7 @@ const isAlreadySignedUp = (opp: any) => {
         opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-      const isUpcoming =
+      cconst isUpcoming =
   opp.schedule_type === 'flexible' ||
   new Date(opp.opportunity_date).getTime() >=
     new Date(new Date().setHours(0, 0, 0, 0)).getTime();
@@ -232,7 +239,7 @@ const isAlreadySignedUp = (opp: any) => {
                     <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold shadow-sm text-violet-600">
                       {isFull(opp)
                         ? 'Full'
-                        : getOpportunityStatus(opp.opportunity_date) === 'Past'
+                        : getOpportunityStatus(opp.opportunity_date, opp.schedule_type) === 'Past'
                         ? 'Past'
                         : 'Upcoming'}
                     </div>
