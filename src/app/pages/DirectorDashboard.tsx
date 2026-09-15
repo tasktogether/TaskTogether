@@ -80,6 +80,33 @@ const [newOpportunity, setNewOpportunity] = useState({
 };
 
 const getOpportunityStatus = (
+  dateString: string,
+  scheduleType?: 'specific' | 'flexible',
+  currentVolunteers = 0,
+  volunteerLimit = 0,
+  dbStatus?: string
+) => {
+  if (scheduleType === 'flexible') {
+    if (dbStatus) return dbStatus;
+    if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
+    return 'Not Ready';
+  }
+
+  const today = new Date();
+  const oppDate = new Date(dateString);
+
+  today.setHours(0, 0, 0, 0);
+  oppDate.setHours(0, 0, 0, 0);
+
+  if (oppDate < today) return 'Past';
+
+  if (dbStatus) return dbStatus;
+
+  if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
+
+  return 'Not Ready';
+};
+
 const isRecentlyCreated = (dateString: string) => {
   const createdDate = new Date(dateString);
   const today = new Date();
@@ -89,6 +116,7 @@ const isRecentlyCreated = (dateString: string) => {
 
   return diffDays <= 7;
 };
+
 const isReadySoon = (dateString: string) => {
   const today = new Date();
   const oppDate = new Date(dateString);
