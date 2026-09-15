@@ -103,7 +103,7 @@ const isAlreadySignedUp = (opp: any) => {
         opp.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         opp.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-      cconst isUpcoming =
+      const isUpcoming =
   opp.schedule_type === 'flexible' ||
   new Date(opp.opportunity_date).getTime() >=
     new Date(new Date().setHours(0, 0, 0, 0)).getTime();
