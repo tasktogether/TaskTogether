@@ -146,7 +146,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setApplications(mappedApplications);
   };
 
-  const fetchOpportunities = async () => {
+const fetchOpportunities = async () => {
   const { data, error } = await supabase
     .from('opportunities')
     .select(`
@@ -163,30 +163,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return;
   }
 
-  const mappedOpportunities = await Promise.all(
-    (data || []).map(async (opp: any) => {
-      const signups = opp.opportunity_signups || [];
+  // Only the authenticated director can request private contact information.
+  const {
+    data: { user: authUser },
+  } = await supabase.auth.getUser();
 
-      const signupsWithSafety = await Promise.all(
-        signups.map(async (signup: any) => {
+  let contacts: any[] = [];
 
-          return {
-            ...signup,
-            is_adult: volunteer?.is_adult || false,
-            one_on_one_opt_in: volunteer?.one_on_one_opt_in || false,
-            background_check_completed: volunteer?.background_check_completed || false,
-          };
-        })
-      );
+  if (authUser?.email === DIRECTOR_EMAIL) {
+    const { data: contactData, error: contactError } = await supabase
+      .from('opportunity_contacts')
+      .select('*');
 
-      return {
-        ...opp,
-        current_volunteers: signupsWithSafety.length,
-        adult_volunteers: signupsWithSafety.filter(s => s.is_adult).length,
-        signups: signupsWithSafety,
-      };
-    })
-  );
+    if (contactError) {
+      console.error('Error loading opportunity contacts:', contactError);
+    } else {
+      contacts = contactData || [];
+    }
+  }
+
+  const mappedOpportunities = (data || []).map((opp: any) => {
+    const signups = opp.opportunity_signups || [];
+    const contact = contacts.find(
+      (item: any) => item.opportunity_id === opp.id
+    );
+
+    return {
+      ...opp,
+
+      // These only exist in memory for the authenticated director.
+      ...(authUser?.email === DIRECTOR_EMAIL
+        ? {
+            senior_name: contact?.senior_name || '',
+            senior_email: contact?.senior_email || '',
+            senior_phone: contact?.senior_phone || '',
+          }
+        : {}),
+
+      current_volunteers: signups.length,
+      adult_volunteers: 0,
+      signups,
+    };
+  });
 
   setOpportunities(mappedOpportunities);
 };
