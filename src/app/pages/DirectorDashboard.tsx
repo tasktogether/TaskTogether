@@ -80,26 +80,6 @@ const [newOpportunity, setNewOpportunity] = useState({
 };
 
 const getOpportunityStatus = (
-  dateString: string,
-  currentVolunteers = 0,
-  volunteerLimit = 0,
-  dbStatus?: string
-) => {
-  const today = new Date();
-  const oppDate = new Date(dateString);
-
-  today.setHours(0, 0, 0, 0);
-  oppDate.setHours(0, 0, 0, 0);
-
-  if (oppDate < today) return 'Past';
-
-  // Use database status if available
-  if (dbStatus) return dbStatus;
-
-  if (volunteerLimit > 0 && currentVolunteers >= volunteerLimit) return 'Full';
-
-  return 'Not Ready';
-};
 const isRecentlyCreated = (dateString: string) => {
   const createdDate = new Date(dateString);
   const today = new Date();
@@ -821,8 +801,9 @@ const status = getOpportunityStatus(
   opp.opportunity_date,
   opp.current_volunteers,
   opp.volunteer_limit,
-  opp.status
-);
+  opp.status,
+  opp.schedule_type
+)
 const statusClasses =
   status === 'Needs Adult Volunteer'
     ? 'bg-red-100 text-red-700'
