@@ -14,7 +14,6 @@ export interface User {
   totalHours?: number;
   joinDate?: string;
 }
-
 export interface Opportunity {
   id: number;
   title: string;
@@ -23,8 +22,9 @@ export interface Opportunity {
   time_commitment: string;
   location: string;
   volunteer_limit: number;
-
   schedule_type?: 'specific' | 'flexible';
+
+  // Director-only fields loaded from opportunity_contacts
   senior_name?: string;
   senior_email?: string;
   senior_phone?: string;
@@ -76,20 +76,26 @@ interface AuthContextType {
   senior_email?: string;
   senior_phone?: string;
 }) => Promise<void>;
-  logout: () => Promise<void>;
-  register: (name: string, email: string) => void;
-  updateUser: (updates: Partial<User>) => void;
-  applications: Application[];
-  updateApplicationStatus: (appId: string, status: ApplicationStatus) => Promise<void>;
-  opportunities: Opportunity[];
-  authLoading: boolean;
-  deleteOpportunity: (id: number) => Promise<void>;
-  signUpForOpportunity: (
+
+logout: () => Promise<void>;
+register: (name: string, email: string) => void;
+updateUser: (updates: Partial<User>) => void;
+applications: Application[];
+updateApplicationStatus: (
+  appId: string,
+  status: ApplicationStatus
+) => Promise<void>;
+opportunities: Opportunity[];
+authLoading: boolean;
+deleteOpportunity: (id: number) => Promise<void>;
+
+signUpForOpportunity: (
   opportunityId: number,
   volunteerName: string,
   volunteerEmail: string
 ) => Promise<void>;
-  updateOpportunity: (
+
+updateOpportunity: (
   id: number,
   updates: {
     title?: string;
@@ -120,33 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const fetchApplications = async () => {
-    const { data, error } = await supabase
-      .from('volunteer_applications')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error loading applications:', error);
-      return;
-    }
-
-    const mappedApplications: Application[] = (data || []).map((app: any) => ({
-      id: String(app.id),
-      userId: String(app.id),
-      userName: app.full_name,
-      userEmail: app.email,
-      videoUrl: app.video_url,
-      age: app.age,
-      status: app.status,
-      submittedAt: new Date(app.created_at),
-      processedAt: app.processed_at ? new Date(app.processed_at) : undefined,
-    }));
-
-    setApplications(mappedApplications);
-  };
-
-const fetchOpportunities = async () => {
+  const fetchOpportunities = async () => {
   const { data, error } = await supabase
     .from('opportunities')
     .select(`
@@ -163,13 +143,13 @@ const fetchOpportunities = async () => {
     return;
   }
 
-  // Only the authenticated director can request private contact information.
   const {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
   let contacts: any[] = [];
 
+  // Only the real authenticated director can read private contact information.
   if (authUser?.email === DIRECTOR_EMAIL) {
     const { data: contactData, error: contactError } = await supabase
       .from('opportunity_contacts')
@@ -184,6 +164,7 @@ const fetchOpportunities = async () => {
 
   const mappedOpportunities = (data || []).map((opp: any) => {
     const signups = opp.opportunity_signups || [];
+
     const contact = contacts.find(
       (item: any) => item.opportunity_id === opp.id
     );
@@ -191,7 +172,6 @@ const fetchOpportunities = async () => {
     return {
       ...opp,
 
-      // These only exist in memory for the authenticated director.
       ...(authUser?.email === DIRECTOR_EMAIL
         ? {
             senior_name: contact?.senior_name || '',
