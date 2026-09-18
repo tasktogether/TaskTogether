@@ -649,6 +649,19 @@ const updateOpportunity = async (
   toast.success('Opportunity updated!');
   fetchOpportunities();
 };
+  const deleteOpportunity = async (id: number) => {
+  const { error } = await supabase
+    .from('opportunities')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting opportunity:', error);
+    throw new Error(error.message || 'Failed to delete opportunity.');
+  }
+
+  await fetchOpportunities();
+};
 
 const signUpForOpportunity = async (
   opportunityId: number,
